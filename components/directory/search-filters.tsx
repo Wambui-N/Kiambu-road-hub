@@ -2,31 +2,10 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-
-const AREAS = [
-  { label: 'All Areas', value: '' },
-  { label: 'Ridgeways', value: 'ridgeways' },
-  { label: 'Thindigua', value: 'thindigua' },
-  { label: 'Runda', value: 'runda' },
-  { label: 'Ruaka', value: 'ruaka' },
-  { label: 'Kasarini', value: 'kasarini' },
-  { label: 'Kitisuru', value: 'kitisuru' },
-  { label: 'Kiambu Town', value: 'kiambu-town' },
-]
-
-const CATEGORIES = [
-  { label: 'All Categories', value: '' },
-  { label: 'Eat, Drink & Stay', value: 'eat-drink-stay' },
-  { label: 'Health & Wellness', value: 'health-wellness' },
-  { label: 'Education & Childcare', value: 'education-childcare' },
-  { label: 'Retail & Shopping', value: 'retail-shopping' },
-  { label: 'Professional Services', value: 'professional-services' },
-  { label: 'Property & Construction', value: 'property-construction' },
-  { label: 'Automotive', value: 'automotive' },
-]
+import { CATEGORY_OPTIONS, AREA_OPTIONS } from '@/lib/data/options'
 
 interface SearchFiltersProps {
   currentQuery?: string
@@ -34,14 +13,20 @@ interface SearchFiltersProps {
   currentArea?: string
 }
 
-export default function SearchFilters({ currentQuery = '', currentCategory = '', currentArea = '' }: SearchFiltersProps) {
+export default function SearchFilters({
+  currentQuery = '',
+  currentCategory = '',
+  currentArea = '',
+}: SearchFiltersProps) {
   const router = useRouter()
   const [query, setQuery] = useState(currentQuery)
 
   const updateParams = (updates: Record<string, string>) => {
     const params = new URLSearchParams()
     const merged = { q: query, category: currentCategory, area: currentArea, ...updates }
-    Object.entries(merged).forEach(([k, v]) => { if (v) params.set(k, v) })
+    Object.entries(merged).forEach(([k, v]) => {
+      if (v) params.set(k, v)
+    })
     router.push(`/search?${params.toString()}`)
   }
 
@@ -73,7 +58,7 @@ export default function SearchFilters({ currentQuery = '', currentCategory = '',
           onChange={(e) => updateParams({ category: e.target.value })}
           className="px-3 py-2 rounded-lg border border-border text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          {CATEGORIES.map((cat) => (
+          {CATEGORY_OPTIONS.map((cat) => (
             <option key={cat.value} value={cat.value}>{cat.label}</option>
           ))}
         </select>
@@ -84,7 +69,7 @@ export default function SearchFilters({ currentQuery = '', currentCategory = '',
           onChange={(e) => updateParams({ area: e.target.value })}
           className="px-3 py-2 rounded-lg border border-border text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          {AREAS.map((area) => (
+          {AREA_OPTIONS.map((area) => (
             <option key={area.value} value={area.value}>{area.label}</option>
           ))}
         </select>

@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 
 interface SubmissionActionsProps {
@@ -14,19 +13,26 @@ export default function SubmissionActions({ id, status }: SubmissionActionsProps
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const updateStatus = async (newStatus: string) => {
+  const handleAction = async (action: 'approve' | 'reject') => {
     setLoading(true)
     try {
-      const supabase = createClient()
-      const { error } = await supabase
-        .from('business_submissions')
-        .update({ status: newStatus, reviewed_at: new Date().toISOString() })
-        .eq('id', id)
-      if (error) throw error
-      toast.success(`Submission marked as ${newStatus}`)
-      router.refresh()
+      const res = await fetch('/api/admin/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, submissionId: id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Request failed')
+
+      if (action === 'approve' && data.businessId) {
+        toast.success('Submission approved — business created in review status')
+        router.push(`/admin/businesses/${data.businessId}`)
+      } else {
+        toast.success('Submission rejected')
+        router.refresh()
+      }
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Update failed')
+      toast.error(err instanceof Error ? err.message : 'Action failed')
     } finally {
       setLoading(false)
     }
@@ -39,14 +45,14 @@ export default function SubmissionActions({ id, status }: SubmissionActionsProps
   return (
     <div className="flex gap-1.5">
       <button
-        onClick={() => updateStatus('approved')}
+        onClick={() => handleAction('approve')}
         disabled={loading}
         className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors disabled:opacity-50"
       >
-        Approve
+        Approve →
       </button>
       <button
-        onClick={() => updateStatus('rejected')}
+        onClick={() => handleAction('reject')}
         disabled={loading}
         className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors disabled:opacity-50"
       >

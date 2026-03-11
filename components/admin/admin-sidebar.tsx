@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Building2, FolderTree, FileText,
-  Briefcase, DollarSign, Inbox, Settings,
+  Briefcase, DollarSign, Inbox, MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -16,6 +16,7 @@ const navItems = [
   { label: 'Jobs Board', href: '/admin/jobs', icon: Briefcase },
   { label: 'Prices', href: '/admin/prices', icon: DollarSign },
   { label: 'Submissions', href: '/admin/submissions', icon: Inbox },
+  { label: 'Messages', href: '/admin/messages', icon: MessageSquare },
 ]
 
 export default function AdminSidebar() {

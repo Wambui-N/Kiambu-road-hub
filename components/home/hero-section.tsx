@@ -5,31 +5,21 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { Search, MapPin, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-
-const CATEGORIES = [
-  'All Categories',
-  'Eat, Drink & Stay',
-  'Health & Wellness',
-  'Education & Childcare',
-  'Retail & Shopping',
-  'Professional Services',
-  'Property & Construction',
-  'Automotive',
-  'Leisure & Outdoors',
-]
+import { CATEGORY_OPTIONS } from '@/lib/data/options'
 
 export default function HeroSection() {
   const [query, setQuery] = useState('')
-  const [category, setCategory] = useState('All Categories')
+  const [categoryValue, setCategoryValue] = useState('')
   const [catOpen, setCatOpen] = useState(false)
   const router = useRouter()
+
+  const selectedLabel = CATEGORY_OPTIONS.find((c) => c.value === categoryValue)?.label ?? 'All Categories'
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     const params = new URLSearchParams()
     if (query.trim()) params.set('q', query.trim())
-    if (category !== 'All Categories') params.set('category', category)
+    if (categoryValue) params.set('category', categoryValue)
     router.push(`/search?${params.toString()}`)
   }
 
@@ -113,19 +103,19 @@ export default function HeroSection() {
                       onClick={() => setCatOpen((v) => !v)}
                       className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/15 hover:bg-white/25 text-white text-sm font-medium whitespace-nowrap transition-colors w-full sm:w-auto"
                     >
-                      {category}
+                      {selectedLabel}
                       <ChevronDown className="w-4 h-4" />
                     </button>
                     {catOpen && (
-                      <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-xl z-10 min-w-[220px] py-1 border border-border">
-                        {CATEGORIES.map((cat) => (
+                      <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-xl z-10 min-w-[220px] py-1 border border-border max-h-72 overflow-y-auto">
+                        {CATEGORY_OPTIONS.map((cat) => (
                           <button
-                            key={cat}
+                            key={cat.value}
                             type="button"
-                            onClick={() => { setCategory(cat); setCatOpen(false) }}
-                            className="w-full text-left px-4 py-2 text-sm hover:bg-muted text-foreground transition-colors"
+                            onClick={() => { setCategoryValue(cat.value); setCatOpen(false) }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${categoryValue === cat.value ? 'text-primary font-semibold' : 'text-foreground'}`}
                           >
-                            {cat}
+                            {cat.label}
                           </button>
                         ))}
                       </div>

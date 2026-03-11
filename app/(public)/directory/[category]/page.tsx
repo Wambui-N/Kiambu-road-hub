@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { CATEGORIES } from '@/data/seed/categories'
 import BusinessCard from '@/components/directory/business-card'
-import CategoryFilters from '@/components/directory/category-filters'
 import type { Business, Category, Subcategory } from '@/types/database'
 
 export const revalidate = 3600

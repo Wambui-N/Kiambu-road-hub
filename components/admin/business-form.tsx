@@ -84,6 +84,9 @@ export default function BusinessForm({ categories, areas, initialData }: Busines
     setLoading(true)
     try {
       const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      const userId = user?.id ?? null
+
       const payload = {
         ...form,
         google_rating: form.google_rating ? Number(form.google_rating) : null,
@@ -91,14 +94,17 @@ export default function BusinessForm({ categories, areas, initialData }: Busines
         category_id: form.category_id || null,
         subcategory_id: form.subcategory_id || null,
         area_id: form.area_id || null,
+        updated_by: userId,
+        published_at: form.status === 'published' ? new Date().toISOString() : (initialData?.published_at as string | null ?? null),
       }
 
       if (initialData?.id) {
         const { error } = await supabase.from('businesses').update(payload).eq('id', initialData.id as string)
         if (error) throw error
         toast.success('Business updated')
+        router.refresh()
       } else {
-        const { error } = await supabase.from('businesses').insert(payload)
+        const { error } = await supabase.from('businesses').insert({ ...payload, created_by: userId })
         if (error) throw error
         toast.success('Business created')
         router.push('/admin/businesses')

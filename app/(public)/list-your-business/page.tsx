@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -40,9 +39,13 @@ export default function ListYourBusinessPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      const supabase = createClient()
-      const { error } = await supabase.from('business_submissions').insert(form)
-      if (error) throw error
+      const res = await fetch('/api/submit-listing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Submission failed')
       setSubmitted(true)
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Submission failed. Please try again.')
@@ -97,6 +100,17 @@ export default function ListYourBusinessPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-border p-6 space-y-5">
+          {/* Honeypot: hidden from real users, traps bots */}
+          <div style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }} aria-hidden="true">
+            <input
+              type="text"
+              name="url"
+              tabIndex={-1}
+              autoComplete="off"
+              value={(form as Record<string, string>).url ?? ''}
+              onChange={(e) => set('url', e.target.value)}
+            />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label>Business Name *</Label>

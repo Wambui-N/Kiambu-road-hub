@@ -1,37 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kiambu Road Hub
+
+The definitive business directory and lifestyle journal for the Kiambu Road corridor, Nairobi, Kenya.
+
+**Live site:** [kiamburoad-hub.com](https://kiamburoad-hub.com) (coming soon)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| UI Components | shadcn/ui + Tailwind CSS v4 |
+| Animations | Framer Motion |
+| Database | Supabase (Postgres + Auth + Storage) |
+| Fonts | Playfair Display · DM Sans · JetBrains Mono |
+| Icons | Lucide React |
+| Email | Resend |
+| Deployment | Vercel |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone and install
+
+```bash
+git clone <your-repo-url>
+cd kiambu-road-hub
+npm install
+```
+
+### 2. Set up environment variables
+
+```bash
+cp .env.local.example .env.local
+# Fill in your Supabase keys and other values
+```
+
+### 3. Set up Supabase
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Open the SQL editor and run the migrations **in order**:
+   - `supabase/migrations/001_initial_schema.sql`
+   - `supabase/migrations/002_storage.sql`
+   - `supabase/migrations/003_seed_reference_data.sql`
+3. Go to **Authentication → Users** and create your admin user
+4. Copy the user UUID and run:
+   ```sql
+   INSERT INTO admin_roles (user_id, role) VALUES ('<your-uuid>', 'super_admin');
+   ```
+
+### 4. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+app/
+  (public)/          Public-facing pages (directory, journal, etc.)
+  admin/             Protected admin panel
+  api/               Server-side API route handlers
+components/
+  home/              Homepage sections
+  directory/         Directory listing components
+  admin/             Admin panel components
+  layout/            Header, footer, navigation
+  ui/                Shared UI primitives
+lib/
+  supabase/          Supabase client helpers (client, server, middleware)
+  data/              Shared data options, query helpers
+  env.ts             Environment variable validation
+  rate-limit.ts      In-memory rate limiter for API routes
+  utils.ts           Utility functions (slugify, formatPhone, etc.)
+data/seed/           Seed data (categories, areas, journal sections)
+supabase/migrations/ SQL migrations for schema, storage, and seed data
+types/database.ts    TypeScript types for all Supabase tables
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Admin Panel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The admin panel is accessible at `/admin/login`. It requires an authenticated Supabase user with an entry in the `admin_roles` table.
 
-## Deploy on Vercel
+| Route | Purpose |
+|---|---|
+| `/admin` | Dashboard |
+| `/admin/businesses` | List, create, edit businesses |
+| `/admin/categories` | Manage categories and subcategories |
+| `/admin/submissions` | Review public listing requests |
+| `/admin/articles` | Write and publish journal articles |
+| `/admin/jobs` | Manage job listings |
+| `/admin/prices` | Add and track price entries |
+| `/admin/messages` | View contact form messages |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Kiambu-road-hub
+## Deployment
+
+Deploy to Vercel in one command:
+
+```bash
+vercel --prod
+```
+
+Set all environment variables from `.env.local.example` in your Vercel project settings.
+
+---
+
+## Pre-Launch
+
+See [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md) for the full pre-launch QA checklist.

@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import { Mail, Phone, Facebook, Twitter, Instagram, Youtube } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Mail, Facebook, Twitter, Instagram, Youtube } from 'lucide-react'
+import NewsletterForm from '@/components/layout/newsletter-form'
 
 export default function Footer() {
   return (
@@ -18,18 +17,7 @@ export default function Footer() {
                 Get updates on new listings and local news.
               </p>
             </div>
-            <form className="flex gap-2 w-full sm:w-auto" action="/api/subscribe" method="POST">
-              <Input
-                type="email"
-                name="email"
-                placeholder="Your email address"
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus-visible:ring-white min-w-[240px]"
-                required
-              />
-              <Button type="submit" className="bg-accent hover:bg-amber-500 text-black font-semibold whitespace-nowrap">
-                Subscribe
-              </Button>
-            </form>
+            <NewsletterForm />
           </div>
         </div>
       </div>

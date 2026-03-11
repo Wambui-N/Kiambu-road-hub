@@ -8,6 +8,23 @@ import { Badge } from '@/components/ui/badge'
 import { getWhatsAppUrl, getImageUrl } from '@/lib/utils'
 import type { Business } from '@/types/database'
 
+const CATEGORY_IMAGE_MAP: Record<string, string> = {
+  'eat-drink-stay':
+    'https://images.unsplash.com/photo-1768697359488-9cc9937056a6?auto=format&fit=crop&w=1600&q=80',
+  'health-wellness':
+    'https://images.unsplash.com/photo-1755995083683-50d08cd83d09?auto=format&fit=crop&w=1600&q=80',
+  'education-childcare':
+    'https://images.unsplash.com/photo-1549380883-4dd936bbc0fa?auto=format&fit=crop&w=1600&q=80',
+  'retail-shopping':
+    'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1600&q=80',
+  automotive:
+    'https://unsplash.com/photos/TCg8r4Z5Wu0/download?force=true',
+  'leisure-outdoors':
+    'https://images.unsplash.com/photo-1751056082653-864c00f89977?auto=format&fit=crop&w=1600&q=80',
+  default:
+    'https://images.unsplash.com/photo-1751056082653-864c00f89977?auto=format&fit=crop&w=1600&q=80',
+}
+
 interface BusinessCardProps {
   business: Business
   variant?: 'default' | 'featured' | 'compact'
@@ -15,7 +32,11 @@ interface BusinessCardProps {
 
 export default function BusinessCard({ business, variant = 'default' }: BusinessCardProps) {
   const coverImage = business.images?.find((i) => i.is_cover) ?? business.images?.[0]
-  const imageUrl = getImageUrl(coverImage?.image_path)
+  const categorySlug = business.category?.slug
+  const fallbackPath =
+    coverImage?.image_path ??
+    (categorySlug ? CATEGORY_IMAGE_MAP[categorySlug] ?? CATEGORY_IMAGE_MAP.default : CATEGORY_IMAGE_MAP.default)
+  const imageUrl = getImageUrl(fallbackPath)
   const whatsappUrl = business.whatsapp ? getWhatsAppUrl(business.whatsapp) : null
 
   return (

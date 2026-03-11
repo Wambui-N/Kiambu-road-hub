@@ -13,6 +13,23 @@ import BusinessCard from '@/components/directory/business-card'
 import { getWhatsAppUrl, getImageUrl, getPriceRangeLabel } from '@/lib/utils'
 import type { Business } from '@/types/database'
 
+const CATEGORY_IMAGE_MAP: Record<string, string> = {
+  'eat-drink-stay':
+    'https://images.unsplash.com/photo-1768697359488-9cc9937056a6?auto=format&fit=crop&w=1600&q=80',
+  'health-wellness':
+    'https://images.unsplash.com/photo-1755995083683-50d08cd83d09?auto=format&fit=crop&w=1600&q=80',
+  'education-childcare':
+    'https://images.unsplash.com/photo-1549380883-4dd936bbc0fa?auto=format&fit=crop&w=1600&q=80',
+  'retail-shopping':
+    'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1600&q=80',
+  automotive:
+    'https://unsplash.com/photos/TCg8r4Z5Wu0/download?force=true',
+  'leisure-outdoors':
+    'https://images.unsplash.com/photo-1751056082653-864c00f89977?auto=format&fit=crop&w=1600&q=80',
+  default:
+    'https://images.unsplash.com/photo-1751056082653-864c00f89977?auto=format&fit=crop&w=1600&q=80',
+}
+
 export const revalidate = 3600
 
 interface Props {
@@ -93,6 +110,11 @@ export default async function BusinessProfilePage({ params }: Props) {
   const whatsappUrl = business.whatsapp ? getWhatsAppUrl(business.whatsapp) : null
   const images = business.images ?? []
   const coverImage = images.find((i) => i.is_cover) ?? images[0]
+  const categorySlug = business.category?.slug
+  const coverPath =
+    coverImage?.image_path ??
+    (categorySlug ? CATEGORY_IMAGE_MAP[categorySlug] ?? CATEGORY_IMAGE_MAP.default : CATEGORY_IMAGE_MAP.default)
+  const coverImageUrl = getImageUrl(coverPath)
   const galleryImages = images.filter((i) => !i.is_cover).slice(0, 4)
 
   return (
@@ -124,20 +146,14 @@ export default async function BusinessProfilePage({ params }: Props) {
           <div className="lg:flex-1 space-y-6">
             {/* Cover image */}
             <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden bg-muted">
-              {coverImage ? (
-                <Image
-                  src={getImageUrl(coverImage.image_path)}
-                  alt={coverImage.alt_text ?? business.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 65vw"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-6xl opacity-20">🏢</span>
-                </div>
-              )}
+              <Image
+                src={coverImageUrl}
+                alt={coverImage?.alt_text ?? business.name}
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 1024px) 100vw, 65vw"
+              />
             </div>
 
             {/* Gallery grid */}

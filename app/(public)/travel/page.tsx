@@ -156,13 +156,13 @@ export default function TravelPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-xs font-mono text-muted-foreground mb-1.5 flex items-center gap-1">
+                    <label className="flex items-center gap-1 text-xs font-mono text-muted-foreground mb-1.5">
                       <Calendar className="w-3 h-3" /> Travel Dates
                     </label>
                     <Input value={form.travel_dates} onChange={(e) => setField('travel_dates', e.target.value)} placeholder="e.g. 15–17 April 2026" />
                   </div>
                   <div>
-                    <label className="block text-xs font-mono text-muted-foreground mb-1.5 flex items-center gap-1">
+                    <label className="flex items-center gap-1 text-xs font-mono text-muted-foreground mb-1.5">
                       <Users className="w-3 h-3" /> Number of People
                     </label>
                     <Input type="number" min="1" value={form.people_count} onChange={(e) => setField('people_count', e.target.value)} placeholder="2" />

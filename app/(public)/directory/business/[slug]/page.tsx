@@ -23,7 +23,7 @@ const CATEGORY_IMAGE_MAP: Record<string, string> = {
   'retail-shopping':
     'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1600&q=80',
   automotive:
-    'https://unsplash.com/photos/TCg8r4Z5Wu0/download?force=true',
+    'https://images.unsplash.com/photo-1751056082653-864c00f89977?auto=format&fit=crop&w=1600&q=80',
   'leisure-outdoors':
     'https://images.unsplash.com/photo-1751056082653-864c00f89977?auto=format&fit=crop&w=1600&q=80',
   default:

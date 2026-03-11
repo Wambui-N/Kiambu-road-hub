@@ -88,6 +88,7 @@ export interface Business {
   status: ContentStatus
   verification_status: VerificationStatus
   source_url: string | null
+  source_note: string | null
   last_verified_at: string | null
   published_at: string | null
   created_at: string

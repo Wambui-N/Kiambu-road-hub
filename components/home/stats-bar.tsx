@@ -34,7 +34,7 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
 }
 
 const stats: StatItem[] = [
-  { value: 200, suffix: '+', label: 'Businesses Listed' },
+  { value: 76, suffix: '+', label: 'Businesses Listed' },
   { value: 14, label: 'Categories' },
   { value: 10, label: 'Local Areas' },
   { value: 5000, suffix: '+', label: 'Monthly Visitors' },

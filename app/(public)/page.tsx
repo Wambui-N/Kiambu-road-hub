@@ -56,9 +56,10 @@ async function getFeaturedBusinesses(): Promise<Business[]> {
         images:business_images(*)
       `)
       .eq('status', 'published')
-      .eq('is_sponsor', true)
+      .eq('featured', true)
+      .order('is_sponsor', { ascending: false })
       .order('google_rating', { ascending: false })
-      .limit(8)
+      .limit(10)
     return data ?? []
   } catch {
     return []

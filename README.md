@@ -42,9 +42,16 @@ cp .env.local.example .env.local
 
 1. Create a project at [supabase.com](https://supabase.com)
 2. Open the SQL editor and run the migrations **in order**:
-   - `supabase/migrations/001_initial_schema.sql`
-   - `supabase/migrations/002_storage.sql`
-   - `supabase/migrations/003_seed_reference_data.sql`
+   - `supabase/migrations/001_initial_schema.sql` — core tables, enums, RLS
+   - `supabase/migrations/002_storage.sql` — storage buckets and policies
+   - `supabase/migrations/003_seed_reference_data.sql` — areas, categories, subcategories
+   - `supabase/migrations/004a_seed_eat_drink_stay.sql` — 30 demo listings (Eat, Drink & Stay)
+   - `supabase/migrations/004b_seed_health_wellness.sql` — 11 demo listings (Health & Wellness)
+   - `supabase/migrations/004c_seed_education_childcare.sql` — 9 demo listings (Education & Childcare)
+   - `supabase/migrations/004d_seed_retail_shopping.sql` — 9 demo listings (Retail & Shopping)
+   - `supabase/migrations/004e_seed_automotive.sql` — 8 demo listings (Automotive)
+   - `supabase/migrations/004f_seed_leisure_outdoors.sql` — 9 demo listings (Leisure & Outdoors)
+   - `supabase/migrations/005_add_source_note_to_businesses.sql` — tags all demo rows
 3. Go to **Authentication → Users** and create your admin user
 4. Copy the user UUID and run:
    ```sql
@@ -113,6 +120,47 @@ vercel --prod
 ```
 
 Set all environment variables from `.env.local.example` in your Vercel project settings.
+
+---
+
+## Demo Data
+
+The directory ships with **76 curated demo listings** across all six main categories, seeded via migrations `004a`–`004f`. These listings are based on real Kiambu Road corridor businesses and are intended to demonstrate the app to stakeholders before fully verified data is collected.
+
+### How to identify demo rows
+
+All demo businesses have `source_note = 'demo-seed-2025'`:
+
+```sql
+SELECT name, status, verification_status
+FROM businesses
+WHERE source_note = 'demo-seed-2025'
+ORDER BY name;
+```
+
+### Managing demo data via the admin panel
+
+| Task | How |
+|---|---|
+| Edit a listing | `/admin/businesses/[id]` — update any field and save |
+| Feature/unfeature | Toggle `featured` flag in the business edit form |
+| Hide from public | Set `status = 'draft'` in the edit form |
+| Add images | Upload via the business edit form → Images tab |
+
+### Upgrading to verified data (pre-launch)
+
+When the client approves the project for full launch:
+
+1. Freeze demo listings — set `status = 'archived'` on unverified rows.
+2. Import verified data category by category using the same schema.
+3. Set `verification_status = 'verified'` and `source_note = null` on confirmed listings.
+4. Optionally remove all demo rows in one shot:
+   ```sql
+   DELETE FROM businesses WHERE source_note = 'demo-seed-2025';
+   ```
+5. Keep URLs stable where possible; add redirects in `next.config.ts` for changed slugs.
+
+> **Note:** All demo listings have `verification_status = 'unverified'` (or `'verified'` for well-known anchor businesses). Treat them as illustrative, not as confirmed operational data, until re-verified by the client.
 
 ---
 

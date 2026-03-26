@@ -5,7 +5,7 @@ import { Map, Mail, MessageSquare, Facebook, Twitter, Instagram, MessageCircle, 
 const QUICK_LINKS = [
   { label: 'Map', icon: Map, href: '/directory', external: false },
   { label: 'Subscribe', icon: Mail, href: '#newsletter', external: false, action: 'subscribe' },
-  { label: 'Feedback', icon: MessageSquare, href: 'mailto:info@kiamburoad-hub.com', external: true },
+  { label: 'Feedback', icon: MessageSquare, href: 'mailto:info@kiamburoad.com', external: true },
   { label: 'Facebook', icon: Facebook, href: 'https://facebook.com/kiamburoadhub', external: true },
   { label: 'X', icon: Twitter, href: 'https://twitter.com/kiamburoadhub', external: true },
   { label: 'Instagram', icon: Instagram, href: 'https://instagram.com/kiamburoadhub', external: true },
@@ -26,10 +26,10 @@ export default function QuickLinks() {
         navigator.share({
           title: 'Kiambu Road Explorer',
           text: 'Check out Kiambu Road Explorer — the complete guide to businesses and services along Kiambu Road!',
-          url: 'https://kiamburoad-hub.com',
+          url: 'https://kiamburoad.com',
         })
       } else {
-        navigator.clipboard.writeText('https://kiamburoad-hub.com')
+        navigator.clipboard.writeText('https://kiamburoad.com')
           .then(() => alert('Link copied to clipboard!'))
       }
       return true

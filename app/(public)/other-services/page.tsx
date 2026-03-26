@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Other Services',
   description:
     'Kiambu Road Explorer offers website development, graphic design, content writing, business planning, marketing training and more.',
-  alternates: { canonical: 'https://kiamburoad-hub.com/other-services' },
+  alternates: { canonical: 'https://kiamburoad.com/other-services' },
 }
 
 const SERVICES = [

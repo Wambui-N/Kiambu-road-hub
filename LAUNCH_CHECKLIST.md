@@ -24,7 +24,7 @@ A structured checklist to run through before making the site publicly accessible
 - [ ] `.env.local` has real `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - [ ] `.env.local` has real `SUPABASE_SERVICE_ROLE_KEY`
 - [ ] Vercel environment variables match `.env.local.example` (all required keys set)
-- [ ] `NEXT_PUBLIC_SITE_URL` set to production URL in Vercel (e.g. `https://kiamburoad-hub.com`)
+- [ ] `NEXT_PUBLIC_SITE_URL` set to production URL in Vercel (e.g. `https://kiamburoad.com`)
 
 ## 3. Admin Smoke Test
 

@@ -25,6 +25,8 @@ export default function HeroSection({ areas = [], heroAdSlot = null }: HeroSecti
 
   const selectedLabel = CATEGORY_OPTIONS.find((c) => c.value === categoryValue)?.label ?? 'All Categories'
   const selectedAreaLabel = areas.find((a) => a.slug === areaValue)?.name ?? 'All Areas'
+  const compactAreaLabel =
+    selectedAreaLabel.length > 12 ? `${selectedAreaLabel.slice(0, 12)}...` : selectedAreaLabel
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -161,7 +163,7 @@ export default function HeroSection({ areas = [], heroAdSlot = null }: HeroSecti
                           className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors whitespace-nowrap py-1 px-2 rounded-lg hover:bg-muted"
                         >
                           <MapPin className="w-3 h-3" />
-                          {selectedAreaLabel}
+                          <span className="max-w-[90px] truncate">{compactAreaLabel}</span>
                           <ChevronDown className="w-3 h-3" />
                         </button>
                         {areaOpen && (

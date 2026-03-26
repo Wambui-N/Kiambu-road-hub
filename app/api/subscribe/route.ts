@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Kiambu Road Explorer <noreply@kiamburoad-hub.com>',
+            from: 'Kiambu Road Explorer <noreply@kiamburoad.com>',
             to: email,
             subject: 'Welcome to the Kiambu Road Explorer Community!',
             html: `
@@ -61,8 +61,8 @@ export async function POST(req: NextRequest) {
                 </p>
                 <p style="color:#555;font-size:15px;line-height:1.6">Talk soon.</p>
                 <div style="margin-top:28px;display:flex;gap:12px">
-                  <a href="https://kiamburoad-hub.com" style="background:#1B6B3A;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600">Back to Site</a>
-                  <a href="https://wa.me/?text=Check%20out%20Kiambu%20Road%20Hub%20%E2%80%94%20the%20complete%20guide%20to%20businesses%20along%20Kiambu%20Road%3A%20https%3A%2F%2Fkiamburoad-hub.com" style="background:#f5f5f5;color:#333;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600">Refer a Friend</a>
+                  <a href="https://kiamburoad.com" style="background:#1B6B3A;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600">Back to Site</a>
+                  <a href="https://wa.me/?text=Check%20out%20Kiambu%20Road%20Hub%20%E2%80%94%20the%20complete%20guide%20to%20businesses%20along%20Kiambu%20Road%3A%20https%3A%2F%2Fkiamburoad.com" style="background:#f5f5f5;color:#333;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600">Refer a Friend</a>
                 </div>
               </div>
             `,

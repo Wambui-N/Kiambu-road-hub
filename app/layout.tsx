@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://kiamburoad-hub.com'),
+  metadataBase: new URL('https://kiamburoad.com'),
   title: {
     default: 'Kiambu Road Explorer — Business Directory & Lifestyle Journal',
     template: '%s | Kiambu Road Explorer',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_KE',
-    url: 'https://kiamburoad-hub.com',
+    url: 'https://kiamburoad.com',
     siteName: 'Kiambu Road Explorer',
     title: 'Kiambu Road Explorer — Business Directory & Lifestyle Journal',
     description: 'Discover local businesses, services and lifestyle content along Kiambu Road.',

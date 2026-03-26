@@ -2,7 +2,7 @@
 
 The definitive business directory and lifestyle journal for the Kiambu Road corridor, Nairobi, Kenya.
 
-**Live site:** [kiamburoad-hub.com](https://kiamburoad-hub.com) (coming soon)
+**Live site:** [kiamburoad.com](https://kiamburoad.com)
 
 ---
 

@@ -130,7 +130,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'website',
     },
     alternates: {
-      canonical: `https://kiamburoad-hub.com/directory/business/${slug}`,
+      canonical: `https://kiamburoad.com/directory/business/${slug}`,
     },
   }
 }

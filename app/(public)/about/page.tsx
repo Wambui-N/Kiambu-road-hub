@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'About Us',
   description:
     'Kiambu Road Explorer is a comprehensive commercial guide to Kiambu Road and its environs — a social and knowledge platform designed for the community.',
-  alternates: { canonical: 'https://kiamburoad-hub.com/about' },
+  alternates: { canonical: 'https://kiamburoad.com/about' },
 }
 
 const QUICK_LINKS = [

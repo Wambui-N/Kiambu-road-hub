@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: 'Kiambu Road Explorer — Business Directory & Lifestyle Journal',
   description:
     'Your complete online business directory for Kiambu Road, Nairobi. Find restaurants, hotels, hospitals, schools and more.',
-  alternates: { canonical: 'https://kiamburoad-hub.com' },
+  alternates: { canonical: 'https://kiamburoad.com' },
 }
 
 async function getCategories(): Promise<Category[]> {

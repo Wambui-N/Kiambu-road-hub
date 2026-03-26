@@ -112,8 +112,8 @@ export default function EmergencyPage() {
         <p className="text-xs text-center text-muted-foreground">
           Numbers marked &ldquo;To be confirmed&rdquo; will be verified and updated before launch.
           To report an incorrect number, email{' '}
-          <a href="mailto:info@kiamburoad-hub.com" className="text-primary hover:underline">
-            info@kiamburoad-hub.com
+          <a href="mailto:info@kiamburoad.com" className="text-primary hover:underline">
+            info@kiamburoad.com
           </a>
         </p>
       </div>

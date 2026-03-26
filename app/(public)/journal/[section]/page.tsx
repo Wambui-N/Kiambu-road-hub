@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: section.name,
     description: `${section.tagline} — Lifestyle journal articles from Kiambu Road Explorer`,
-    alternates: { canonical: `https://kiamburoad-hub.com/journal/${sectionSlug}` },
+    alternates: { canonical: `https://kiamburoad.com/journal/${sectionSlug}` },
   }
 }
 

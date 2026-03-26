@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: article.cover_image_path ? [article.cover_image_path] : [],
       publishedTime: article.published_at ?? undefined,
     },
-    alternates: { canonical: `https://kiamburoad-hub.com/journal/article/${slug}` },
+    alternates: { canonical: `https://kiamburoad.com/journal/article/${slug}` },
   }
 }
 
@@ -83,7 +83,7 @@ export default async function ArticleDetailPage({ params }: Props) {
       : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/article-media/${article.cover_image_path}`
     : fallback
 
-  const articleUrl = `https://kiamburoad-hub.com/journal/article/${slug}`
+  const articleUrl = `https://kiamburoad.com/journal/article/${slug}`
   const isTravelSection = sectionSlug === 'kiambu-here-n-there' || sectionSlug === 'destination-review'
 
   return (

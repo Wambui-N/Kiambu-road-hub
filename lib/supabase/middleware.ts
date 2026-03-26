@@ -29,21 +29,17 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protect all /admin routes except /admin/login
-  if (
-    request.nextUrl.pathname.startsWith('/admin') &&
-    !request.nextUrl.pathname.startsWith('/admin/login') &&
-    !user
-  ) {
+  // Protect all /admin routes except /admin/login and /admin/unauthorized.
+  // Only redirect unauthenticated users — admin role verification is handled
+  // by the layout server component so we don't need to query the DB here.
+  const { pathname } = request.nextUrl
+  const isAdminRoute = pathname.startsWith('/admin')
+  const isPublicAdminRoute =
+    pathname === '/admin/login' || pathname === '/admin/unauthorized'
+
+  if (isAdminRoute && !isPublicAdminRoute && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin/login'
-    return NextResponse.redirect(url)
-  }
-
-  // Redirect authenticated admins away from login page
-  if (request.nextUrl.pathname === '/admin/login' && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin'
     return NextResponse.redirect(url)
   }
 

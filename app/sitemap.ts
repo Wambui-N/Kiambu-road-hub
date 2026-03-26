@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { createClient } from '@/lib/supabase/server'
 
-const BASE_URL = 'https://kiamburoad-hub.com'
+const BASE_URL = 'https://kiamburoad.com'
 
 export const revalidate = 86400 // 24 hours
 

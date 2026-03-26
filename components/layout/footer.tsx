@@ -122,10 +122,10 @@ export default function Footer() {
             </ul>
             <div className="mt-6">
               <p className="text-xs text-white/40 font-mono">Contact us:</p>
-              <a href="mailto:info@kiamburoad-hub.com"
+              <a href="mailto:info@kiamburoad.com"
                 className="flex items-center gap-1 text-sm text-white/60 hover:text-white mt-1 transition-colors">
                 <Mail className="w-3 h-3" />
-                info@kiamburoad-hub.com
+                info@kiamburoad.com
               </a>
             </div>
           </div>

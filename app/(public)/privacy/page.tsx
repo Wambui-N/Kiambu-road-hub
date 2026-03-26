@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Learn how Kiambu Road Explorer collects, uses, and protects your personal information.',
-  alternates: { canonical: 'https://kiamburoad-hub.com/privacy' },
+  alternates: { canonical: 'https://kiamburoad.com/privacy' },
 }
 
 const LAST_UPDATED = 'March 2026'
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Kiambu Road Explorer (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;) is committed to protecting and respecting your privacy.
                 This policy explains how we collect, use, and safeguard your personal information when you use our website at
-                kiamburoad-hub.com. By using our site you agree to the terms of this policy.
+                kiamburoad.com. By using our site you agree to the terms of this policy.
               </p>
             </section>
 

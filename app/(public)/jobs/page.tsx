@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 export const metadata: Metadata = {
   title: 'Jobs Board',
   description: 'Find local jobs and career opportunities along the Kiambu Road corridor, Nairobi.',
-  alternates: { canonical: 'https://kiamburoad-hub.com/jobs' },
+  alternates: { canonical: 'https://kiamburoad.com/jobs' },
 }
 
 export const revalidate = 1800

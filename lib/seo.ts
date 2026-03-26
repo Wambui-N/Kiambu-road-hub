@@ -1,6 +1,6 @@
 import type { Business, Article, JobListing } from '@/types/database'
 
-const BASE_URL = 'https://kiamburoad-hub.com'
+const BASE_URL = 'https://kiamburoad.com'
 
 export function buildCanonical(path: string): string {
   return `${BASE_URL}${path}`

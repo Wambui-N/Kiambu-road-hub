@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@kiamburoad-hub.com"
+                placeholder="admin@kiamburoad.com"
                 required
                 autoComplete="email"
               />

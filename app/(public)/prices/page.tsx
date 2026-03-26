@@ -7,7 +7,7 @@ import SubmitPriceForm from './submit-price-form'
 export const metadata: Metadata = {
   title: 'Prices at a Glance',
   description: 'Compare community-sourced prices for groceries, fuel, dining, and more along Kiambu Road, Nairobi.',
-  alternates: { canonical: 'https://kiamburoad-hub.com/prices' },
+  alternates: { canonical: 'https://kiamburoad.com/prices' },
 }
 
 export const revalidate = 3600

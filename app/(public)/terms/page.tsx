@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Terms & Conditions',
   description: 'Terms and conditions governing use of the Kiambu Road Explorer website and services.',
-  alternates: { canonical: 'https://kiamburoad-hub.com/terms' },
+  alternates: { canonical: 'https://kiamburoad.com/terms' },
 }
 
 const LAST_UPDATED = 'March 2026'
@@ -12,7 +12,7 @@ const LAST_UPDATED = 'March 2026'
 const TERMS = [
   {
     heading: 'Acceptance of Terms',
-    body: 'By accessing and using Kiambu Road Explorer (kiamburoad-hub.com), you accept and agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our website.',
+    body: 'By accessing and using Kiambu Road Explorer (kiamburoad.com), you accept and agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our website.',
   },
   {
     heading: 'Use of the Directory',

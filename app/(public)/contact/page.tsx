@@ -62,9 +62,9 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground font-mono">Email</p>
-                    <a href="mailto:info@kiamburoad-hub.com"
+                    <a href="mailto:info@kiamburoad.com"
                       className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-                      info@kiamburoad-hub.com
+                      info@kiamburoad.com
                     </a>
                   </div>
                 </div>

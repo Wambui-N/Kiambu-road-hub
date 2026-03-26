@@ -54,7 +54,7 @@ export default function Header() {
               K
             </span>
             <span className="font-display font-bold text-lg text-foreground leading-tight hidden sm:block">
-              Kiambu Road Hub
+              Kiambu Road Explorer
             </span>
             <span className="font-display font-bold text-lg text-foreground leading-tight sm:hidden">
               KRH

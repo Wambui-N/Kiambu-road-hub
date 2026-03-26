@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!section) return { title: 'Section Not Found' }
   return {
     title: section.name,
-    description: `${section.tagline} — Lifestyle journal articles from Kiambu Road Hub`,
+    description: `${section.tagline} — Lifestyle journal articles from Kiambu Road Explorer`,
     alternates: { canonical: `https://kiamburoad-hub.com/journal/${sectionSlug}` },
   }
 }

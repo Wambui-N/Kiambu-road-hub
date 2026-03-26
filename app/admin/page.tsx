@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
     <div className="space-y-8">
       <div>
         <h1 className="font-display text-2xl font-bold">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Welcome back — here&apos;s what&apos;s happening on Kiambu Road Hub</p>
+        <p className="text-sm text-muted-foreground mt-0.5">Welcome back — here&apos;s what&apos;s happening on Kiambu Road Explorer</p>
       </div>
 
       {/* Primary stats */}

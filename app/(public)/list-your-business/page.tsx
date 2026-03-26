@@ -1,16 +1,46 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { CheckCircle2, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react'
+import { CheckCircle2, ChevronRight, ChevronLeft, Loader2, ImagePlus, X, ShieldCheck } from 'lucide-react'
+import Image from 'next/image'
 import { CATEGORIES } from '@/data/seed/categories'
+import { createClient } from '@/lib/supabase/client'
 
-const TOTAL_STEPS = 8
+const TOTAL_STEPS = 9
+
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const MAX_BYTES = 5 * 1024 * 1024   // 5 MB — matches bucket limit
+const MIN_BYTES = 60 * 1024          // 60 KB  — avoids tiny / low-quality files
+const MIN_WIDTH  = 800
+const MIN_HEIGHT = 600
+
+function checkImageQuality(file: File): Promise<string | null> {
+  return new Promise((resolve) => {
+    if (!ACCEPTED_TYPES.includes(file.type))
+      return resolve('Only JPEG, PNG or WebP images are accepted.')
+    if (file.size > MAX_BYTES)
+      return resolve('Image must be under 5 MB.')
+    if (file.size < MIN_BYTES)
+      return resolve('Image file is too small — please use a higher-quality photo (min 60 KB).')
+
+    const url = URL.createObjectURL(file)
+    const img = new window.Image()
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      if (img.width < MIN_WIDTH || img.height < MIN_HEIGHT)
+        return resolve(`Image too small (${img.width}×${img.height} px). Minimum ${MIN_WIDTH}×${MIN_HEIGHT} px required.`)
+      resolve(null)
+    }
+    img.onerror = () => { URL.revokeObjectURL(url); resolve('Could not read image. Please try another file.') }
+    img.src = url
+  })
+}
 
 type FormData = {
   category_name: string
@@ -25,6 +55,7 @@ type FormData = {
   website: string
   email: string
   short_description: string
+  image_url: string
 }
 
 const EMPTY: FormData = {
@@ -40,6 +71,7 @@ const EMPTY: FormData = {
   website: '',
   email: '',
   short_description: '',
+  image_url: '',
 }
 
 const STEP_TITLES = [
@@ -50,6 +82,7 @@ const STEP_TITLES = [
   'Contact Person',
   'Phone & WhatsApp',
   'Online Presence',
+  'Business Image',
   'Review & Submit',
 ]
 
@@ -82,11 +115,50 @@ export default function ListYourBusinessPage() {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string>('')
+  const [imageUploading, setImageUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const set = (key: keyof FormData, value: string) =>
     setForm((p) => ({ ...p, [key]: value }))
 
   const selectedCategory = CATEGORIES.find((c) => c.name === form.category_name)
+
+  const handleImageSelect = async (file: File) => {
+    setError('')
+    const qualityError = await checkImageQuality(file)
+    if (qualityError) { setError(qualityError); return }
+    setImageFile(file)
+    setImagePreview(URL.createObjectURL(file))
+  }
+
+  const removeImage = () => {
+    setImageFile(null)
+    setImagePreview('')
+    set('image_url', '')
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const uploadImage = async (): Promise<string | null> => {
+    if (!imageFile) return null
+    setImageUploading(true)
+    try {
+      const supabase = createClient()
+      const ext = imageFile.name.split('.').pop() ?? 'jpg'
+      const path = `business-listings/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { error: upErr } = await supabase.storage
+        .from('submission-uploads')
+        .upload(path, imageFile, { cacheControl: '3600', upsert: false })
+      if (upErr) throw upErr
+      // Return the storage path — admin will move to public bucket on approval
+      return path
+    } catch {
+      return null
+    } finally {
+      setImageUploading(false)
+    }
+  }
 
   const validateStep = (): string => {
     switch (step) {
@@ -108,7 +180,18 @@ export default function ListYourBusinessPage() {
     }
   }
 
-  const next = () => {
+  const next = async () => {
+    // Step 8: upload image if one was selected, then advance
+    if (step === 8) {
+      setError('')
+      if (imageFile && !form.image_url) {
+        const url = await uploadImage()
+        if (url) set('image_url', url)
+        // Upload failure is non-blocking — we still advance
+      }
+      setStep((s) => Math.min(s + 1, TOTAL_STEPS))
+      return
+    }
     const err = validateStep()
     if (err) { setError(err); return }
     setError('')
@@ -140,6 +223,7 @@ export default function ListYourBusinessPage() {
           website: form.website,
           email: form.email,
           description: form.short_description,
+          image_url: form.image_url || null,
         }),
       })
       const data = await res.json()
@@ -170,7 +254,7 @@ export default function ListYourBusinessPage() {
             <Button className="bg-primary hover:bg-primary/90" onClick={() => window.location.href = '/directory'}>
               Browse Directory
             </Button>
-            <Button variant="outline" onClick={() => { setSubmitted(false); setForm(EMPTY); setStep(1) }}>
+            <Button variant="outline" onClick={() => { setSubmitted(false); setForm(EMPTY); setStep(1); setImageFile(null); setImagePreview('') }}>
               Submit Another
             </Button>
           </div>
@@ -201,6 +285,7 @@ export default function ListYourBusinessPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
+              className="min-h-[380px]"
             >
               {/* Step 1: Category */}
               {step === 1 && (
@@ -211,7 +296,12 @@ export default function ListYourBusinessPage() {
                       <button
                         key={cat.slug}
                         type="button"
-                        onClick={() => { set('category_name', cat.name); set('subcategory_name', '') }}
+                        onClick={() => {
+                          set('category_name', cat.name)
+                          set('subcategory_name', '')
+                          setError('')
+                          setTimeout(() => setStep(2), 250)
+                        }}
                         className={`text-left p-4 rounded-xl border-2 transition-all ${
                           form.category_name === cat.name
                             ? 'border-primary bg-primary/5'
@@ -239,7 +329,11 @@ export default function ListYourBusinessPage() {
                         <button
                           key={sub.slug}
                           type="button"
-                          onClick={() => set('subcategory_name', sub.name)}
+                          onClick={() => {
+                            set('subcategory_name', sub.name)
+                            setError('')
+                            setTimeout(() => setStep(3), 250)
+                          }}
                           className={`text-left p-4 rounded-xl border-2 transition-all ${
                             form.subcategory_name === sub.name
                               ? 'border-primary bg-primary/5'
@@ -386,11 +480,85 @@ export default function ListYourBusinessPage() {
                 </div>
               )}
 
-              {/* Step 8: Review & Submit */}
+              {/* Step 8: Business Image */}
               {step === 8 && (
                 <div>
+                  <h2 className="font-display text-xl font-bold mb-1">Business Image</h2>
+                  <p className="text-sm text-muted-foreground mb-5">
+                    Optional — but a great photo makes your listing stand out.
+                  </p>
+
+                  {/* Quality guardrails info */}
+                  <div className="flex items-start gap-2 bg-primary/5 border border-primary/20 rounded-xl p-3 mb-5">
+                    <ShieldCheck className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      We only accept <strong>JPEG, PNG or WebP</strong> · Max <strong>5 MB</strong> ·
+                      Minimum <strong>800×600 px</strong> · File must be at least <strong>60 KB</strong>{' '}
+                      to ensure display quality.
+                    </p>
+                  </div>
+
+                  {imagePreview ? (
+                    <div className="relative rounded-2xl overflow-hidden border border-border">
+                      <Image
+                        src={imagePreview}
+                        alt="Business preview"
+                        width={800}
+                        height={450}
+                        className="w-full object-cover max-h-56"
+                      />
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 transition-colors"
+                        aria-label="Remove image"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                      <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-mono px-2 py-0.5 rounded-full">
+                        {imageFile ? `${(imageFile.size / 1024).toFixed(0)} KB` : ''}
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full h-44 rounded-2xl border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-3 group"
+                    >
+                      <ImagePlus className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                          Click to upload a photo
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">JPEG, PNG or WebP</p>
+                      </div>
+                    </button>
+                  )}
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) handleImageSelect(file)
+                    }}
+                  />
+
+                  {imageFile && !imageUploading && (
+                    <p className="text-xs text-muted-foreground mt-3 text-center">
+                      Image will be uploaded when you click Next.
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Step 9: Review & Submit */}
+              {step === 9 && (
+                <div>
                   <h2 className="font-display text-xl font-bold mb-5">Review & Submit</h2>
-                  <div className="bg-muted rounded-xl p-5 space-y-3 text-sm mb-6">
+                  <div className="bg-muted rounded-xl p-5 space-y-3 text-sm mb-4">
                     {[
                       { label: 'Category', value: form.category_name },
                       { label: 'Subcategory', value: form.subcategory_name || '—' },
@@ -411,6 +579,18 @@ export default function ListYourBusinessPage() {
                       </div>
                     ))}
                   </div>
+                  {/* Image preview in review (use local object URL since bucket is non-public) */}
+                  {imagePreview && (
+                    <div className="rounded-xl overflow-hidden border border-border mb-4">
+                      <Image
+                        src={imagePreview}
+                        alt="Business image"
+                        width={800}
+                        height={300}
+                        className="w-full object-cover max-h-40"
+                      />
+                    </div>
+                  )}
                   <p className="text-xs text-muted-foreground">
                     By submitting, you agree to our{' '}
                     <a href="/terms" className="text-primary hover:underline">Terms & Conditions</a>.
@@ -429,13 +609,16 @@ export default function ListYourBusinessPage() {
           {/* Navigation */}
           <div className="flex gap-3 mt-8">
             {step > 1 && (
-              <Button variant="outline" onClick={back} className="flex-1">
+              <Button variant="outline" onClick={back} className="flex-1" disabled={imageUploading}>
                 <ChevronLeft className="w-4 h-4 mr-1" /> Back
               </Button>
             )}
             {step < TOTAL_STEPS ? (
-              <Button onClick={next} className="flex-1 bg-primary hover:bg-primary/90">
-                Next <ChevronRight className="w-4 h-4 ml-1" />
+              <Button onClick={next} className="flex-1 bg-primary hover:bg-primary/90" disabled={imageUploading}>
+                {imageUploading
+                  ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Uploading…</>
+                  : <>Next <ChevronRight className="w-4 h-4 ml-1" /></>
+                }
               </Button>
             ) : (
               <Button

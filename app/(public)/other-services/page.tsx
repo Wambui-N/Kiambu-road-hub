@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Other Services',
   description:
-    'Kiambu Road Hub offers website development, graphic design, content writing, business planning, marketing training and more.',
+    'Kiambu Road Explorer offers website development, graphic design, content writing, business planning, marketing training and more.',
   alternates: { canonical: 'https://kiamburoad-hub.com/other-services' },
 }
 
@@ -49,7 +49,7 @@ export default function OtherServicesPage() {
           <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">What We Do</p>
           <h1 className="font-display text-4xl font-bold text-white mb-3">Other Services</h1>
           <p className="text-white/75 text-sm max-w-2xl">
-            Kiambu Road Hub is a powerhouse of skills and expertise ready to serve individuals, companies, and businesses.
+            Kiambu Road Explorer is a powerhouse of skills and expertise ready to serve individuals, companies, and businesses.
           </p>
         </div>
       </div>

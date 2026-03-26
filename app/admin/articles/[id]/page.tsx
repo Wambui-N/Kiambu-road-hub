@@ -33,7 +33,7 @@ export default async function EditArticlePage({ params }: Props) {
           <p className="text-xs text-muted-foreground font-mono">{article.slug}</p>
         </div>
       </div>
-      <ArticleForm article={article} sections={sections} mode="edit" />
+      <ArticleForm sections={sections} initialData={article} />
     </div>
   )
 }

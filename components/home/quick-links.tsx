@@ -24,8 +24,8 @@ export default function QuickLinks() {
     if (action === 'share') {
       if (navigator.share) {
         navigator.share({
-          title: 'Kiambu Road Hub',
-          text: 'Check out Kiambu Road Hub — the complete guide to businesses and services along Kiambu Road!',
+          title: 'Kiambu Road Explorer',
+          text: 'Check out Kiambu Road Explorer — the complete guide to businesses and services along Kiambu Road!',
           url: 'https://kiamburoad-hub.com',
         })
       } else {
@@ -40,7 +40,7 @@ export default function QuickLinks() {
   return (
     <div className="bg-white border-b border-border py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex gap-4 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex justify-center gap-4 overflow-x-auto pb-1 scrollbar-hide">
           {QUICK_LINKS.map((link) => (
             <a
               key={link.label}

@@ -66,6 +66,24 @@ export function countWords(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length
 }
 
+/**
+ * Appends UTM parameters to a URL without overriding any the destination
+ * already sets (respects the business's own tracking).
+ */
+export function appendUtms(url: string, utms: Record<string, string>): string {
+  try {
+    const u = new URL(url)
+    for (const [key, value] of Object.entries(utms)) {
+      if (!u.searchParams.has(key)) {
+        u.searchParams.set(key, value)
+      }
+    }
+    return u.toString()
+  } catch {
+    return url
+  }
+}
+
 export function getImageUrl(path: string | null | undefined, bucket = 'business-media'): string {
   if (!path) return '/placeholder-business.svg'
   if (path.startsWith('http')) return path

@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'About Us',
   description:
-    'Kiambu Road Hub is a comprehensive commercial guide to Kiambu Road and its environs — a social and knowledge platform designed for the community.',
+    'Kiambu Road Explorer is a comprehensive commercial guide to Kiambu Road and its environs — a social and knowledge platform designed for the community.',
   alternates: { canonical: 'https://kiamburoad-hub.com/about' },
 }
 
@@ -34,7 +34,7 @@ export default function AboutPage() {
 
             <section className="bg-white rounded-2xl border border-border p-8 space-y-4">
               <p className="text-foreground leading-relaxed">
-                Kiambu Road Hub is a comprehensive commercial guide to Kiambu Road and its environs.
+                Kiambu Road Explorer is a comprehensive commercial guide to Kiambu Road and its environs.
                 It is also a social and knowledge platform designed for you.
               </p>
               <p className="text-muted-foreground leading-relaxed">

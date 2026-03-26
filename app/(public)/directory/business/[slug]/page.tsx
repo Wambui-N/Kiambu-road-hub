@@ -11,7 +11,9 @@ import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import BusinessCard from '@/components/directory/business-card'
+import ReviewSection from '@/components/directory/review-section'
 import { getWhatsAppUrl, getImageUrl, getPriceRangeLabel } from '@/lib/utils'
+import { buildTrackedUrl } from '@/lib/tracking'
 import { localBusinessJsonLd } from '@/lib/seo'
 import type { Business } from '@/types/database'
 
@@ -116,13 +118,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const business = await getBusiness(slug)
   if (!business) return { title: 'Business Not Found' }
 
-  const description = business.short_description ?? `Discover ${business.name} on Kiambu Road Hub — ${business.category?.name ?? 'local business'} along Kiambu Road, Nairobi.`
+  const description = business.short_description ?? `Discover ${business.name} on Kiambu Road Explorer — ${business.category?.name ?? 'local business'} along Kiambu Road, Nairobi.`
 
   return {
     title: business.name,
     description,
     openGraph: {
-      title: `${business.name} | Kiambu Road Hub`,
+      title: `${business.name} | Kiambu Road Explorer`,
       description,
       images: business.images?.[0] ? [getImageUrl(business.images[0].image_path)] : [],
       type: 'website',
@@ -331,7 +333,7 @@ export default async function BusinessProfilePage({ params }: Props) {
                       <MapPin className="w-4 h-4 text-primary" /> Location
                     </h2>
                     <a
-                      href={business.google_maps_url}
+                      href={buildTrackedUrl(business.google_maps_url, { linkType: 'maps', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-primary hover:underline flex items-center gap-1 font-mono"
@@ -347,56 +349,8 @@ export default async function BusinessProfilePage({ params }: Props) {
                 </div>
               )}
 
-              {/* Community Reviews */}
-              <div className="bg-white rounded-2xl border border-border p-6">
-                <h2 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  Community Reviews
-                  {reviews.length > 0 && (
-                    <span className="text-xs font-mono text-muted-foreground ml-auto">
-                      {reviews.length} review{reviews.length !== 1 ? 's' : ''}
-                    </span>
-                  )}
-                </h2>
-
-                {reviews.length === 0 ? (
-                  <p className="text-sm text-muted-foreground mb-4">
-                    No community reviews yet. Be the first to share your experience.
-                  </p>
-                ) : (
-                  <div className="space-y-4 mb-6">
-                    {reviews.map((review) => (
-                      <div key={review.id} className="border-b border-border pb-4 last:border-0 last:pb-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-semibold text-sm">{review.reviewer_name}</span>
-                          <span className="text-xs font-mono text-muted-foreground">
-                            {new Date(review.created_at).toLocaleDateString('en-KE', { month: 'short', year: 'numeric' })}
-                          </span>
-                        </div>
-                        <div className="flex gap-0.5 mb-1">
-                          {Array.from({ length: 5 }, (_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-3.5 h-3.5 ${i < review.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
-                            />
-                          ))}
-                        </div>
-                        {review.comment && (
-                          <p className="text-sm text-muted-foreground leading-relaxed">{review.comment}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Write a review link */}
-                <Link
-                  href={`/directory/business/${business.slug}/review`}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-                >
-                  ✍️ Write a review
-                </Link>
-              </div>
+              {/* Community Reviews — inline form */}
+              <ReviewSection businessId={business.id} initialReviews={reviews} />
             </div>
 
             {/* Sidebar */}
@@ -407,7 +361,7 @@ export default async function BusinessProfilePage({ params }: Props) {
                 <div className="space-y-3">
                   {business.phone && (
                     <a
-                      href={`tel:${business.phone}`}
+                      href={buildTrackedUrl(`tel:${business.phone}`, { linkType: 'phone', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
                       className="flex items-center gap-3 p-3 rounded-xl bg-muted hover:bg-primary hover:text-white transition-colors group"
                     >
                       <Phone className="w-4 h-4 text-primary group-hover:text-white" />
@@ -416,7 +370,7 @@ export default async function BusinessProfilePage({ params }: Props) {
                   )}
                   {whatsappUrl && (
                     <a
-                      href={whatsappUrl}
+                      href={buildTrackedUrl(whatsappUrl, { linkType: 'whatsapp', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 p-3 rounded-xl bg-green-50 border border-green-200 hover:bg-green-100 transition-colors"
@@ -427,7 +381,7 @@ export default async function BusinessProfilePage({ params }: Props) {
                   )}
                   {business.website && (
                     <a
-                      href={business.website}
+                      href={buildTrackedUrl(business.website, { linkType: 'website', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 p-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
@@ -438,7 +392,7 @@ export default async function BusinessProfilePage({ params }: Props) {
                   )}
                   {business.email && (
                     <a
-                      href={`mailto:${business.email}`}
+                      href={buildTrackedUrl(`mailto:${business.email}`, { linkType: 'email', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
                       className="flex items-center gap-3 p-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
                     >
                       <Mail className="w-4 h-4 text-muted-foreground" />

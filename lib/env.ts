@@ -29,7 +29,7 @@ export function validateServerEnv(): void {
   const missing = REQUIRED_SERVER_VARS.filter((key) => !process.env[key])
   if (missing.length > 0) {
     throw new Error(
-      `[Kiambu Road Hub] Missing required environment variables:\n  ${missing.join('\n  ')}\n\nCopy .env.local.example to .env.local and fill in the values.`
+      `[Kiambu Road Explorer] Missing required environment variables:\n  ${missing.join('\n  ')}\n\nCopy .env.local.example to .env.local and fill in the values.`
     )
   }
 }
@@ -37,7 +37,7 @@ export function validateServerEnv(): void {
 export function getEnv<K extends ServerVar>(key: K): string {
   const value = process.env[key]
   if (!value) {
-    throw new Error(`[Kiambu Road Hub] Environment variable "${key}" is not set.`)
+    throw new Error(`[Kiambu Road Explorer] Environment variable "${key}" is not set.`)
   }
   return value
 }
@@ -45,7 +45,7 @@ export function getEnv<K extends ServerVar>(key: K): string {
 export function getPublicEnv<K extends PublicVar>(key: K): string {
   const value = process.env[key]
   if (!value) {
-    throw new Error(`[Kiambu Road Hub] Public environment variable "${key}" is not set.`)
+    throw new Error(`[Kiambu Road Explorer] Public environment variable "${key}" is not set.`)
   }
   return value
 }

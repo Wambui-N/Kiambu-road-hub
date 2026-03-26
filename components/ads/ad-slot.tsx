@@ -1,14 +1,17 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { buildTrackedUrl } from '@/lib/tracking'
 import type { AdSlot as AdSlotType } from '@/types/database'
+import type { TrackingSurface } from '@/lib/tracking'
 
 interface AdSlotProps {
   slot: AdSlotType | null | undefined
   tier: 'primary' | 'secondary' | 'tertiary'
+  surface?: TrackingSurface
   className?: string
 }
 
-export default function AdSlot({ slot, tier, className = '' }: AdSlotProps) {
+export default function AdSlot({ slot, tier, surface = 'category_ads', className = '' }: AdSlotProps) {
   const sizeClass = {
     primary: 'h-28 text-base',
     secondary: 'h-20 text-sm',
@@ -48,7 +51,11 @@ export default function AdSlot({ slot, tier, className = '' }: AdSlotProps) {
 
   if (slot.ad_link_url) {
     return (
-      <a href={slot.ad_link_url} target="_blank" rel="noopener noreferrer sponsored">
+      <a
+        href={buildTrackedUrl(slot.ad_link_url, { linkType: 'ad', surface, adSlotId: slot.id })}
+        target="_blank"
+        rel="noopener noreferrer sponsored"
+      >
         {content}
       </a>
     )

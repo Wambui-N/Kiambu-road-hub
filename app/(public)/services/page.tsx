@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Our Services — Kiambu Road Hub',
-  description: 'Explore all the services offered by Kiambu Road Hub — from business directory listings to editorial content and local guides.',
+  title: 'Our Services — Kiambu Road Explorer',
+  description: 'Explore all the services offered by Kiambu Road Explorer — from business directory listings to editorial content and local guides.',
 }
 
 const SERVICES = [

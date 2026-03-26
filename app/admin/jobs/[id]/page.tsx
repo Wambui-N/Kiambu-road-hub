@@ -33,7 +33,7 @@ export default async function EditJobPage({ params }: Props) {
           <p className="text-xs text-muted-foreground font-mono">{job.title}</p>
         </div>
       </div>
-      <JobForm job={job} areas={areas} mode="edit" />
+      <JobForm areas={areas} initialData={job} />
     </div>
   )
 }

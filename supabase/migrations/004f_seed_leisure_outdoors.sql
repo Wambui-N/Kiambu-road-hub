@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Demo Seed: LEISURE & OUTDOORS
+-- Kiambu Road Explorer — Demo Seed: LEISURE & OUTDOORS
 -- =============================================================================
 -- Run AFTER 003_seed_reference_data.sql.
 -- Safe to re-run: ON CONFLICT (slug) DO NOTHING on all inserts.

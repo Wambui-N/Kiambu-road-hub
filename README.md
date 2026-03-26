@@ -1,4 +1,4 @@
-# Kiambu Road Hub
+# Kiambu Road Explorer
 
 The definitive business directory and lifestyle journal for the Kiambu Road corridor, Nairobi, Kenya.
 

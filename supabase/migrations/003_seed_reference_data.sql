@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Reference Data Seed
+-- Kiambu Road Explorer — Reference Data Seed
 -- =============================================================================
 -- Run this AFTER 001_initial_schema.sql and 002_storage.sql.
 -- Seeds: areas, categories, subcategories, journal sections.

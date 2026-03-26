@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Demo Seed: AUTOMOTIVE
+-- Kiambu Road Explorer — Demo Seed: AUTOMOTIVE
 -- =============================================================================
 -- Run AFTER 003_seed_reference_data.sql.
 -- Safe to re-run: ON CONFLICT (slug) DO NOTHING on all inserts.

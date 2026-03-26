@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { JOURNAL_SECTIONS } from '@/data/seed/categories'
 
 export const metadata: Metadata = {
-  title: 'Lifestyle Journal — Kiambu Road Hub',
+  title: 'Lifestyle Journal — Kiambu Road Explorer',
   description:
     'Health, travel, business and community stories from around the Kiambu Road corridor.',
 }
@@ -43,7 +43,7 @@ export default function JournalPage() {
       <div className="bg-primary py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">
-            Kiambu Road Hub
+            Kiambu Road Explorer
           </p>
           <h1 className="font-display text-4xl font-bold text-white mb-3">Lifestyle Journal</h1>
           <p className="text-white/70 text-base max-w-2xl">
@@ -94,7 +94,7 @@ export default function JournalPage() {
         <div className="mt-12 bg-primary rounded-2xl p-8 text-center text-white">
           <h3 className="font-display text-2xl font-bold mb-2">Be the first to read</h3>
           <p className="text-white/70 text-sm mb-6">
-            Subscribe to the Kiambu Road Hub newsletter and get new articles delivered to your inbox.
+            Subscribe to the Kiambu Road Explorer newsletter and get new articles delivered to your inbox.
           </p>
           <Link
             href="/#newsletter"

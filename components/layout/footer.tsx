@@ -1,10 +1,14 @@
 import Link from 'next/link'
 import { Mail, Facebook, Twitter, Instagram, Youtube } from 'lucide-react'
 import NewsletterForm from '@/components/layout/newsletter-form'
+import QuickLinks from '@/components/home/quick-links'
 
 export default function Footer() {
   return (
     <footer className="bg-brand-surface-dark text-white">
+      {/* Quick links row */}
+      <QuickLinks />
+
       {/* Newsletter bar */}
       <div className="bg-primary py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,7 +33,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <span className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">K</span>
-              <span className="font-display font-bold text-lg text-white">Kiambu Road Hub</span>
+              <span className="font-display font-bold text-lg text-white">Kiambu Road Explorer</span>
             </Link>
             <p className="text-sm text-white/60 leading-relaxed mb-4">
               Your complete business directory and lifestyle journal for the Kiambu Road corridor, Nairobi.
@@ -130,7 +134,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-white/40 font-mono">
-            © {new Date().getFullYear()} Kiambu Road Hub. All rights reserved.
+            © {new Date().getFullYear()} Kiambu Road Explorer. All rights reserved.
           </p>
           <div className="flex flex-wrap gap-4 text-xs text-white/40">
             <Link href="/terms" className="hover:text-white/70 transition-colors">Terms</Link>

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Phone, MessageCircle, Globe, MapPin, BadgeCheck, Crown, Star, ExternalLink } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { getWhatsAppUrl, getImageUrl, truncateWords } from '@/lib/utils'
+import { buildTrackedUrl } from '@/lib/tracking'
 import type { Business } from '@/types/database'
 
 const CATEGORY_IMAGE_MAP: Record<string, string> = {
@@ -139,7 +140,7 @@ export default function FeaturedListingBanner({ business }: Props) {
           <div className="flex flex-wrap gap-2 mt-auto pt-1">
             {business.phone && (
               <a
-                href={`tel:${business.phone}`}
+                href={buildTrackedUrl(`tel:${business.phone}`, { linkType: 'phone', surface: 'featured_banner', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
                 className="flex items-center gap-1.5 text-sm h-9 px-4 rounded-lg border border-border bg-background hover:bg-muted transition-colors font-medium"
               >
                 <Phone className="w-3.5 h-3.5" /> Call
@@ -147,7 +148,7 @@ export default function FeaturedListingBanner({ business }: Props) {
             )}
             {whatsappUrl && (
               <a
-                href={whatsappUrl}
+                href={buildTrackedUrl(whatsappUrl, { linkType: 'whatsapp', surface: 'featured_banner', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm h-9 px-4 rounded-lg border border-green-500 text-green-700 hover:bg-green-50 transition-colors font-medium"
@@ -157,7 +158,7 @@ export default function FeaturedListingBanner({ business }: Props) {
             )}
             {business.website && (
               <a
-                href={business.website}
+                href={buildTrackedUrl(business.website, { linkType: 'website', surface: 'featured_banner', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm h-9 px-4 rounded-lg border border-border bg-background hover:bg-muted transition-colors font-medium"

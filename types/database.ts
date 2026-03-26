@@ -362,6 +362,28 @@ export interface AuditLog {
   created_at: string
 }
 
+// ─── Analytics ───────────────────────────────────────────────────────────────
+
+export interface OutboundClick {
+  id: string
+  business_id: string | null
+  ad_slot_id: string | null
+  destination_url: string
+  link_type: 'website' | 'whatsapp' | 'phone' | 'email' | 'maps' | 'ad'
+  surface: string
+  page_path: string | null
+  category_slug: string | null
+  business_slug: string | null
+  utm_source: string | null
+  utm_medium: string | null
+  utm_campaign: string | null
+  utm_content: string | null
+  referrer: string | null
+  user_agent: string | null
+  ip_hash: string | null
+  created_at: string
+}
+
 // ─── Query helpers ────────────────────────────────────────────────────────────
 
 export interface BusinessFilters {

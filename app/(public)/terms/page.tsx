@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Terms & Conditions',
-  description: 'Terms and conditions governing use of the Kiambu Road Hub website and services.',
+  description: 'Terms and conditions governing use of the Kiambu Road Explorer website and services.',
   alternates: { canonical: 'https://kiamburoad-hub.com/terms' },
 }
 
@@ -12,23 +12,23 @@ const LAST_UPDATED = 'March 2026'
 const TERMS = [
   {
     heading: 'Acceptance of Terms',
-    body: 'By accessing and using Kiambu Road Hub (kiamburoad-hub.com), you accept and agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our website.',
+    body: 'By accessing and using Kiambu Road Explorer (kiamburoad-hub.com), you accept and agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our website.',
   },
   {
     heading: 'Use of the Directory',
-    body: 'Kiambu Road Hub provides a business directory and lifestyle journal for the Kiambu Road corridor. The information provided is for general guidance only. We do not guarantee the accuracy, completeness, or currency of business listings and are not responsible for any decisions made based on this information. You may use the directory for personal, non-commercial purposes. Systematic scraping, reproduction, or redistribution of directory data without our written consent is prohibited.',
+    body: 'Kiambu Road Explorer provides a business directory and lifestyle journal for the Kiambu Road corridor. The information provided is for general guidance only. We do not guarantee the accuracy, completeness, or currency of business listings and are not responsible for any decisions made based on this information. You may use the directory for personal, non-commercial purposes. Systematic scraping, reproduction, or redistribution of directory data without our written consent is prohibited.',
   },
   {
     heading: 'Business Listings',
-    body: 'Business owners are responsible for the accuracy of information they submit. Kiambu Road Hub reserves the right to edit, approve, or remove listings at our sole discretion. We make reasonable efforts to verify listings but cannot guarantee that all information is current or accurate.',
+    body: 'Business owners are responsible for the accuracy of information they submit. Kiambu Road Explorer reserves the right to edit, approve, or remove listings at our sole discretion. We make reasonable efforts to verify listings but cannot guarantee that all information is current or accurate.',
   },
   {
     heading: 'Intellectual Property',
-    body: 'All content on Kiambu Road Hub — including text, graphics, logos, and editorial content — is owned by or licensed to Kiambu Road Hub and is protected by applicable intellectual property laws. Business owners retain ownership of their submitted images and descriptions.',
+    body: 'All content on Kiambu Road Explorer — including text, graphics, logos, and editorial content — is owned by or licensed to Kiambu Road Explorer and is protected by applicable intellectual property laws. Business owners retain ownership of their submitted images and descriptions.',
   },
   {
     heading: 'Limitation of Liability',
-    body: 'Kiambu Road Hub shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the website, reliance on directory listings, or any transactions with listed businesses. Your use of the site is at your sole risk.',
+    body: 'Kiambu Road Explorer shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the website, reliance on directory listings, or any transactions with listed businesses. Your use of the site is at your sole risk.',
   },
   {
     heading: 'Advertising',
@@ -36,7 +36,7 @@ const TERMS = [
   },
   {
     heading: 'User Submissions',
-    body: 'By submitting a business listing, review, price entry, job posting, or any other content, you grant Kiambu Road Hub a non-exclusive licence to display that content on the platform. We reserve the right to moderate, edit, or remove any submission.',
+    body: 'By submitting a business listing, review, price entry, job posting, or any other content, you grant Kiambu Road Explorer a non-exclusive licence to display that content on the platform. We reserve the right to moderate, edit, or remove any submission.',
   },
   {
     heading: 'Privacy',
@@ -44,19 +44,19 @@ const TERMS = [
   },
   {
     heading: 'Links to Third-Party Sites',
-    body: 'The site may contain links to third-party websites. Kiambu Road Hub is not responsible for the content, privacy policies, or practices of any third-party sites.',
+    body: 'The site may contain links to third-party websites. Kiambu Road Explorer is not responsible for the content, privacy policies, or practices of any third-party sites.',
   },
   {
     heading: 'Community Reviews',
-    body: 'Reviews submitted by users are moderated before publication. Kiambu Road Hub does not endorse any user review and is not responsible for the opinions expressed therein.',
+    body: 'Reviews submitted by users are moderated before publication. Kiambu Road Explorer does not endorse any user review and is not responsible for the opinions expressed therein.',
   },
   {
     heading: 'Job Listings',
-    body: 'Job listings on our Jobs Board are provided by third parties. Kiambu Road Hub does not guarantee the availability of any position, the accuracy of job descriptions, or the behaviour of hiring organisations.',
+    body: 'Job listings on our Jobs Board are provided by third parties. Kiambu Road Explorer does not guarantee the availability of any position, the accuracy of job descriptions, or the behaviour of hiring organisations.',
   },
   {
     heading: 'Travel & Bookings',
-    body: 'Travel inquiry submissions are handled by our affiliate travel partners. Kiambu Road Hub acts as an intermediary only and is not a licensed travel agent. Any travel arrangements made through the site are subject to the terms of the relevant service provider.',
+    body: 'Travel inquiry submissions are handled by our affiliate travel partners. Kiambu Road Explorer acts as an intermediary only and is not a licensed travel agent. Any travel arrangements made through the site are subject to the terms of the relevant service provider.',
   },
   {
     heading: 'Changes to Terms',
@@ -69,7 +69,7 @@ const TERMS = [
 ]
 
 const DISCLAIMER =
-  'Kiambu Road Hub provides this website and all its content on an "as-is" basis without warranty of any kind, express or implied. While we strive to keep information accurate and up-to-date, we make no representations or warranties of any kind about the completeness, accuracy, reliability, suitability, or availability of the information, products, services, or related graphics contained on the website. All business listings, prices, and contact details should be independently verified before relying on them.'
+  'Kiambu Road Explorer provides this website and all its content on an "as-is" basis without warranty of any kind, express or implied. While we strive to keep information accurate and up-to-date, we make no representations or warranties of any kind about the completeness, accuracy, reliability, suitability, or availability of the information, products, services, or related graphics contained on the website. All business listings, prices, and contact details should be independently verified before relying on them.'
 
 const FOOTER_LINKS = [
   { label: 'Tours and Travel', href: '/travel' },

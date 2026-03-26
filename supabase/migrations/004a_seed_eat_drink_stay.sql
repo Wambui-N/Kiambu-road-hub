@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Demo Seed: EAT, DRINK & STAY
+-- Kiambu Road Explorer — Demo Seed: EAT, DRINK & STAY
 -- =============================================================================
 -- Run AFTER 003_seed_reference_data.sql.
 -- All rows are tagged via businesses.source_note = 'demo-seed-2025' (set by

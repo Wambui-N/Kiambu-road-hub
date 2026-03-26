@@ -120,8 +120,6 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     adSlots = data ?? []
   } catch { /* silently fall through to placeholders */ }
 
-  const primaryAd = adSlots.find((s) => s.tier === 'primary') ?? null
-  const secondaryAds = adSlots.filter((s) => s.tier === 'secondary').slice(0, 2)
   const tertiaryAds = adSlots.filter((s) => s.tier === 'tertiary').slice(0, 3)
 
   if (!categoryData) notFound()
@@ -154,18 +152,6 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Primary Ad Slot */}
-        <AdSlot slot={primaryAd} tier="primary" className="mb-6 w-full" />
-
-        {/* Secondary Ad Slots */}
-        {secondaryAds.length > 0 && (
-          <div className={`grid grid-cols-${secondaryAds.length} gap-4 mb-6`}>
-            {secondaryAds.map((s, i) => (
-              <AdSlot key={i} slot={s} tier="secondary" />
-            ))}
-          </div>
-        )}
-
         {/* Subcategory filter tabs */}
         {subcategories.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">

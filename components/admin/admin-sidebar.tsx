@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Building2, FolderTree, FileText,
   Briefcase, DollarSign, Inbox, MessageSquare,
-  Star, Megaphone, Users, ThumbsUp, Mail, MapPin, Search,
+  Star, Megaphone, Users, ThumbsUp, Mail, MapPin, Search, TrendingUp,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -18,6 +18,10 @@ const navItems = [
   { label: 'Prices',           href: '/admin/prices',           icon: DollarSign },
   { label: 'Submissions',      href: '/admin/submissions',      icon: Inbox },
   { label: 'Messages',         href: '/admin/messages',         icon: MessageSquare },
+]
+
+const analyticsItems = [
+  { label: 'Click Stats', href: '/admin/click-stats', icon: TrendingUp },
 ]
 
 const moderationItems = [
@@ -68,6 +72,25 @@ export default function AdminSidebar() {
             {item.label}
           </Link>
         ))}
+
+        <div className="pt-4">
+          <p className="px-3 pb-1 text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Analytics</p>
+          {analyticsItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                isActive(item.href)
+                  ? 'bg-primary text-white'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              )}
+            >
+              <item.icon className="w-4 h-4" />
+              {item.label}
+            </Link>
+          ))}
+        </div>
 
         <div className="pt-4">
           <p className="px-3 pb-1 text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Moderation & Inquiries</p>

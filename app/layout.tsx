@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, DM_Sans, JetBrains_Mono } from 'next/font/google'
+import { Suspense } from 'react'
 import { Toaster } from '@/components/ui/sonner'
+import AttributionTracker from '@/components/analytics/attribution-tracker'
 import './globals.css'
 
 const dmSans = DM_Sans({
@@ -63,6 +65,9 @@ export default function RootLayout({
       <body className="min-h-screen bg-background font-sans antialiased">
         {children}
         <Toaster richColors position="top-right" />
+        <Suspense fallback={null}>
+          <AttributionTracker />
+        </Suspense>
       </body>
     </html>
   )

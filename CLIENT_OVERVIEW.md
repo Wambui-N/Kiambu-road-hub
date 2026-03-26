@@ -1,4 +1,4 @@
-## Kiambu Road Hub — Client Overview
+## Kiambu Road Explorer — Client Overview
 
 **Environment:** Next.js 16 · Supabase (Postgres + Auth + Storage) · Tailwind · shadcn/ui · Framer Motion  
 **Scope:** MVP directory + demo content for the Kiambu Road corridor

@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Migration 005: Add source_note to businesses
+-- Kiambu Road Explorer — Migration 005: Add source_note to businesses
 -- =============================================================================
 -- Adds a nullable source_note column to the businesses table and tags all
 -- existing demo rows (inserted by 004a–004f) with 'demo-seed-2025'.

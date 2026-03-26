@@ -48,13 +48,13 @@ export async function POST(req: NextRequest) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Kiambu Road Hub <noreply@kiamburoad-hub.com>',
+            from: 'Kiambu Road Explorer <noreply@kiamburoad-hub.com>',
             to: email,
-            subject: 'Welcome to the Kiambu Road Hub Community!',
+            subject: 'Welcome to the Kiambu Road Explorer Community!',
             html: `
               <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px">
                 <h1 style="color:#1B6B3A;font-size:24px;margin-bottom:8px">Welcome to our Community!</h1>
-                <p style="color:#555;font-size:15px;line-height:1.6">Thanks for subscribing to Kiambu Road Hub!</p>
+                <p style="color:#555;font-size:15px;line-height:1.6">Thanks for subscribing to Kiambu Road Explorer!</p>
                 <p style="color:#555;font-size:15px;line-height:1.6">
                   We'll keep you updated with the latest local business news, lifestyle content, and community announcements
                   from Kiambu Road.

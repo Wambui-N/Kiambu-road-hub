@@ -37,15 +37,17 @@ export default function HeroSection({ areas = [], heroAdSlot = null }: HeroSecti
 
   return (
     <section className="relative overflow-hidden min-h-[560px] flex items-center">
-      {/* Background image */}
-      <Image
-        src="https://images.unsplash.com/photo-1568714876846-5cb2cf789bf0?auto=format&fit=crop&w=1920&q=80"
-        alt="Kiambu Road, Nairobi"
-        fill
-        priority
-        className="object-cover"
-        sizes="100vw"
-      />
+      {/* Background image — absolute wrapper gives fill a sized parent */}
+      <div className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1920&q=80"
+          alt="Kiambu Road, Nairobi"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+      </div>
       {/* Dark overlay for text readability */}
       <div className="absolute inset-0 bg-black/55" />
       {/* Green tint overlay */}

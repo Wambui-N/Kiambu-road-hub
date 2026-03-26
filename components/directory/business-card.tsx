@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Phone, MessageCircle, MapPin, Star, Globe, BadgeCheck, Crown } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { getWhatsAppUrl, getImageUrl, truncateWords } from '@/lib/utils'
+import { buildTrackedUrl } from '@/lib/tracking'
 import type { Business } from '@/types/database'
 
 const CATEGORY_IMAGE_MAP: Record<string, string> = {
@@ -151,7 +152,7 @@ export default function BusinessCard({ business, variant = 'default' }: Business
         <div className="flex gap-2 mt-auto pt-2">
           {business.phone && (
             <a
-              href={`tel:${business.phone}`}
+              href={buildTrackedUrl(`tel:${business.phone}`, { linkType: 'phone', surface: 'business_card', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
               className="flex-1 flex items-center justify-center gap-1 text-xs h-8 rounded-md border border-border bg-background hover:bg-muted transition-colors font-medium"
             >
               <Phone className="w-3 h-3" /> Call
@@ -159,7 +160,7 @@ export default function BusinessCard({ business, variant = 'default' }: Business
           )}
           {whatsappUrl && (
             <a
-              href={whatsappUrl}
+              href={buildTrackedUrl(whatsappUrl, { linkType: 'whatsapp', surface: 'business_card', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-1 text-xs h-8 rounded-md border border-green-500 text-green-700 hover:bg-green-50 transition-colors font-medium"
@@ -169,7 +170,7 @@ export default function BusinessCard({ business, variant = 'default' }: Business
           )}
           {business.website && !business.phone && !whatsappUrl && (
             <a
-              href={business.website}
+              href={buildTrackedUrl(business.website, { linkType: 'website', surface: 'business_card', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-1 text-xs h-8 rounded-md border border-border bg-background hover:bg-muted transition-colors font-medium"

@@ -1,4 +1,4 @@
-# Kiambu Road Hub — Pre-Launch Checklist
+# Kiambu Road Explorer — Pre-Launch Checklist
 
 A structured checklist to run through before making the site publicly accessible.
 

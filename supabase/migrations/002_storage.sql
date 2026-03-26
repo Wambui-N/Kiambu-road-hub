@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Storage Buckets & Policies
+-- Kiambu Road Explorer — Storage Buckets & Policies
 -- =============================================================================
 -- Run this after 001_initial_schema.sql in your Supabase SQL editor.
 -- =============================================================================

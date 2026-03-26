@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Migration 006
+-- Kiambu Road Explorer — Migration 006
 -- New 16-category structure, business field additions, and new platform tables
 -- Run AFTER 005_add_source_note_to_businesses.sql
 -- =============================================================================

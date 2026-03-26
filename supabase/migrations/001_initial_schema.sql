@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Initial Schema
+-- Kiambu Road Explorer — Initial Schema
 -- =============================================================================
 -- Run this in your Supabase SQL editor to set up the full database schema.
 -- Always run in a new project before adding any data.

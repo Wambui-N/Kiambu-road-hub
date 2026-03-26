@@ -83,7 +83,7 @@ export default async function PricesPage() {
     <div className="min-h-screen bg-brand-surface">
       <div className="bg-primary py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Kiambu Road Hub</p>
+          <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Kiambu Road Explorer</p>
           <h1 className="font-display text-4xl font-bold text-white mb-2">Prices at a Glance</h1>
           <p className="text-white/70 text-sm max-w-xl">
             Community-sourced prices for everyday goods and services along Kiambu Road.

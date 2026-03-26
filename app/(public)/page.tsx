@@ -5,8 +5,7 @@ import HeroSection from '@/components/home/hero-section'
 import StatsBar from '@/components/home/stats-bar'
 import CategoryGrid from '@/components/home/category-grid'
 import FeaturedBusinesses from '@/components/home/featured-businesses'
-import QuickLinks from '@/components/home/quick-links'
-import AdSlot from '@/components/ads/ad-slot'
+import HomeAdsSection from '@/components/ads/home-ads-section'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo'
 import type { Area, Business, Category, AdSlot as AdSlotType } from '@/types/database'
 
@@ -89,7 +88,7 @@ async function getHomeAdSlots(): Promise<AdSlotType[]> {
     const { data } = await supabase
       .from('ad_slots')
       .select('*, advertiser:businesses(id, name, slug)')
-      .in('page', ['home', 'home-hero', 'global'])
+      .in('page', ['home', 'home-hero', 'home-leaderboard', 'home-side-1', 'home-side-2', 'global'])
       .eq('active', true)
       .order('position')
     return data ?? []
@@ -106,8 +105,10 @@ export default async function HomePage() {
     getHomeAdSlots(),
   ])
 
-  const heroAdSlot = homeAdSlots.find((s) => s.page === 'home-hero') ?? null
-  const bodyAdSlot = homeAdSlots.find((s) => s.page === 'home' || s.page === 'global') ?? null
+  const heroAdSlot      = homeAdSlots.find((s) => s.page === 'home-hero') ?? null
+  const leaderboardSlot = homeAdSlots.find((s) => s.page === 'home-leaderboard') ?? null
+  const sideLeftSlot    = homeAdSlots.find((s) => s.page === 'home-side-1') ?? null
+  const sideRightSlot   = homeAdSlots.find((s) => s.page === 'home-side-2') ?? null
 
   const displayCategories: Category[] = categories.length
     ? categories
@@ -139,12 +140,13 @@ export default async function HomePage() {
 
       <HeroSection areas={areas} heroAdSlot={heroAdSlot} />
       <StatsBar />
-      <QuickLinks />
 
-      {/* Homepage body ad slot — between quick links and category grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-        <AdSlot slot={bodyAdSlot} tier="primary" className="w-full" />
-      </div>
+      {/* Ads section — leaderboard + two halves */}
+      <HomeAdsSection
+        leaderboard={leaderboardSlot}
+        sideLeft={sideLeftSlot}
+        sideRight={sideRightSlot}
+      />
 
       <CategoryGrid categories={displayCategories} />
       <FeaturedBusinesses businesses={featuredBusinesses} />

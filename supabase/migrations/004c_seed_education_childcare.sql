@@ -1,5 +1,5 @@
 -- =============================================================================
--- Kiambu Road Hub — Demo Seed: EDUCATION & CHILDCARE
+-- Kiambu Road Explorer — Demo Seed: EDUCATION & CHILDCARE
 -- =============================================================================
 -- Run AFTER 003_seed_reference_data.sql.
 -- Safe to re-run: ON CONFLICT (slug) DO NOTHING on all inserts.

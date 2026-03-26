@@ -71,7 +71,7 @@ export default function TalentSearchPage() {
     <div className="min-h-screen bg-brand-surface">
       <div className="bg-primary py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Kiambu Road Hub</p>
+          <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Kiambu Road Explorer</p>
           <h1 className="font-display text-4xl font-bold text-white mb-2">Talent Search</h1>
           <p className="text-white/75 text-sm max-w-xl">
             Looking for the right candidate? Tell us who you need and we&apos;ll connect you with qualified talent from our community.

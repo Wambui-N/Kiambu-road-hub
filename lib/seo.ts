@@ -98,7 +98,7 @@ export function articleJsonLd(article: Article) {
     description: article.excerpt ?? undefined,
     author: {
       '@type': 'Person',
-      name: article.author_name ?? 'Kiambu Road Hub',
+      name: article.author_name ?? 'Kiambu Road Explorer',
     },
     publisher: {
       '@type': 'Organization',

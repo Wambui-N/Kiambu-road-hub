@@ -23,7 +23,7 @@ export function formatPhone(phone: string): string {
 export function getWhatsAppUrl(number: string, message?: string): string {
   const cleaned = number.replace(/\D/g, '')
   const normalized = cleaned.startsWith('254') ? cleaned : `254${cleaned.replace(/^0/, '')}`
-  const text = message ?? "Hi, I found your business on Kiambu Road Hub. I'd like to inquire about your services."
+  const text = message ?? "Hi, I found your business on Kiambu Road Explorer. I'd like to inquire about your services."
   return `https://wa.me/${normalized}?text=${encodeURIComponent(text)}`
 }
 
@@ -54,6 +54,16 @@ export function formatDate(dateStr: string | null): string {
 export function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
   return text.slice(0, maxLength).trimEnd() + '…'
+}
+
+export function truncateWords(text: string, max = 25): string {
+  const words = text.trim().split(/\s+/)
+  if (words.length <= max) return text
+  return words.slice(0, max).join(' ') + '…'
+}
+
+export function countWords(text: string): number {
+  return text.trim().split(/\s+/).filter(Boolean).length
 }
 
 export function getImageUrl(path: string | null | undefined, bucket = 'business-media'): string {

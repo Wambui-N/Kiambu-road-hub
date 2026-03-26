@@ -259,27 +259,23 @@ export default async function BusinessProfilePage({ params }: Props) {
                   )}
                 </div>
 
-                {/* Ratings row */}
-                {(business.google_rating || avgRating) && (
+                {/* Own-site ratings row */}
+                {avgRating !== null && avgRating !== undefined && (
                   <div className="flex flex-wrap items-center gap-4 mb-4">
-                    {business.google_rating && (
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-0.5">
-                          {Array.from({ length: 5 }, (_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${i < Math.round(business.google_rating!) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm font-mono font-semibold">{business.google_rating.toFixed(1)}</span>
-                        {business.google_review_count && (
-                          <span className="text-xs text-muted-foreground">
-                            ({business.google_review_count.toLocaleString()} Google reviews)
-                          </span>
-                        )}
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }, (_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${i < Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
+                          />
+                        ))}
                       </div>
-                    )}
+                      <span className="text-sm font-mono font-semibold">{avgRating.toFixed(1)}</span>
+                      <span className="text-xs text-muted-foreground">
+                        ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
+                      </span>
+                    </div>
                   </div>
                 )}
 

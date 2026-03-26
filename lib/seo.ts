@@ -12,7 +12,7 @@ export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Kiambu Road Hub',
+    name: 'Kiambu Road Explorer',
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     contactPoint: {
@@ -33,7 +33,7 @@ export function websiteJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Kiambu Road Hub',
+    name: 'Kiambu Road Explorer',
     url: BASE_URL,
     potentialAction: {
       '@type': 'SearchAction',
@@ -75,11 +75,11 @@ export function localBusinessJsonLd(business: Business) {
         longitude: business.longitude,
       },
     } : {}),
-    ...(business.google_rating ? {
+    ...((business.reviews && business.reviews.length > 0) ? {
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: business.google_rating,
-        reviewCount: business.google_review_count ?? 1,
+        ratingValue: (business.reviews.reduce((s, r) => s + r.rating, 0) / business.reviews.length).toFixed(1),
+        reviewCount: business.reviews.length,
         bestRating: 5,
         worstRating: 1,
       },
@@ -102,7 +102,7 @@ export function articleJsonLd(article: Article) {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Kiambu Road Hub',
+      name: 'Kiambu Road Explorer',
       url: BASE_URL,
     },
     datePublished: article.published_at ?? article.created_at,

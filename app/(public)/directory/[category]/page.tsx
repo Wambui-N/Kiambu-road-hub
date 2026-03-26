@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { CATEGORIES } from '@/data/seed/categories'
 import BusinessCard from '@/components/directory/business-card'
+import FeaturedListingBanner from '@/components/directory/featured-listing-banner'
 import AdSlot from '@/components/ads/ad-slot'
 import type { Business, Category, Subcategory, AdSlot as AdSlotType } from '@/types/database'
 
@@ -25,7 +26,6 @@ async function getCategoryData(categorySlug: string) {
       .single()
     return data
   } catch {
-    // Fall back to seed data
     const seed = CATEGORIES.find((c) => c.slug === categorySlug)
     if (!seed) return null
     return { ...seed, id: `seed-${categorySlug}`, status: 'published', cover_image_path: null, sort_order: 0 }
@@ -42,17 +42,17 @@ async function getBusinesses(categorySlug: string, subcategorySlug?: string, are
         category:categories(id, name, slug, icon, color),
         subcategory:subcategories(id, name, slug),
         area:areas(id, name, slug),
-        images:business_images(*)
+        images:business_images(*),
+        reviews:reviews(rating)
       `)
       .eq('status', 'published')
 
-    // Filter by category slug (join through category table)
     const { data: catData } = await supabase
       .from('categories')
       .select('id')
       .eq('slug', categorySlug)
       .single()
-    
+
     if (catData?.id) {
       query = query.eq('category_id', catData.id)
     }
@@ -75,7 +75,12 @@ async function getBusinesses(categorySlug: string, subcategorySlug?: string, are
       if (areaData?.id) query = query.eq('area_id', areaData.id)
     }
 
-    const { data } = await query.order('featured', { ascending: false }).order('google_rating', { ascending: false })
+    // Order: featured/sponsor (paid) first, then by date
+    const { data } = await query
+      .order('featured', { ascending: false })
+      .order('is_sponsor', { ascending: false })
+      .order('created_at', { ascending: false })
+
     return data ?? []
   } catch {
     return []
@@ -94,7 +99,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { category: categorySlug } = await params
-  const { subcategory, area, sort } = await searchParams
+  const { subcategory, area } = await searchParams
 
   const [categoryData, businesses] = await Promise.all([
     getCategoryData(categorySlug),
@@ -122,6 +127,12 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   if (!categoryData) notFound()
 
   const subcategories: Subcategory[] = (categoryData as { subcategories?: Subcategory[] }).subcategories ?? []
+
+  // Split: first featured/sponsor listing gets the banner treatment
+  const topBusiness = businesses.length > 0 && (businesses[0].featured || businesses[0].is_sponsor)
+    ? businesses[0]
+    : null
+  const listingBusinesses = topBusiness ? businesses.slice(1) : businesses
 
   return (
     <div className="min-h-screen bg-brand-surface">
@@ -198,13 +209,22 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           </div>
         )}
 
-        {/* Results grid */}
         {businesses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {businesses.map((business) => (
-              <BusinessCard key={business.id} business={business} />
-            ))}
-          </div>
+          <>
+            {/* Top featured listing banner */}
+            {topBusiness && (
+              <FeaturedListingBanner business={topBusiness} />
+            )}
+
+            {/* Remaining listings grid — paid/featured first, then free */}
+            {listingBusinesses.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {listingBusinesses.map((business) => (
+                  <BusinessCard key={business.id} business={business} />
+                ))}
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-20">
             <p className="text-4xl mb-4">🔍</p>

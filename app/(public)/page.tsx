@@ -6,13 +6,14 @@ import StatsBar from '@/components/home/stats-bar'
 import CategoryGrid from '@/components/home/category-grid'
 import FeaturedBusinesses from '@/components/home/featured-businesses'
 import QuickLinks from '@/components/home/quick-links'
+import AdSlot from '@/components/ads/ad-slot'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo'
-import type { Business, Category } from '@/types/database'
+import type { Area, Business, Category, AdSlot as AdSlotType } from '@/types/database'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Kiambu Road Hub — Business Directory & Lifestyle Journal',
+  title: 'Kiambu Road Explorer — Business Directory & Lifestyle Journal',
   description:
     'Your complete online business directory for Kiambu Road, Nairobi. Find restaurants, hotels, hospitals, schools and more.',
   alternates: { canonical: 'https://kiamburoad-hub.com' },
@@ -56,12 +57,12 @@ async function getFeaturedBusinesses(): Promise<Business[]> {
         category:categories(id, name, slug, icon, color),
         subcategory:subcategories(id, name, slug),
         area:areas(id, name, slug),
-        images:business_images(*)
+        images:business_images(*),
+        reviews:reviews(rating)
       `)
       .eq('status', 'published')
       .eq('featured', true)
       .order('is_sponsor', { ascending: false })
-      .order('google_rating', { ascending: false })
       .limit(10)
     return data ?? []
   } catch {
@@ -69,11 +70,44 @@ async function getFeaturedBusinesses(): Promise<Business[]> {
   }
 }
 
+async function getAreas(): Promise<Area[]> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('areas')
+      .select('id, name, slug, description, sort_order')
+      .order('sort_order')
+    return data ?? []
+  } catch {
+    return []
+  }
+}
+
+async function getHomeAdSlots(): Promise<AdSlotType[]> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('ad_slots')
+      .select('*, advertiser:businesses(id, name, slug)')
+      .in('page', ['home', 'home-hero', 'global'])
+      .eq('active', true)
+      .order('position')
+    return data ?? []
+  } catch {
+    return []
+  }
+}
+
 export default async function HomePage() {
-  const [categories, featuredBusinesses] = await Promise.all([
+  const [categories, featuredBusinesses, areas, homeAdSlots] = await Promise.all([
     getCategories(),
     getFeaturedBusinesses(),
+    getAreas(),
+    getHomeAdSlots(),
   ])
+
+  const heroAdSlot = homeAdSlots.find((s) => s.page === 'home-hero') ?? null
+  const bodyAdSlot = homeAdSlots.find((s) => s.page === 'home' || s.page === 'global') ?? null
 
   const displayCategories: Category[] = categories.length
     ? categories
@@ -103,9 +137,15 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
       />
 
-      <HeroSection />
+      <HeroSection areas={areas} heroAdSlot={heroAdSlot} />
       <StatsBar />
       <QuickLinks />
+
+      {/* Homepage body ad slot — between quick links and category grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <AdSlot slot={bodyAdSlot} tier="primary" className="w-full" />
+      </div>
+
       <CategoryGrid categories={displayCategories} />
       <FeaturedBusinesses businesses={featuredBusinesses} />
 
@@ -144,7 +184,11 @@ export default async function HomePage() {
                 excerpt: 'Business insights, tips and local entrepreneurship stories — launching soon.',
               },
             ].map((item) => (
-              <a key={item.section} href={`/journal/${item.slug}`} className="block bg-white rounded-2xl border border-border p-6 hover:border-primary hover:shadow-sm transition-all">
+              <a
+                key={item.section}
+                href={`/journal/${item.slug}`}
+                className="block bg-white rounded-2xl border border-border p-6 hover:border-primary hover:shadow-sm transition-all"
+              >
                 <span
                   className="inline-block text-xs font-mono font-semibold px-2 py-1 rounded-full mb-4 text-white"
                   style={{ backgroundColor: item.color }}

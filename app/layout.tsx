@@ -24,8 +24,8 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://kiamburoad-hub.com'),
   title: {
-    default: 'Kiambu Road Hub — Business Directory & Lifestyle Journal',
-    template: '%s | Kiambu Road Hub',
+    default: 'Kiambu Road Explorer — Business Directory & Lifestyle Journal',
+    template: '%s | Kiambu Road Explorer',
   },
   description:
     'Your complete online business directory and lifestyle journal for Kiambu Road, Nairobi. Discover restaurants, hotels, hospitals, schools, and more.',
@@ -34,13 +34,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_KE',
     url: 'https://kiamburoad-hub.com',
-    siteName: 'Kiambu Road Hub',
-    title: 'Kiambu Road Hub — Business Directory & Lifestyle Journal',
+    siteName: 'Kiambu Road Explorer',
+    title: 'Kiambu Road Explorer — Business Directory & Lifestyle Journal',
     description: 'Discover local businesses, services and lifestyle content along Kiambu Road.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kiambu Road Hub',
+    title: 'Kiambu Road Explorer',
     description: 'Your complete business directory for Kiambu Road, Nairobi.',
   },
   robots: {

@@ -101,6 +101,8 @@ export default function ListYourBusinessPage() {
         if (!form.email.trim()) return 'Email address is required'
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'Please enter a valid email'
         if (!form.short_description.trim()) return 'Short description is required'
+        if (form.short_description.trim().split(/\s+/).filter(Boolean).length > 25)
+          return 'Short description must be 25 words or fewer'
         return ''
       default: return ''
     }
@@ -370,15 +372,15 @@ export default function ListYourBusinessPage() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label>Short Description * (max 20 words)</Label>
+                    <Label>Short Description * (max 25 words)</Label>
                     <Textarea
                       value={form.short_description}
                       onChange={(e) => set('short_description', e.target.value)}
-                      placeholder="Briefly describe your business in 20 words or less..."
+                      placeholder="Briefly describe your business in 25 words or less..."
                       rows={3}
                     />
-                    <p className="text-xs text-muted-foreground text-right">
-                      {form.short_description.trim().split(/\s+/).filter(Boolean).length} / 20 words
+                    <p className={`text-xs text-right ${form.short_description.trim().split(/\s+/).filter(Boolean).length > 25 ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
+                      {form.short_description.trim().split(/\s+/).filter(Boolean).length} / 25 words
                     </p>
                   </div>
                 </div>

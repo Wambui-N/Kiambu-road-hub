@@ -17,7 +17,6 @@ interface Props {
     category?: string
     area?: string
     price?: string
-    rating?: string
     page?: string
   }>
 }
@@ -27,7 +26,6 @@ async function searchBusinesses(params: {
   category?: string
   area?: string
   price?: string
-  rating?: string
 }): Promise<Business[]> {
   try {
     const supabase = await createClient()
@@ -38,7 +36,8 @@ async function searchBusinesses(params: {
         category:categories(id, name, slug, icon, color),
         subcategory:subcategories(id, name, slug),
         area:areas(id, name, slug),
-        images:business_images(*)
+        images:business_images(*),
+        reviews:reviews(rating)
       `)
       .eq('status', 'published')
 
@@ -66,11 +65,11 @@ async function searchBusinesses(params: {
       if (areaData?.id) query = query.eq('area_id', areaData.id)
     }
 
-    if (params.rating) {
-      query = query.gte('google_rating', Number(params.rating))
-    }
-
-    const { data } = await query.order('featured', { ascending: false }).order('google_rating', { ascending: false }).limit(48)
+    const { data } = await query
+      .order('featured', { ascending: false })
+      .order('is_sponsor', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(48)
     return data ?? []
   } catch {
     return []

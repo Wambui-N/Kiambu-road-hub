@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Phone, MessageCircle, MapPin, Star, Globe, BadgeCheck, Crown } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { getWhatsAppUrl, getImageUrl } from '@/lib/utils'
+import { getWhatsAppUrl, getImageUrl, truncateWords } from '@/lib/utils'
 import type { Business } from '@/types/database'
 
 const CATEGORY_IMAGE_MAP: Record<string, string> = {
@@ -47,6 +47,17 @@ export default function BusinessCard({ business, variant = 'default' }: Business
     business.building_name,
     business.area?.name,
   ].filter(Boolean)
+
+  // Compute own-site rating from approved reviews
+  const reviews = business.reviews ?? []
+  const avgRating = reviews.length
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : null
+  const reviewCount = reviews.length
+
+  const description = business.short_description
+    ? truncateWords(business.short_description, 25)
+    : null
 
   return (
     <motion.div
@@ -103,20 +114,19 @@ export default function BusinessCard({ business, variant = 'default' }: Business
             </h3>
           </Link>
 
-          {/* Rating */}
-          {business.google_rating && (
+          {/* Own-site rating */}
+          {avgRating !== null && (
             <div className="flex items-center gap-1.5 mt-1">
               <div className="flex items-center gap-0.5">
                 {Array.from({ length: 5 }, (_, i) => (
                   <Star
                     key={i}
-                    className={`w-3 h-3 ${i < Math.round(business.google_rating!) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
+                    className={`w-3 h-3 ${i < Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
                   />
                 ))}
               </div>
               <span className="text-xs font-mono text-muted-foreground">
-                {business.google_rating.toFixed(1)}
-                {business.google_review_count && ` (${business.google_review_count.toLocaleString()})`}
+                {avgRating.toFixed(1)} ({reviewCount} {reviewCount === 1 ? 'review' : 'reviews'})
               </span>
             </div>
           )}
@@ -130,10 +140,10 @@ export default function BusinessCard({ business, variant = 'default' }: Business
           </div>
         )}
 
-        {/* Short description */}
-        {business.short_description && (
+        {/* Short description (capped at 25 words) */}
+        {description && (
           <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-            {business.short_description}
+            {description}
           </p>
         )}
 

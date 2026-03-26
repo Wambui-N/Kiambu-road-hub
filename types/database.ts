@@ -5,6 +5,8 @@ export type PriceCategory = 'groceries' | 'fuel' | 'medical' | 'dining'
 export type SubmissionStatus = 'new' | 'in_review' | 'approved' | 'rejected'
 export type AdminRole = 'super_admin' | 'editor' | 'data_entry' | 'support'
 export type PriceRange = '$' | '$$' | '$$$' | '$$$$'
+export type ModerationStatus = 'pending' | 'approved' | 'rejected'
+export type MessageStatus = 'new' | 'read' | 'replied' | 'responded' | 'closed'
 
 // ─── Reference tables ────────────────────────────────────────────────────────
 
@@ -69,6 +71,10 @@ export interface Business {
   subcategory_id: string | null
   area_id: string | null
   address_line: string | null
+  road_street: string | null
+  building_name: string | null
+  door_number: string | null
+  contact_name: string | null
   short_description: string | null
   description: string | null
   phone: string | null
@@ -102,6 +108,7 @@ export interface Business {
   images?: BusinessImage[]
   hours?: BusinessHour[]
   tags?: Tag[]
+  reviews?: Review[]
 }
 
 export interface BusinessImage {
@@ -152,6 +159,87 @@ export interface Article {
   // Joined
   section?: JournalSection
   tags?: Tag[]
+  comments?: ArticleComment[]
+}
+
+export interface ArticleComment {
+  id: string
+  article_id: string
+  commenter_name: string
+  comment: string
+  status: ModerationStatus
+  created_at: string
+}
+
+// ─── Community / moderation tables ───────────────────────────────────────────
+
+export interface Review {
+  id: string
+  business_id: string
+  reviewer_name: string
+  rating: number
+  comment: string | null
+  status: ModerationStatus
+  created_at: string
+}
+
+export interface AdSlot {
+  id: string
+  page: string
+  tier: 'primary' | 'secondary' | 'tertiary'
+  position: number
+  advertiser_id: string | null
+  ad_title: string | null
+  ad_image_path: string | null
+  ad_link_url: string | null
+  active: boolean
+  created_at: string
+  advertiser?: Business
+}
+
+export interface AdInquiry {
+  id: string
+  business_name: string
+  contact_person: string
+  phone: string
+  email: string
+  message: string | null
+  status: 'new' | 'read' | 'replied' | 'closed'
+  created_at: string
+}
+
+export interface Feedback {
+  id: string
+  name: string | null
+  email: string | null
+  message: string
+  status: 'new' | 'read' | 'noted'
+  created_at: string
+}
+
+export interface TalentInquiry {
+  id: string
+  company_name: string
+  role_needed: string
+  description: string | null
+  contact_name: string
+  phone: string
+  email: string
+  status: 'new' | 'read' | 'replied' | 'closed'
+  created_at: string
+}
+
+export interface PriceSubmission {
+  id: string
+  store_name: string
+  item_name: string
+  price: number
+  unit: string | null
+  category: string | null
+  observed_at: string
+  submitted_by_email: string | null
+  status: ModerationStatus
+  created_at: string
 }
 
 // ─── Utility tables ───────────────────────────────────────────────────────────
@@ -170,6 +258,7 @@ export interface JobListing {
   contact_phone: string | null
   status: ContentStatus
   published_at: string | null
+  created_at: string
   area?: Area
 }
 
@@ -233,7 +322,7 @@ export interface TravelInquiry {
   people_count: number | null
   budget_range: string | null
   message: string | null
-  status: 'new' | 'responded' | 'closed'
+  status: MessageStatus
   created_at: string
 }
 
@@ -244,7 +333,7 @@ export interface ContactMessage {
   phone: string | null
   subject: string | null
   message: string
-  status: 'new' | 'read' | 'replied'
+  status: MessageStatus
   created_at: string
 }
 

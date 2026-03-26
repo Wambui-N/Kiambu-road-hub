@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { CATEGORIES } from '@/data/seed/categories'
 import BusinessCard from '@/components/directory/business-card'
-import type { Business, Category, Subcategory } from '@/types/database'
+import AdSlot from '@/components/ads/ad-slot'
+import type { Business, Category, Subcategory, AdSlot as AdSlotType } from '@/types/database'
 
 export const revalidate = 3600
 
@@ -100,6 +101,24 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     getBusinesses(categorySlug, subcategory, area),
   ])
 
+  // Fetch ad slots for this category page
+  let adSlots: AdSlotType[] = []
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('ad_slots')
+      .select('*, advertiser:businesses(id, name, slug)')
+      .or(`page.eq.directory/${categorySlug},page.eq.global`)
+      .eq('active', true)
+      .order('tier')
+      .order('position')
+    adSlots = data ?? []
+  } catch { /* silently fall through to placeholders */ }
+
+  const primaryAd = adSlots.find((s) => s.tier === 'primary') ?? null
+  const secondaryAds = adSlots.filter((s) => s.tier === 'secondary').slice(0, 2)
+  const tertiaryAds = adSlots.filter((s) => s.tier === 'tertiary').slice(0, 3)
+
   if (!categoryData) notFound()
 
   const subcategories: Subcategory[] = (categoryData as { subcategories?: Subcategory[] }).subcategories ?? []
@@ -124,6 +143,18 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Primary Ad Slot */}
+        <AdSlot slot={primaryAd} tier="primary" className="mb-6 w-full" />
+
+        {/* Secondary Ad Slots */}
+        {secondaryAds.length > 0 && (
+          <div className={`grid grid-cols-${secondaryAds.length} gap-4 mb-6`}>
+            {secondaryAds.map((s, i) => (
+              <AdSlot key={i} slot={s} tier="secondary" />
+            ))}
+          </div>
+        )}
+
         {/* Subcategory filter tabs */}
         {subcategories.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
@@ -157,6 +188,15 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             ? `${businesses.length} business${businesses.length !== 1 ? 'es' : ''} found`
             : 'No businesses listed yet in this category'}
         </p>
+
+        {/* Tertiary Ad Slots */}
+        {tertiaryAds.length > 0 && (
+          <div className="flex gap-3 mb-6 overflow-x-auto">
+            {tertiaryAds.map((s, i) => (
+              <AdSlot key={i} slot={s} tier="tertiary" className="min-w-[280px] flex-1" />
+            ))}
+          </div>
+        )}
 
         {/* Results grid */}
         {businesses.length > 0 ? (

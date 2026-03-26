@@ -34,6 +34,9 @@ export default function Footer() {
             <p className="text-sm text-white/60 leading-relaxed mb-4">
               Your complete business directory and lifestyle journal for the Kiambu Road corridor, Nairobi.
             </p>
+            <p className="text-xs text-white/40 mb-3">
+              Serving Ridgeways · Thindigua · Runda · Ruaka · Kiambu Town
+            </p>
             <div className="flex gap-3">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
@@ -65,7 +68,7 @@ export default function Footer() {
               {[
                 { label: 'About Us', href: '/about' },
                 { label: 'Advertise With Us', href: '/advertise' },
-                { label: 'Other Services', href: '/services' },
+                { label: 'Other Services', href: '/other-services' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="text-sm text-white/60 hover:text-white transition-colors">
@@ -86,6 +89,8 @@ export default function Footer() {
                 { label: 'Emergency Contacts', href: '/emergency' },
                 { label: 'Jobs Board', href: '/jobs' },
                 { label: 'Travel Bookings', href: '/travel' },
+                { label: 'Prices at a Glance', href: '/prices' },
+                { label: 'Talent Search', href: '/talent-search' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="text-sm text-white/60 hover:text-white transition-colors">
@@ -127,9 +132,11 @@ export default function Footer() {
           <p className="text-xs text-white/40 font-mono">
             © {new Date().getFullYear()} Kiambu Road Hub. All rights reserved.
           </p>
-          <p className="text-xs text-white/40">
-            Serving the Kiambu Road corridor, Nairobi, Kenya
-          </p>
+          <div className="flex flex-wrap gap-4 text-xs text-white/40">
+            <Link href="/terms" className="hover:text-white/70 transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy</Link>
+            <Link href="/sitemap.xml" className="hover:text-white/70 transition-colors">Sitemap</Link>
+          </div>
         </div>
       </div>
     </footer>

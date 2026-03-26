@@ -1,205 +1,244 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
-import { Input } from '@/components/ui/input'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { MapPin, Calendar, Users } from 'lucide-react'
+import { CheckCircle2, Loader2, MessageCircle } from 'lucide-react'
 
 const TRAVEL_TYPES = [
-  { value: 'accommodation', label: 'Accommodation' },
-  { value: 'car_hire', label: 'Car Hire' },
-  { value: 'day_trip', label: 'Day Trip' },
-  { value: 'airport_transfer', label: 'Airport Transfer' },
-  { value: 'group_tour', label: 'Group Tour' },
-  { value: 'conference', label: 'Conference Package' },
+  { label: '🏕️ Camping', value: 'camping' },
+  { label: '🏔️ Hiking', value: 'hiking' },
+  { label: '🦒 Safari', value: 'safari' },
+  { label: '🏨 Hotel Bookings', value: 'hotel-bookings' },
+  { label: '🛥️ Beach & Coast', value: 'beach-coast' },
+  { label: '🌍 Africa Touring', value: 'africa-touring' },
+  { label: '💐 Honeymoon', value: 'honeymoon' },
+  { label: '🎒 Budget Travel', value: 'budget-travel' },
 ]
 
+const BUDGET_RANGES = [
+  'Under KES 10,000',
+  'KES 10,000 – 25,000',
+  'KES 25,000 – 50,000',
+  'KES 50,000 – 100,000',
+  'Above KES 100,000',
+]
+
+type FormData = {
+  name: string
+  email: string
+  phone: string
+  travel_type: string
+  travel_dates: string
+  people_count: string
+  budget_range: string
+  message: string
+}
+
+const EMPTY: FormData = {
+  name: '',
+  email: '',
+  phone: '',
+  travel_type: '',
+  travel_dates: '',
+  people_count: '',
+  budget_range: '',
+  message: '',
+}
+
 export default function TravelPage() {
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    travel_type: '',
-    travel_dates: '',
-    people_count: '',
-    budget_range: '',
-    message: '',
-  })
+  const [form, setForm] = useState<FormData>(EMPTY)
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  const setField = (key: string, value: string) => {
-    setForm((prev) => ({ ...prev, [key]: value }))
-  }
+  const set = (key: keyof FormData, value: string) => setForm((p) => ({ ...p, [key]: value }))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!form.name || !form.email || !form.phone) {
+      toast.error('Name, email, and phone are required.')
+      return
+    }
     setLoading(true)
     try {
       const res = await fetch('/api/travel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          people_count: form.people_count ? parseInt(form.people_count) : null,
+        }),
       })
       if (!res.ok) throw new Error('Submission failed')
       setSubmitted(true)
-      toast.success('Travel enquiry submitted! We will be in touch shortly.')
     } catch {
-      toast.error('Something went wrong. Please try again.')
+      toast.error('Could not send your inquiry. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  const selectClass = 'w-full px-3 py-2 rounded-lg border border-border text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary'
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-brand-surface flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white rounded-2xl border border-border p-10 text-center max-w-md w-full"
+        >
+          <CheckCircle2 className="w-16 h-16 text-primary mx-auto mb-4" />
+          <h2 className="font-display text-2xl font-bold mb-3">Inquiry Received!</h2>
+          <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+            Thank you, {form.name}! Our travel team will contact you within 24 hours to discuss your trip.
+            Check your email for a confirmation message.
+          </p>
+          <Button
+            className="bg-primary hover:bg-primary/90"
+            onClick={() => { setSubmitted(false); setForm(EMPTY) }}
+          >
+            Make Another Inquiry
+          </Button>
+        </motion.div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-brand-surface">
-      <div className="bg-primary py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Plan Your Stay</p>
-          <h1 className="font-display text-4xl font-bold text-white mb-2">Travel Bookings</h1>
-          <p className="text-white/70 text-sm">
-            Hotels, car hire, day trips and curated local experiences around Kiambu
+      {/* Hero */}
+      <div className="bg-primary py-14">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Travel & Adventure</p>
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">
+            Plan Your Perfect Trip
+          </h1>
+          <p className="text-white/80 text-base leading-relaxed max-w-2xl mb-5">
+            We arrange personalised travel experiences across Kenya and beyond. From wildlife safaris and coastal escapes to mountain hikes and romantic honeymoons.
           </p>
+          {/* Service chips */}
+          <div className="flex flex-wrap gap-2">
+            {TRAVEL_TYPES.map((t) => (
+              <span
+                key={t.value}
+                className="text-xs font-mono font-semibold bg-white/20 text-white px-3 py-1.5 rounded-full hover:bg-white/30 transition-colors cursor-default"
+              >
+                {t.label}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-border p-6 sm:p-8 space-y-6">
+          <h2 className="font-display text-xl font-bold">Travel Inquiry</h2>
+          <p className="text-sm text-muted-foreground -mt-3">
+            Tell us about your dream trip and we&apos;ll create a personalised itinerary for you.
+          </p>
 
-          {/* Features sidebar */}
-          <div className="space-y-6">
-            <div>
-              <h2 className="font-display text-xl font-bold text-foreground mb-4">What We Can Arrange</h2>
-              <div className="space-y-3">
-                {[
-                  { icon: '🏨', title: 'Hotels & Lodges', desc: 'From budget to luxury options along Kiambu Road' },
-                  { icon: '🚗', title: 'Car Hire', desc: 'Self-drive or chauffeured vehicles' },
-                  { icon: '🗺️', title: 'Day Trips', desc: 'Curated excursions to nearby attractions' },
-                  { icon: '✈️', title: 'Airport Transfers', desc: 'Reliable pickups and drop-offs' },
-                  { icon: '🏟️', title: 'Conference Packages', desc: 'Meeting rooms and facilities' },
-                ].map((item) => (
-                  <div key={item.title} className="bg-white rounded-xl border border-border p-4 flex gap-3">
-                    <span className="text-2xl">{item.icon}</span>
-                    <div>
-                      <p className="font-semibold text-sm">{item.title}</p>
-                      <p className="text-xs text-muted-foreground">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* Contact details */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label>Full Name *</Label>
+              <Input value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="Your name" required />
             </div>
-
-            <div className="bg-white rounded-xl border border-border p-5">
-              <h3 className="font-semibold text-sm mb-3">Or browse directly</h3>
-              <div className="space-y-2">
-                <Link href="/directory/eat-drink-stay" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                  → Hotels &amp; Accommodation
-                </Link>
-                <Link href="/directory/transport-logistics" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                  → Transport &amp; Car Hire
-                </Link>
-                <Link href="/directory/leisure-outdoors" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                  → Leisure &amp; Activities
-                </Link>
-              </div>
+            <div className="space-y-1.5">
+              <Label>Email *</Label>
+              <Input type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="your@email.com" required />
             </div>
           </div>
 
-          {/* Enquiry form */}
-          <div className="lg:col-span-2">
-            {submitted ? (
-              <div className="bg-white rounded-2xl border border-border p-10 text-center">
-                <div className="text-5xl mb-4">✈️</div>
-                <h2 className="font-display text-2xl font-bold text-foreground mb-2">Enquiry Received!</h2>
-                <p className="text-muted-foreground text-sm mb-6">
-                  Thank you for your travel enquiry. Our team will contact you within 24 hours.
-                </p>
+          <div className="space-y-1.5">
+            <Label>Phone / WhatsApp *</Label>
+            <Input type="tel" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+254 7XX XXX XXX" required />
+          </div>
+
+          {/* Travel type */}
+          <div className="space-y-1.5">
+            <Label>Travel Type</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {TRAVEL_TYPES.map((t) => (
                 <button
-                  onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', travel_type: '', travel_dates: '', people_count: '', budget_range: '', message: '' }) }}
-                  className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
+                  key={t.value}
+                  type="button"
+                  onClick={() => set('travel_type', t.value)}
+                  className={`p-3 rounded-xl border-2 text-xs font-medium transition-all text-center ${
+                    form.travel_type === t.value
+                      ? 'border-primary bg-primary/5 text-foreground'
+                      : 'border-border hover:border-primary/50 text-muted-foreground'
+                  }`}
                 >
-                  Submit Another Enquiry
+                  {t.label}
                 </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-border p-6 lg:p-8 space-y-5">
-                <h2 className="font-display text-xl font-bold text-foreground">Submit Travel Enquiry</h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-mono text-muted-foreground mb-1.5">Your Name *</label>
-                    <Input name="name" value={form.name} onChange={(e) => setField('name', e.target.value)} required placeholder="John Kamau" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-mono text-muted-foreground mb-1.5">Email *</label>
-                    <Input name="email" type="email" value={form.email} onChange={(e) => setField('email', e.target.value)} required />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-mono text-muted-foreground mb-1.5">Phone</label>
-                    <Input value={form.phone} onChange={(e) => setField('phone', e.target.value)} placeholder="+254 7XX XXX XXX" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-mono text-muted-foreground mb-1.5">Travel Type</label>
-                    <select value={form.travel_type} onChange={(e) => setField('travel_type', e.target.value)} className={selectClass}>
-                      <option value="">Select type</option>
-                      {TRAVEL_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div>
-                    <label className="flex items-center gap-1 text-xs font-mono text-muted-foreground mb-1.5">
-                      <Calendar className="w-3 h-3" /> Travel Dates
-                    </label>
-                    <Input value={form.travel_dates} onChange={(e) => setField('travel_dates', e.target.value)} placeholder="e.g. 15–17 April 2026" />
-                  </div>
-                  <div>
-                    <label className="flex items-center gap-1 text-xs font-mono text-muted-foreground mb-1.5">
-                      <Users className="w-3 h-3" /> Number of People
-                    </label>
-                    <Input type="number" min="1" value={form.people_count} onChange={(e) => setField('people_count', e.target.value)} placeholder="2" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-mono text-muted-foreground mb-1.5">Budget Range</label>
-                    <select value={form.budget_range} onChange={(e) => setField('budget_range', e.target.value)} className={selectClass}>
-                      <option value="">Select range</option>
-                      <option value="budget">Budget (Under KES 5,000/night)</option>
-                      <option value="mid">Mid-range (KES 5,000–15,000)</option>
-                      <option value="premium">Premium (KES 15,000+)</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-muted-foreground mb-1.5">Additional Details</label>
-                  <textarea
-                    value={form.message}
-                    onChange={(e) => setField('message', e.target.value)}
-                    rows={4}
-                    placeholder="Tell us more about what you're looking for..."
-                    className="w-full px-3 py-2.5 rounded-lg border border-border text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl h-auto"
-                >
-                  {loading ? 'Submitting...' : 'Submit Enquiry'}
-                </Button>
-              </form>
-            )}
+              ))}
+            </div>
           </div>
-        </div>
+
+          {/* Dates + people */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label>Travel Dates (preferred)</Label>
+              <Input value={form.travel_dates} onChange={(e) => set('travel_dates', e.target.value)} placeholder="e.g. 15–20 April 2026" />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Number of People</Label>
+              <Input type="number" min="1" value={form.people_count} onChange={(e) => set('people_count', e.target.value)} placeholder="e.g. 2" />
+            </div>
+          </div>
+
+          {/* Budget */}
+          <div className="space-y-1.5">
+            <Label>Budget Range (per person)</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {BUDGET_RANGES.map((b) => (
+                <button
+                  key={b}
+                  type="button"
+                  onClick={() => set('budget_range', b)}
+                  className={`text-left px-4 py-2.5 rounded-xl border-2 text-sm transition-all ${
+                    form.budget_range === b
+                      ? 'border-primary bg-primary/5 font-semibold text-foreground'
+                      : 'border-border hover:border-primary/50 text-muted-foreground'
+                  }`}
+                >
+                  {b}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Message */}
+          <div className="space-y-1.5">
+            <Label>Additional Info / Special Requests</Label>
+            <Textarea
+              value={form.message}
+              onChange={(e) => set('message', e.target.value)}
+              placeholder="Tell us more about your ideal trip — specific destinations, activities, dietary requirements, special occasions..."
+              rows={4}
+            />
+          </div>
+
+          <Button type="submit" disabled={loading} className="w-full bg-primary hover:bg-primary/90 h-12">
+            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            {loading ? 'Sending Inquiry...' : '✈️  Send Travel Inquiry'}
+          </Button>
+
+          <p className="text-center text-sm text-muted-foreground">
+            Prefer WhatsApp?{' '}
+            <a
+              href="https://wa.me/254720950500?text=Hi%2C%20I%27d%20like%20to%20inquire%20about%20a%20travel%20booking"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green-600 font-semibold hover:underline inline-flex items-center gap-1"
+            >
+              <MessageCircle className="w-3.5 h-3.5" /> Chat with us
+            </a>
+          </p>
+        </form>
       </div>
     </div>
   )

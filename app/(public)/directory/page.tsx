@@ -5,18 +5,20 @@ import { CATEGORIES } from '@/data/seed/categories'
 import {
   UtensilsCrossed, Building2, Briefcase, ShoppingBag, Truck, Shield,
   Heart, Home, Car, GraduationCap, Church, Trees, Wallet, Users,
+  Wrench, HardHat,
 } from 'lucide-react'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Business Directory',
-  description: 'Browse all 14 categories of local businesses and services along Kiambu Road, Nairobi.',
+  description: 'Browse all 16 categories of local businesses and services along Kiambu Road, Nairobi.',
 }
 
 const iconMap: Record<string, React.ElementType> = {
   UtensilsCrossed, Building2, Briefcase, ShoppingBag, Truck, Shield,
   Heart, Home, Car, GraduationCap, Church, Trees, Wallet, Users,
+  Wrench, HardHat,
 }
 
 async function getCategoriesWithCounts() {

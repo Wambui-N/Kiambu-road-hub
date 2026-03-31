@@ -19,7 +19,6 @@ const SECTION_ICONS: Record<string, string> = {
   'nature-trivia': '🌿',
   'business-notes': '💼',
   'opinion': '📝',
-  'newswatch': '📰',
 }
 
 const SECTION_COLORS: Record<string, string> = {
@@ -33,7 +32,6 @@ const SECTION_COLORS: Record<string, string> = {
   'nature-trivia': '#22C55E',
   'business-notes': '#E8A020',
   'opinion': '#EF4444',
-  'newswatch': '#64748B',
 }
 
 export default function JournalPage() {
@@ -52,6 +50,17 @@ export default function JournalPage() {
         </div>
       </div>
 
+      {/* Banner ad slot */}
+      <div className="bg-muted border-b border-border py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="h-24 bg-white border-2 border-dashed border-border rounded-xl flex items-center justify-center text-sm text-muted-foreground">
+            <Link href="/advertise" className="hover:text-primary transition-colors">
+              📢 Banner Ad Slot — <strong>Contact us to advertise here</strong>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Coming soon notice */}
         <div className="bg-white border border-border rounded-2xl p-6 mb-10 flex items-start gap-4">
@@ -67,7 +76,7 @@ export default function JournalPage() {
         {/* Section grid */}
         <h2 className="font-display text-xl font-bold text-foreground mb-6">Journal Sections</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {JOURNAL_SECTIONS.map((section) => (
+          {JOURNAL_SECTIONS.filter((s) => s.slug !== 'newswatch').map((section) => (
             <Link
               key={section.slug}
               href={`/journal/${section.slug}`}

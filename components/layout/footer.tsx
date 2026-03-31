@@ -1,7 +1,9 @@
 import Link from 'next/link'
-import { Mail, Facebook, Twitter, Instagram, Youtube } from 'lucide-react'
+import { Mail, Facebook, Twitter, Instagram, Youtube, Users } from 'lucide-react'
 import NewsletterForm from '@/components/layout/newsletter-form'
 import QuickLinks from '@/components/home/quick-links'
+
+const FB_COMMUNITY_URL = 'https://www.facebook.com/groups/kiamburoadcommunity'
 
 export default function Footer() {
   return (
@@ -23,6 +25,30 @@ export default function Footer() {
             </div>
             <NewsletterForm />
           </div>
+        </div>
+      </div>
+
+      {/* Facebook community CTA band */}
+      <div className="bg-[#1877F2]/10 border-t border-[#1877F2]/20 py-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-[#1877F2]/20 flex items-center justify-center shrink-0">
+              <Users className="w-5 h-5 text-[#1877F2]" />
+            </div>
+            <div>
+              <p className="text-white font-semibold text-sm">Join our Facebook Community</p>
+              <p className="text-white/50 text-xs">Connect with neighbours along the Kiambu Road corridor</p>
+            </div>
+          </div>
+          <a
+            href={FB_COMMUNITY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 inline-flex items-center gap-2 bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors"
+          >
+            <Facebook className="w-4 h-4" />
+            Join on Facebook
+          </a>
         </div>
       </div>
 
@@ -80,6 +106,17 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <a
+                  href={FB_COMMUNITY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-[#60a5fa] hover:text-white transition-colors"
+                >
+                  <Facebook className="w-3 h-3" />
+                  Facebook Community
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -90,11 +127,6 @@ export default function Footer() {
               {[
                 { label: 'Contact Us', href: '/contact' },
                 { label: 'List Your Business', href: '/list-your-business' },
-                { label: 'Emergency Contacts', href: '/emergency' },
-                { label: 'Jobs Board', href: '/jobs' },
-                { label: 'Travel Bookings', href: '/travel' },
-                { label: 'Prices at a Glance', href: '/prices' },
-                { label: 'Talent Search', href: '/talent-search' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="text-sm text-white/60 hover:text-white transition-colors">

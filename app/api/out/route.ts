@@ -1,6 +1,6 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse, after } from 'next/server'
 import crypto from 'crypto'
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { appendUtms } from '@/lib/utils'
 
 const ALLOWED_PROTOCOLS = new Set(['https:', 'http:', 'tel:', 'mailto:'])
@@ -34,15 +34,24 @@ async function logClick(data: {
   business_slug: string | null
   category_slug: string | null
   page_path: string | null
+  utm_source: string | null
+  utm_medium: string | null
+  utm_campaign: string | null
+  utm_content: string | null
   referrer: string | null
   user_agent: string | null
   ip_hash: string | null
 }) {
   try {
-    const supabase = await createClient()
-    await supabase.from('outbound_clicks').insert(data)
-  } catch {
-    // Logging must never block the redirect
+    // Use service role key so this works without a user session and bypasses RLS
+    const supabase = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    const { error } = await supabase.from('outbound_clicks').insert(data)
+    if (error) console.error('[out] logClick error:', error.message)
+  } catch (err) {
+    console.error('[out] logClick exception:', err)
   }
 }
 
@@ -63,8 +72,17 @@ export async function GET(request: NextRequest) {
 
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? ''
 
-  // Fire-and-forget — do NOT await so the redirect is instant
-  logClick({
+  // Build UTM values — mirror exactly what appendUtms injects so the DB record
+  // always reflects the parameters the destination site will receive.
+  const utmSource   = 'kiamburoadexplorer'
+  const utmMedium   = surface.replace(/_/g, '-')
+  const utmCampaign = 'directory'
+  const utmContent  = businessSlug ?? 'listing'
+
+  // Schedule logging after the redirect is sent.
+  // `after()` keeps the serverless function alive until logClick resolves,
+  // preventing the insert from being abandoned mid-flight.
+  after(() => logClick({
     destination_url: rawUrl,
     link_type: linkType,
     surface,
@@ -73,19 +91,23 @@ export async function GET(request: NextRequest) {
     business_slug: businessSlug,
     category_slug: categorySlug,
     page_path: pagePath,
+    utm_source:   linkType === 'website' ? utmSource   : null,
+    utm_medium:   linkType === 'website' ? utmMedium   : null,
+    utm_campaign: linkType === 'website' ? utmCampaign : null,
+    utm_content:  linkType === 'website' ? utmContent  : null,
     referrer: request.headers.get('referer') ?? null,
     user_agent: request.headers.get('user-agent') ?? null,
     ip_hash: ip ? hashIp(ip) : null,
-  })
+  }))
 
   // Append UTMs for website click-throughs only
   let finalUrl = rawUrl
   if (linkType === 'website') {
     finalUrl = appendUtms(rawUrl, {
-      utm_source: 'kiamburoadexplorer',
-      utm_medium: surface.replace(/_/g, '-'),
-      utm_campaign: 'directory',
-      utm_content: businessSlug ?? 'listing',
+      utm_source:   utmSource,
+      utm_medium:   utmMedium,
+      utm_campaign: utmCampaign,
+      utm_content:  utmContent,
     })
   }
 

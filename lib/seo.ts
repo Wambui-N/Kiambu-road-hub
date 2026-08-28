@@ -46,7 +46,7 @@ export function websiteJsonLd() {
   }
 }
 
-export function localBusinessJsonLd(business: Business) {
+export function localBusinessJsonLd(business: Business, aggregate?: { average: number | null; count: number }) {
   const imageUrl = business.images?.[0]?.image_path
     ? business.images[0].image_path.startsWith('http')
       ? business.images[0].image_path
@@ -75,11 +75,11 @@ export function localBusinessJsonLd(business: Business) {
         longitude: business.longitude,
       },
     } : {}),
-    ...((business.reviews && business.reviews.length > 0) ? {
+    ...((aggregate?.average != null && aggregate.count > 0) ? {
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: (business.reviews.reduce((s, r) => s + r.rating, 0) / business.reviews.length).toFixed(1),
-        reviewCount: business.reviews.length,
+        ratingValue: aggregate.average.toFixed(1),
+        reviewCount: aggregate.count,
         bestRating: 5,
         worstRating: 1,
       },
@@ -108,6 +108,66 @@ export function articleJsonLd(article: Article) {
     datePublished: article.published_at ?? article.created_at,
     dateModified: article.updated_at,
     url: `${BASE_URL}/journal/article/${article.slug}`,
+  }
+}
+
+export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: `${BASE_URL}${item.path}`,
+    })),
+  }
+}
+
+export function collectionPageJsonLd(params: {
+  name: string
+  description?: string
+  path: string
+  items: { name: string; path: string }[]
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: params.name,
+    description: params.description,
+    url: `${BASE_URL}${params.path}`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: params.items.map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: item.name,
+        url: `${BASE_URL}${item.path}`,
+      })),
+    },
+  }
+}
+
+export function productJsonLd(
+  item: { name: string; slug: string; unit?: string | null },
+  entries: { amount: number; currency: string }[]
+) {
+  if (!entries.length) return null
+  const amounts = entries.map((e) => e.amount)
+  const currency = entries[0]?.currency ?? 'KES'
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: item.name,
+    url: `${BASE_URL}/prices/${item.slug}`,
+    ...(item.unit ? { description: `Price per ${item.unit}` } : {}),
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: currency,
+      lowPrice: Math.min(...amounts).toFixed(2),
+      highPrice: Math.max(...amounts).toFixed(2),
+      offerCount: entries.length,
+    },
   }
 }
 

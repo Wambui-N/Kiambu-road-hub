@@ -9,6 +9,7 @@ export type TrackingSurface =
   | 'business_profile'
   | 'home_ads'
   | 'category_ads'
+  | 'price_comparison'
 
 export interface TrackingContext {
   linkType: LinkType

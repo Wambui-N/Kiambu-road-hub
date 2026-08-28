@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { slugify } from '@/lib/utils'
@@ -25,18 +26,50 @@ interface Area {
   slug: string
 }
 
+interface TagOption {
+  id: string
+  name: string
+  slug: string
+  tag_type: string | null
+}
+
+const TAG_TYPE_LABELS: Record<string, string> = {
+  medical_service: 'Medical Services',
+  quick_fact: 'Quick Facts',
+  emergency_criteria: 'Emergency Criteria',
+}
+
 interface BusinessFormProps {
   categories: Category[]
   areas: Area[]
+  tags?: TagOption[]
+  initialTagIds?: string[]
   initialData?: Record<string, unknown>
 }
 
-export default function BusinessForm({ categories, areas, initialData }: BusinessFormProps) {
+export default function BusinessForm({ categories, areas, tags = [], initialTagIds = [], initialData }: BusinessFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
     (initialData?.category_id as string) ?? ''
   )
+  const [selectedTagIds, setSelectedTagIds] = useState<Set<string>>(new Set(initialTagIds))
+
+  const tagGroups = tags.reduce<Record<string, TagOption[]>>((acc, t) => {
+    const key = t.tag_type ?? 'other'
+    acc[key] = acc[key] ?? []
+    acc[key].push(t)
+    return acc
+  }, {})
+
+  const toggleTag = (tagId: string) => {
+    setSelectedTagIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(tagId)) next.delete(tagId)
+      else next.add(tagId)
+      return next
+    })
+  }
 
   const subcategories = categories.find((c) => c.id === selectedCategoryId)?.subcategories ?? []
 
@@ -98,14 +131,31 @@ export default function BusinessForm({ categories, areas, initialData }: Busines
         published_at: form.status === 'published' ? new Date().toISOString() : (initialData?.published_at as string | null ?? null),
       }
 
-      if (initialData?.id) {
-        const { error } = await supabase.from('businesses').update(payload).eq('id', initialData.id as string)
+      let businessId = initialData?.id as string | undefined
+
+      if (businessId) {
+        const { error } = await supabase.from('businesses').update(payload).eq('id', businessId)
         if (error) throw error
+      } else {
+        const { data, error } = await supabase.from('businesses').insert({ ...payload, created_by: userId }).select('id').single()
+        if (error) throw error
+        businessId = data.id
+      }
+
+      // Replace business_tags with the current selection
+      if (businessId) {
+        await supabase.from('business_tags').delete().eq('business_id', businessId)
+        if (selectedTagIds.size > 0) {
+          const rows = Array.from(selectedTagIds).map((tag_id) => ({ business_id: businessId, tag_id }))
+          const { error: tagError } = await supabase.from('business_tags').insert(rows)
+          if (tagError) throw tagError
+        }
+      }
+
+      if (initialData?.id) {
         toast.success('Business updated')
         router.refresh()
       } else {
-        const { error } = await supabase.from('businesses').insert({ ...payload, created_by: userId })
-        if (error) throw error
         toast.success('Business created')
         router.push('/admin/businesses')
       }
@@ -280,6 +330,31 @@ export default function BusinessForm({ categories, areas, initialData }: Busines
           </div>
         ))}
       </div>
+
+      {/* Quick Facts / Tags */}
+      {Object.keys(tagGroups).length > 0 && (
+        <div className="space-y-4 border-t border-border pt-5">
+          <Label>Quick Facts &amp; Tags</Label>
+          {Object.entries(tagGroups).map(([groupKey, groupTags]) => (
+            <div key={groupKey} className="space-y-2">
+              <p className="text-xs font-mono uppercase tracking-wide text-muted-foreground">
+                {TAG_TYPE_LABELS[groupKey] ?? groupKey}
+              </p>
+              <div className="flex flex-wrap gap-x-5 gap-y-2">
+                {groupTags.map((t) => (
+                  <label key={t.id} className="flex items-center gap-2 text-sm cursor-pointer group/field">
+                    <Checkbox
+                      checked={selectedTagIds.has(t.id)}
+                      onCheckedChange={() => toggleTag(t.id)}
+                    />
+                    {t.name}
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={loading}>
         {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}

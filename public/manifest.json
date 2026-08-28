@@ -1,0 +1,12 @@
+{
+  "name": "Kiambu Road Explorer",
+  "short_name": "KRE",
+  "description": "Business directory and lifestyle journal for the Kiambu Road corridor, Nairobi, Kenya.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F5F0",
+  "theme_color": "#1B6B3A",
+  "icons": [
+    { "src": "/icon", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

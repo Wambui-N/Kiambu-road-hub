@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse, after } from 'next/server'
-import crypto from 'crypto'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { appendUtms } from '@/lib/utils'
+import { hashIp } from '@/lib/ip-hash'
 
 const ALLOWED_PROTOCOLS = new Set(['https:', 'http:', 'tel:', 'mailto:'])
 
@@ -19,10 +19,6 @@ function isAllowedUrl(raw: string): boolean {
   } catch {
     return false
   }
-}
-
-function hashIp(ip: string): string {
-  return crypto.createHash('sha256').update(ip + 'kra-click').digest('hex').slice(0, 12)
 }
 
 async function logClick(data: {

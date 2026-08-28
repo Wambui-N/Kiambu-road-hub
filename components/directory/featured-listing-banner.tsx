@@ -8,9 +8,11 @@ import type { Business } from '@/types/database'
 
 const CATEGORY_IMAGE_MAP: Record<string, string> = {
   'eat-drink-stay':        'https://images.unsplash.com/photo-1768697359488-9cc9937056a6?auto=format&fit=crop&w=1200&q=80',
-  'health-wellness':       'https://images.unsplash.com/photo-1755995083683-50d08cd83d09?auto=format&fit=crop&w=1200&q=80',
+  'medical-services':      'https://images.unsplash.com/photo-1755995083683-50d08cd83d09?auto=format&fit=crop&w=1200&q=80',
   'education-childcare':   'https://images.unsplash.com/photo-1549380883-4dd936bbc0fa?auto=format&fit=crop&w=1200&q=80',
   'retail-shopping':       'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1200&q=80',
+  'malls':                 'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1200&q=80',
+  'lifestyle-wellness':    'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
   'car-motor-dealers':     'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80',
   'auto-services':         'https://images.unsplash.com/photo-1632823469850-2f77dd9c7f93?auto=format&fit=crop&w=1200&q=80',
   'real-estate-property':  'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',

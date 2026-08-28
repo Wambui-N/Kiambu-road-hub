@@ -1,23 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Star, CheckCircle2, Loader2, PenLine, ChevronDown, ChevronUp } from 'lucide-react'
+import { Star, CheckCircle2, Loader2, PenLine, ChevronDown, ChevronUp, ThumbsUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
+import { getRatingAspects, averageAspectRatings } from '@/data/seed/rating-aspects'
 import type { Review } from '@/types/database'
 
 const RATING_LABELS = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent']
+const VOTED_REVIEWS_KEY = 'kra_voted_reviews'
 
 interface ReviewSectionProps {
   businessId: string
   initialReviews: Review[]
+  aggregate: { average: number | null; count: number }
+  categorySlug?: string
 }
 
-function StarPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+function StarPicker({ value, onChange, size = 'w-8 h-8' }: { value: number; onChange: (v: number) => void; size?: string }) {
   const [hover, setHover] = useState(0)
   return (
     <div className="flex gap-1">
@@ -32,7 +36,7 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
           aria-label={`Rate ${star} star${star !== 1 ? 's' : ''}`}
         >
           <Star
-            className="w-8 h-8"
+            className={size}
             fill={(hover || value) >= star ? '#F59E0B' : 'transparent'}
             color={(hover || value) >= star ? '#F59E0B' : '#D1D5DB'}
           />
@@ -42,7 +46,29 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
   )
 }
 
-function ReviewCard({ review }: { review: Review }) {
+function getVotedReviewIds(): Set<string> {
+  if (typeof window === 'undefined') return new Set()
+  try {
+    const raw = window.localStorage.getItem(VOTED_REVIEWS_KEY)
+    return new Set(raw ? (JSON.parse(raw) as string[]) : [])
+  } catch {
+    return new Set()
+  }
+}
+
+function rememberVotedReview(reviewId: string) {
+  try {
+    const ids = getVotedReviewIds()
+    ids.add(reviewId)
+    window.localStorage.setItem(VOTED_REVIEWS_KEY, JSON.stringify(Array.from(ids)))
+  } catch {
+    // localStorage unavailable — vote still recorded server-side by ip_hash
+  }
+}
+
+function ReviewCard({ review, voted, onVote }: { review: Review; voted: boolean; onVote: (reviewId: string) => void }) {
+  const aspectEntries = review.aspect_ratings ? Object.entries(review.aspect_ratings) : []
+
   return (
     <div className="border-b border-border pb-4 last:border-0 last:pb-0">
       <div className="flex items-start justify-between mb-1.5">
@@ -52,41 +78,91 @@ function ReviewCard({ review }: { review: Review }) {
             {Array.from({ length: 5 }, (_, i) => (
               <Star
                 key={i}
-                className={`w-3.5 h-3.5 ${i < review.rating ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
+                className={`w-3.5 h-3.5 ${i < Math.round(review.rating) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
               />
             ))}
+            <span className="text-xs font-mono text-muted-foreground ml-1">{review.rating.toFixed(1)}</span>
           </div>
         </div>
         <span className="text-xs font-mono text-muted-foreground shrink-0 mt-0.5">
           {new Date(review.created_at).toLocaleDateString('en-KE', { month: 'short', year: 'numeric' })}
         </span>
       </div>
+
       {review.comment && (
-        <p className="text-sm text-muted-foreground leading-relaxed">{review.comment}</p>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-2">{review.comment}</p>
       )}
+
+      {aspectEntries.length > 0 && (
+        <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2 text-xs text-muted-foreground">
+          {aspectEntries.map(([key, value]) => (
+            <span key={key} className="font-mono">
+              {key.replace(/_/g, ' ')}: <span className="font-semibold text-foreground">{value}</span>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={() => !voted && onVote(review.id)}
+        disabled={voted}
+        className={`inline-flex items-center gap-1.5 text-xs font-medium transition-colors ${
+          voted ? 'text-primary cursor-default' : 'text-muted-foreground hover:text-primary'
+        }`}
+      >
+        <ThumbsUp className={`w-3.5 h-3.5 ${voted ? 'fill-primary' : ''}`} />
+        Helpful{review.helpful_count > 0 ? ` (${review.helpful_count})` : ''}
+      </button>
     </div>
   )
 }
 
-export default function ReviewSection({ businessId, initialReviews }: ReviewSectionProps) {
+export default function ReviewSection({ businessId, initialReviews, aggregate, categorySlug }: ReviewSectionProps) {
   const [reviews, setReviews] = useState<Review[]>(initialReviews)
+  const [votedIds, setVotedIds] = useState<Set<string>>(new Set())
   const [showForm, setShowForm] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [rating, setRating] = useState(0)
+  const [aspectValues, setAspectValues] = useState<Record<string, number>>({})
   const [form, setForm] = useState({ reviewer_name: '', comment: '' })
 
-  const avgRating = reviews.length
-    ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
-    : null
+  const aspects = getRatingAspects(categorySlug)
+
+  useEffect(() => {
+    setVotedIds(getVotedReviewIds())
+  }, [])
+
+  const handleVote = async (reviewId: string) => {
+    setVotedIds((prev) => new Set(prev).add(reviewId))
+    rememberVotedReview(reviewId)
+    setReviews((prev) => prev.map((r) => (r.id === reviewId ? { ...r, helpful_count: r.helpful_count + 1 } : r)))
+
+    try {
+      const res = await fetch('/api/reviews/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ review_id: reviewId }),
+      })
+      if (!res.ok) throw new Error('Vote failed')
+      const data = await res.json()
+      if (typeof data.helpful_count === 'number') {
+        setReviews((prev) => prev.map((r) => (r.id === reviewId ? { ...r, helpful_count: data.helpful_count } : r)))
+      }
+    } catch {
+      // Keep the optimistic state — the vote may still have landed server-side.
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!rating) { toast.error('Please select a star rating.'); return }
+    const missing = aspects.filter((a) => !aspectValues[a.key])
+    if (missing.length > 0) { toast.error(`Please rate: ${missing.map((a) => a.label).join(', ')}`); return }
     if (!form.reviewer_name.trim()) { toast.error('Please enter your name.'); return }
 
     setLoading(true)
     try {
+      const rating = averageAspectRatings(aspectValues)
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -94,6 +170,7 @@ export default function ReviewSection({ businessId, initialReviews }: ReviewSect
           business_id: businessId,
           reviewer_name: form.reviewer_name.trim(),
           rating,
+          aspect_ratings: aspectValues,
           comment: form.comment.trim(),
         }),
       })
@@ -113,18 +190,18 @@ export default function ReviewSection({ businessId, initialReviews }: ReviewSect
         <div className="flex items-center gap-2">
           <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
           <h2 className="font-semibold text-lg">Reviews</h2>
-          {reviews.length > 0 && (
+          {aggregate.count > 0 && (
             <span className="text-xs font-mono text-muted-foreground">
-              ({reviews.length})
+              ({aggregate.count})
             </span>
           )}
         </div>
 
         {/* Aggregate rating badge */}
-        {avgRating !== null && (
+        {aggregate.average !== null && (
           <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
             <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-            <span className="text-sm font-bold text-amber-700">{avgRating.toFixed(1)}</span>
+            <span className="text-sm font-bold text-amber-700">{aggregate.average.toFixed(1)}</span>
           </div>
         )}
       </div>
@@ -138,7 +215,9 @@ export default function ReviewSection({ businessId, initialReviews }: ReviewSect
 
       {reviews.length > 0 && (
         <div className="space-y-4 mb-6">
-          {reviews.map((r) => <ReviewCard key={r.id} review={r} />)}
+          {reviews.map((r) => (
+            <ReviewCard key={r.id} review={r} voted={votedIds.has(r.id)} onVote={handleVote} />
+          ))}
         </div>
       )}
 
@@ -170,13 +249,22 @@ export default function ReviewSection({ businessId, initialReviews }: ReviewSect
                 className="overflow-hidden"
               >
                 <div className="pt-5 space-y-4 border-t border-border mt-4">
-                  {/* Star picker */}
-                  <div className="space-y-1.5">
-                    <Label>Your Rating *</Label>
-                    <StarPicker value={rating} onChange={setRating} />
-                    {rating > 0 && (
+                  {/* Aspect ratings */}
+                  <div className="space-y-3">
+                    <Label>Rate Your Experience *</Label>
+                    {aspects.map((aspect) => (
+                      <div key={aspect.key} className="flex items-center justify-between gap-3">
+                        <span className="text-sm text-muted-foreground">{aspect.label}</span>
+                        <StarPicker
+                          size="w-5 h-5"
+                          value={aspectValues[aspect.key] ?? 0}
+                          onChange={(v) => setAspectValues((prev) => ({ ...prev, [aspect.key]: v }))}
+                        />
+                      </div>
+                    ))}
+                    {Object.keys(aspectValues).length === aspects.length && aspects.length > 0 && (
                       <p className="text-xs font-mono text-muted-foreground">
-                        {RATING_LABELS[rating]}
+                        Overall: {averageAspectRatings(aspectValues).toFixed(1)} — {RATING_LABELS[Math.round(averageAspectRatings(aspectValues))]}
                       </p>
                     )}
                   </div>

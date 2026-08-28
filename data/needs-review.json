@@ -1,0 +1,290 @@
+[
+  {
+    "title": "F&L Barbershop and Spa",
+    "placeId": "ChIJaZqla6w9LxgRU8YcEGSR3Nk",
+    "reason": "unmapped_category",
+    "categoryName": "Barber shop"
+  },
+  {
+    "title": "Omega Opticians Kiambu road,Kiambu",
+    "placeId": "ChIJJTboH6Q9LxgRhjWZpL3hB70",
+    "reason": "unmapped_category",
+    "categoryName": "Optometrist"
+  },
+  {
+    "title": "Baus Optical Kiambu Branch",
+    "placeId": "ChIJ4cTGUXE9LxgR-YVy0Sr0f_E",
+    "reason": "unmapped_category",
+    "categoryName": "Optician"
+  },
+  {
+    "title": "Optica - Opticians in Runda Mall, Nairobi",
+    "placeId": "ChIJ7378ZK4XLxgRFmwwjBn7TEQ",
+    "reason": "unmapped_category",
+    "categoryName": "Optician"
+  },
+  {
+    "title": "Salons Assured Kenya",
+    "placeId": "ChIJMwYlomwXLxgReK6_tB_dlBg",
+    "reason": "unmapped_category",
+    "categoryName": "Business management consultant"
+  },
+  {
+    "title": "Metropolis( Metro) Barbershop and Spa",
+    "placeId": "ChIJvWULbok9LxgRFm-vNCo5_6U",
+    "reason": "unmapped_category",
+    "categoryName": "Barber shop"
+  },
+  {
+    "title": "Dapper Barbershop, Ever green Square Kiambu Road",
+    "placeId": "ChIJmXmeDz4lLxgRfxtM69Jkzn8",
+    "reason": "unmapped_category",
+    "categoryName": "Barber shop"
+  },
+  {
+    "title": "Tj barber shop kiambu road",
+    "placeId": "ChIJo4WfUmY9LxgRDHD2lnO-wLE",
+    "reason": "unmapped_category",
+    "categoryName": "Barber shop"
+  },
+  {
+    "title": "D&C Executive Barbershop & Spa",
+    "placeId": "ChIJ4yZHUyA9LxgRJVKTZB0poLc",
+    "reason": "unmapped_category",
+    "categoryName": "Barber shop"
+  },
+  {
+    "title": "TotalEnergies Fourways service station",
+    "placeId": "ChIJGdstQ5c9LxgRvIjzcTKvduI",
+    "reason": "unmapped_category",
+    "categoryName": "Gas station"
+  },
+  {
+    "title": "Nyanju's Garage",
+    "placeId": "ChIJSfR6EgA9LxgRl4HVsmW7o8E",
+    "reason": "unmapped_category",
+    "categoryName": "Repair service"
+  },
+  {
+    "title": "TRADELINE AUTO ACADEMY DRIVING SCHOOL.",
+    "placeId": "ChIJ6fm1304XLxgRREcqzhi6cZk",
+    "reason": "unmapped_category",
+    "categoryName": "Driving school"
+  },
+  {
+    "title": "TopRide Driving School - Runda Mall",
+    "placeId": "ChIJ9fsTdgIXLxgRtt2QFZUnypM",
+    "reason": "unmapped_category",
+    "categoryName": "Driving school"
+  },
+  {
+    "title": "Millfield Runda School",
+    "placeId": "ChIJMStCwjsXLxgRnMpgOhwzy4s",
+    "reason": "unmapped_category",
+    "categoryName": "Educational institution"
+  },
+  {
+    "title": "Find A Daycare (We help you get a daycare)",
+    "placeId": "ChIJ6RzkG4IXLxgRWwSe4Tckrj0",
+    "reason": "unmapped_category",
+    "categoryName": "Babysitter"
+  },
+  {
+    "title": "Cake City Kiambu Road",
+    "placeId": "ChIJ406EZt49LxgRofE9xrF0xQk",
+    "reason": "unmapped_category",
+    "categoryName": "Cake shop"
+  },
+  {
+    "title": "YEN Golf Pro Shop",
+    "placeId": "ChIJgwceKfA9LxgR4aIYicpglqw",
+    "reason": "unmapped_category",
+    "categoryName": "Golf shop"
+  },
+  {
+    "title": "Glee Nairobi",
+    "placeId": "ChIJRafshCY9LxgR3kIWD5TCJ8A",
+    "reason": "collision",
+    "detail": {
+      "existing": "Glee Nairobi",
+      "reason": "phone match"
+    }
+  },
+  {
+    "title": "The Fuse Club",
+    "placeId": "ChIJA5C26kI9LxgRYlaPoqmtEq4",
+    "reason": "collision",
+    "detail": {
+      "existing": "(see Phase 2 review)",
+      "reason": "confirmed duplicate in Phase 2 review"
+    }
+  },
+  {
+    "title": "Zana Wines & Spirits (Whiskey Bar and Grill)",
+    "placeId": "ChIJeb618_U9LxgRWuaK8mTUzdI",
+    "reason": "collision",
+    "detail": {
+      "existing": "(see Phase 2 review)",
+      "reason": "confirmed duplicate in Phase 2 review"
+    }
+  },
+  {
+    "title": "Truce Lounge & Grill",
+    "placeId": "ChIJZ7vYpNQXLxgRpyy2ZuOWEnY",
+    "reason": "collision",
+    "detail": {
+      "existing": "(see Phase 2 review)",
+      "reason": "confirmed duplicate in Phase 2 review"
+    }
+  },
+  {
+    "title": "Creamy Inn Total Fourways",
+    "placeId": "ChIJpdQVzCYRLxgRuaymYl4ZG08",
+    "reason": "unmapped_category",
+    "categoryName": "Dessert shop"
+  },
+  {
+    "title": "Jambo Fish Ltd",
+    "placeId": "ChIJA7SDuoM9LxgRLxYlKDr94EY",
+    "reason": "unmapped_category",
+    "categoryName": "Farm"
+  },
+  {
+    "title": "Chiropractic & Physiotherapy Health Centre - Ridgeways",
+    "placeId": "ChIJR71_4ocXLxgRvQAG7-VhgHk",
+    "reason": "unmapped_category",
+    "categoryName": "Health consultant"
+  },
+  {
+    "title": "Ineza Runda - Gate B",
+    "placeId": "ChIJi-YaLAA9LxgR8UjpGQW3Nfs",
+    "reason": "unmapped_category",
+    "categoryName": "Housing society"
+  },
+  {
+    "title": "Kenbro Industries Limited - Kiambu",
+    "placeId": "ChIJK0Sef1o9LxgRWFPPic9szgI",
+    "reason": "unmapped_category",
+    "categoryName": "Manufacturer"
+  },
+  {
+    "title": "FUTURE SPACE AFRICA",
+    "placeId": "ChIJaV9MlLw9LxgRFkL9DgcrBgw",
+    "reason": "unmapped_category",
+    "categoryName": "Architecture firm"
+  },
+  {
+    "title": "MAXDYNAMIC CYBER CAFE",
+    "placeId": "ChIJtTCKT6I9LxgRC9Ku3I6PN04",
+    "reason": "unmapped_category",
+    "categoryName": "Internet cafe"
+  },
+  {
+    "title": "BYPASS CYBER CAFE",
+    "placeId": "ChIJU96MDUk2SCMR_IoPV4_SaT0",
+    "reason": "unmapped_category",
+    "categoryName": "Internet cafe"
+  },
+  {
+    "title": "Levi King Photography",
+    "placeId": "ChIJ6bvYDB49LxgRpYJCYbT0bnk",
+    "reason": "unmapped_category",
+    "categoryName": "Photography service"
+  },
+  {
+    "title": "ZealSCENTS Ltd",
+    "placeId": "ChIJKSqhi6s9LxgRQH_ZLE5dkrs",
+    "reason": "unmapped_category",
+    "categoryName": "Perfume store"
+  },
+  {
+    "title": "Azone",
+    "placeId": "ChIJhT1-CQAXLxgR4rexlwUkQ88",
+    "reason": "unmapped_category",
+    "categoryName": "Appliance store"
+  },
+  {
+    "title": "Jestar General traders",
+    "placeId": "ChIJVyR5l_g9LxgR6mY-PUFPlIc",
+    "reason": "unmapped_category",
+    "categoryName": "Kitchen supply store"
+  },
+  {
+    "title": "BOOZE BYTES",
+    "placeId": "ChIJeWTlVAAXLxgR7DJOGYmcpqQ",
+    "reason": "unmapped_category",
+    "categoryName": "Beverage distributor"
+  },
+  {
+    "title": "Galana Petrol Station, Runda Mall, Kiambu Road",
+    "placeId": "ChIJ7T04dQAXLxgRJ4I64Xc3Rfo",
+    "reason": "unmapped_category",
+    "categoryName": "Gas station"
+  },
+  {
+    "title": "Rubis Githogoro",
+    "placeId": "ChIJgeKAS8Q9LxgRO7FUpuz81kU",
+    "reason": "unmapped_category",
+    "categoryName": "Gas station"
+  },
+  {
+    "title": "Glencor petrol station",
+    "placeId": "ChIJP0CRydg9LxgRaPfBOi9L0Ew",
+    "reason": "unmapped_category",
+    "categoryName": "Gas station"
+  },
+  {
+    "title": "Shell Petrol Service Station, Fourways 4 Ways, Kiambu Road",
+    "placeId": "ChIJwSXJrYg9LxgRDY_D_KnEuho",
+    "reason": "unmapped_category",
+    "categoryName": "Gas station"
+  },
+  {
+    "title": "The Moran bar And Grill Nairobi",
+    "placeId": "ChIJYxRHmC49LxgRCZHEq7VQy-s",
+    "reason": "unmapped_category",
+    "categoryName": null
+  },
+  {
+    "title": "Matteliana Fish",
+    "placeId": "ChIJ9cY394UbLxgRQAVML25e0PI",
+    "reason": "unmapped_category",
+    "categoryName": "Fish store"
+  },
+  {
+    "title": "The Loco Barber",
+    "placeId": "ChIJRSUCUfA9LxgRBtcKCjJNTCc",
+    "reason": "unmapped_category",
+    "categoryName": "Barber shop"
+  },
+  {
+    "title": "Sweet Tooth",
+    "placeId": "ChIJZa225U09LxgRwbZTkpXTRNo",
+    "reason": "unmapped_category",
+    "categoryName": "Dessert shop"
+  },
+  {
+    "title": "Sleek Auto Detailing",
+    "placeId": "ChIJTWDsG6I9LxgRT-I4HjwjiM4",
+    "reason": "unmapped_category",
+    "categoryName": "Car accessories store"
+  },
+  {
+    "title": "Fourways Junction Estate",
+    "placeId": "ChIJiThPJ489LxgR5YQQTsqoa44",
+    "reason": "unmapped_category",
+    "categoryName": "Gated community"
+  },
+  {
+    "title": "Smartika na men shoes online",
+    "placeId": "ChIJ98rcMms9LxgRdSEaYkWJAUs",
+    "reason": "unmapped_category",
+    "categoryName": "Barber shop"
+  },
+  {
+    "title": "Lymack Gardens",
+    "placeId": "ChIJPXb_roE9LxgR_YTCP67k5Ww",
+    "reason": "unmapped_category",
+    "categoryName": "Garden"
+  }
+]

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { business_id, reviewer_name, rating, comment } = body
+    const { business_id, reviewer_name, rating, comment, aspect_ratings } = body
 
     if (!business_id || !reviewer_name?.trim() || !rating) {
       return NextResponse.json({ error: 'Business ID, name, and rating are required.' }, { status: 400 })
@@ -21,11 +21,33 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Rating must be between 1 and 5.' }, { status: 400 })
     }
 
+    let finalRating = Number(rating)
+    let aspectRatings: Record<string, number> | null = null
+
+    if (aspect_ratings && typeof aspect_ratings === 'object') {
+      const entries = Object.entries(aspect_ratings as Record<string, unknown>)
+      const values: number[] = []
+      for (const [, v] of entries) {
+        const n = Number(v)
+        if (!Number.isFinite(n) || n < 1 || n > 5) {
+          return NextResponse.json({ error: 'Each aspect rating must be between 1 and 5.' }, { status: 400 })
+        }
+        values.push(n)
+      }
+      if (values.length > 0) {
+        aspectRatings = Object.fromEntries(entries.map(([k, v]) => [k, Number(v)]))
+        // Trust the client-computed average within rounding, but recompute
+        // server-side rather than accept an arbitrary rating value outright.
+        finalRating = Math.round((values.reduce((s, n) => s + n, 0) / values.length) * 10) / 10
+      }
+    }
+
     const supabase = await createAdminClient()
     const { error } = await supabase.from('reviews').insert({
       business_id,
       reviewer_name: reviewer_name.trim(),
-      rating: Number(rating),
+      rating: finalRating,
+      aspect_ratings: aspectRatings,
       comment: comment?.trim() || null,
       status: 'pending',
     })

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Search, Menu, X, ChevronDown, Phone,
+  Search, Menu, X, ChevronDown, Phone, Siren,
   UtensilsCrossed, Heart, Car, GraduationCap, ShoppingBag,
   Building2, Briefcase, Truck, Shield, Home, Trees, Wallet, Users, Church,
 } from 'lucide-react'
@@ -17,7 +17,7 @@ const navLinks = [
   { label: 'Lifestyle Vibes', href: '/journal' },
   { label: 'Newswatch', href: '/journal/newswatch' },
   { label: 'Jobs & Careers', href: '/jobs' },
-  { label: 'Compare Prices', href: '/prices' },
+  { label: 'Price Comparison', href: '/prices' },
   { label: 'Travel', href: '/travel' },
   { label: 'Ask Kiambu Road', href: '/ask-kiambu-road' },
 ]
@@ -27,8 +27,8 @@ const PHONE_HREF = 'tel:+254720950500'
 
 const quickCategories = [
   { label: 'Eat & Stay', href: '/directory/eat-drink-stay', icon: UtensilsCrossed },
-  { label: 'Health', href: '/directory/health-wellness', icon: Heart },
-  { label: 'Automotive', href: '/directory/automotive', icon: Car },
+  { label: 'Medical Services', href: '/directory/medical-services', icon: Heart },
+  { label: 'Car & Motor Dealers', href: '/directory/car-motor-dealers', icon: Car },
   { label: 'Education', href: '/directory/education-childcare', icon: GraduationCap },
   { label: 'Shopping', href: '/directory/retail-shopping', icon: ShoppingBag },
 ]
@@ -68,6 +68,15 @@ export default function Header() {
 
           {/* Right actions */}
           <div className="flex items-center gap-2">
+            <Link
+              href="/emergency"
+              aria-label="Emergency contacts"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-full px-3 py-1.5 transition-colors"
+            >
+              <Siren className="w-3.5 h-3.5 shrink-0" />
+              Emergency
+            </Link>
+
             <a
               href={PHONE_HREF}
               aria-label={`Call us at ${PHONE_NUMBER}`}
@@ -168,6 +177,14 @@ export default function Header() {
             className="fixed inset-0 top-14 bg-white z-40 md:hidden overflow-y-auto"
           >
             <nav className="px-4 py-6 flex flex-col gap-1">
+              <Link
+                href="/emergency"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 font-bold text-sm mb-3"
+              >
+                <Siren className="w-4 h-4" />
+                Emergency Contacts
+              </Link>
               {navLinks.map((link) => (
                 <Link
                   key={link.href}

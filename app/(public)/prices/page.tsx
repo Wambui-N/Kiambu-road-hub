@@ -1,8 +1,12 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Script from 'next/script'
 import { createClient } from '@/lib/supabase/server'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import PriceFilters from './price-filters'
+import PriceComparisonList from './price-comparison-list'
 import SubmitPriceForm from './submit-price-form'
+import { breadcrumbJsonLd, collectionPageJsonLd } from '@/lib/seo'
+import type { PriceRow } from '@/components/prices/types'
 
 export const metadata: Metadata = {
   title: 'Prices at a Glance',
@@ -12,88 +16,106 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600
 
-const CATEGORY_LABELS: Record<string, string> = {
-  groceries: '🛒 Groceries',
-  fuel: '⛽ Fuel',
-  medical: '💊 Medical',
-  dining: '🍽️ Dining',
+type Props = {
+  searchParams: Promise<{
+    category?: string
+    q?: string
+    min?: string
+    max?: string
+    outlet?: string
+    sort?: string
+  }>
 }
 
-async function getPriceData() {
+async function getPriceRows(category?: string, search?: string): Promise<PriceRow[]> {
   try {
     const supabase = await createClient()
-    const { data: entries } = await supabase
+    let query = supabase
       .from('price_entries')
       .select(`
-        *,
-        price_item:price_items(id, name, category, unit),
-        business:businesses(id, name, slug)
+        id, amount, currency, store_name_snapshot, observed_at,
+        price_item:price_items!inner(id, name, slug, category, unit, status),
+        business:businesses(id, name, slug, latitude, longitude, google_maps_url, whatsapp, phone, road_street, area:areas(name))
       `)
       .eq('status', 'published')
-      .order('observed_at', { ascending: false })
-      .limit(200)
-    return entries ?? []
+      .eq('price_item.status', 'published')
+      .order('amount', { ascending: true })
+      .limit(500)
+
+    if (category) query = query.eq('price_item.category', category)
+    if (search) query = query.ilike('price_item.name', `%${search}%`)
+
+    const { data } = await query
+    if (!data) return []
+
+    return data.map((entry): PriceRow => {
+      const item = entry.price_item as unknown as { id: string; name: string; slug: string; category: string | null; unit: string | null }
+      const business = entry.business as unknown as {
+        id: string; name: string; slug: string; latitude: number | null; longitude: number | null
+        google_maps_url: string | null; whatsapp: string | null; phone: string | null
+        road_street: string | null; area: { name: string } | null
+      } | null
+
+      return {
+        id: entry.id,
+        itemId: item.id,
+        itemName: item.name,
+        itemSlug: item.slug,
+        category: item.category,
+        unit: item.unit,
+        amount: entry.amount,
+        currency: entry.currency,
+        observedAt: entry.observed_at,
+        storeName: business?.name ?? entry.store_name_snapshot,
+        businessId: business?.id ?? null,
+        businessSlug: business?.slug ?? null,
+        areaName: business?.area?.name ?? business?.road_street ?? null,
+        lat: business?.latitude ?? null,
+        lng: business?.longitude ?? null,
+        googleMapsUrl: business?.google_maps_url ?? null,
+        whatsapp: business?.whatsapp ?? null,
+        phone: business?.phone ?? null,
+      }
+    })
   } catch {
     return []
   }
 }
 
-type Entry = {
-  id: string
-  amount: number
-  currency: string
-  store_name_snapshot: string
-  observed_at: string
-  price_item: { id?: string; name?: string; category?: string; unit?: string } | null
-  business: { id?: string; name?: string; slug?: string } | null
-}
+export default async function PricesPage({ searchParams }: Props) {
+  const params = await searchParams
+  const rows = await getPriceRows(params.category, params.q)
+  const hasData = rows.length > 0
 
-export default async function PricesPage() {
-  const entries = await getPriceData()
-
-  type GroupedItems = Record<string, { name: string; unit: string | null; prices: Record<string, { amount: number; currency: string; observed_at: string }> }>
-  type CategoryGroup = Record<string, GroupedItems>
-
-  const grouped: CategoryGroup = {}
-  const allStores = new Set<string>()
-
-  entries.forEach((entry) => {
-    const e = entry as Entry
-    const item = e.price_item
-    if (!item?.name) return
-    const cat = item.category ?? 'other'
-    const storeName = (e.business?.name ?? e.store_name_snapshot) ?? 'Other'
-    allStores.add(storeName)
-    if (!grouped[cat]) grouped[cat] = {}
-    if (!grouped[cat][item.name]) {
-      grouped[cat][item.name] = { name: item.name, unit: item.unit ?? null, prices: {} }
-    }
-    grouped[cat][item.name].prices[storeName] = {
-      amount: e.amount,
-      currency: e.currency,
-      observed_at: e.observed_at,
-    }
+  const uniqueItems = Array.from(new Map(rows.map((r) => [r.itemSlug, r.itemName])).entries())
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: 'Home', path: '/' },
+    { name: 'Price Comparison', path: '/prices' },
+  ])
+  const collectionLd = collectionPageJsonLd({
+    name: 'Price Comparison',
+    description: 'Compare community-sourced prices for groceries, fuel, dining, and more along Kiambu Road, Nairobi.',
+    path: '/prices',
+    items: uniqueItems.map(([slug, name]) => ({ name, path: `/prices/${slug}` })),
   })
-
-  const categories = Object.keys(grouped)
-  const stores = Array.from(allStores).slice(0, 6)
-  const hasData = entries.length > 0
 
   return (
     <div className="min-h-screen bg-brand-surface">
+      <Script id="prices-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <Script id="prices-collection-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
       <div className="bg-primary py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Kiambu Road Explorer</p>
-          <h1 className="font-display text-4xl font-bold text-white mb-2">Prices at a Glance</h1>
+          <h1 className="font-display text-4xl font-bold text-white mb-2">Price Comparison</h1>
           <p className="text-white/70 text-sm max-w-xl">
-            Community-sourced prices for everyday goods and services along Kiambu Road.
+            Compare community-sourced prices for everyday goods and services across outlets along Kiambu Road.
             Updated regularly by our community.
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {!hasData ? (
+        {!hasData && !params.category && !params.q ? (
           <div className="text-center py-20">
             <div className="text-6xl mb-5">🏷️</div>
             <h2 className="font-display text-2xl font-semibold mb-3">Price data coming soon</h2>
@@ -102,70 +124,23 @@ export default async function PricesPage() {
             </p>
           </div>
         ) : (
-          <Tabs defaultValue={categories[0] ?? 'groceries'}>
-            <TabsList className="mb-6 flex-wrap h-auto">
-              {categories.map((cat) => (
-                <TabsTrigger key={cat} value={cat} className="text-xs font-mono">
-                  {CATEGORY_LABELS[cat] ?? cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            {categories.map((cat) => {
-              const items = grouped[cat]
-              return (
-                <TabsContent key={cat} value={cat}>
-                  <div className="bg-white rounded-2xl border border-border overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm min-w-[640px]">
-                        <thead>
-                          <tr className="border-b border-border bg-muted/50">
-                            <th className="text-left px-4 py-3 font-mono text-xs text-muted-foreground sticky left-0 bg-muted/50 min-w-[140px]">
-                              Item
-                            </th>
-                            {stores.map((store) => (
-                              <th key={store} className="px-4 py-3 font-mono text-xs text-muted-foreground text-center min-w-[100px]">
-                                {store}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border">
-                          {Object.values(items).map((item) => (
-                            <tr key={item.name} className="hover:bg-muted/20 transition-colors">
-                              <td className="px-4 py-3 sticky left-0 bg-white">
-                                <p className="font-medium">{item.name}</p>
-                                {item.unit && <p className="text-[10px] font-mono text-muted-foreground">per {item.unit}</p>}
-                              </td>
-                              {stores.map((store) => {
-                                const entry = item.prices[store]
-                                return (
-                                  <td key={store} className="px-4 py-3 text-center">
-                                    {entry ? (
-                                      <div>
-                                        <p className="font-bold text-foreground">
-                                          {entry.currency} {Number(entry.amount).toLocaleString()}
-                                        </p>
-                                        <p className="text-[10px] font-mono text-muted-foreground">
-                                          {new Date(entry.observed_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' })}
-                                        </p>
-                                      </div>
-                                    ) : (
-                                      <span className="text-muted-foreground text-xs">—</span>
-                                    )}
-                                  </td>
-                                )
-                              })}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </TabsContent>
-              )
-            })}
-          </Tabs>
+          <div className="space-y-6">
+            <PriceFilters
+              currentCategory={params.category}
+              currentSearch={params.q}
+              currentMin={params.min}
+              currentMax={params.max}
+              currentOutlet={params.outlet}
+              currentSort={params.sort}
+            />
+            <PriceComparisonList
+              rows={rows}
+              min={params.min}
+              max={params.max}
+              outlet={params.outlet}
+              sort={params.sort}
+            />
+          </div>
         )}
 
         {/* Community submission */}

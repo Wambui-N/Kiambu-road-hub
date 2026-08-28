@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Script from 'next/script'
 import {
   Phone, MessageCircle, Globe, Mail, MapPin, Clock, Star,
-  BadgeCheck, ExternalLink, ArrowLeft, Building2, User, DoorOpen,
+  BadgeCheck, ExternalLink, ArrowLeft, Building2, User, DoorOpen, CheckCircle2,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
@@ -14,14 +14,19 @@ import BusinessCard from '@/components/directory/business-card'
 import ReviewSection from '@/components/directory/review-section'
 import { getWhatsAppUrl, getImageUrl, getPriceRangeLabel } from '@/lib/utils'
 import { buildTrackedUrl } from '@/lib/tracking'
-import { localBusinessJsonLd } from '@/lib/seo'
+import { localBusinessJsonLd, breadcrumbJsonLd } from '@/lib/seo'
+import { getReviewAggregate } from '@/lib/reviews'
 import type { Business } from '@/types/database'
+
+const QUICK_FACT_TAG_TYPES = new Set(['quick_fact', 'medical_service', 'emergency_criteria'])
 
 const CATEGORY_IMAGE_MAP: Record<string, string> = {
   'eat-drink-stay':        'https://images.unsplash.com/photo-1768697359488-9cc9937056a6?auto=format&fit=crop&w=1600&q=80',
-  'health-wellness':       'https://images.unsplash.com/photo-1755995083683-50d08cd83d09?auto=format&fit=crop&w=1600&q=80',
+  'medical-services':      'https://images.unsplash.com/photo-1755995083683-50d08cd83d09?auto=format&fit=crop&w=1600&q=80',
   'education-childcare':   'https://images.unsplash.com/photo-1549380883-4dd936bbc0fa?auto=format&fit=crop&w=1600&q=80',
   'retail-shopping':       'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1600&q=80',
+  'malls':                 'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1600&q=80',
+  'lifestyle-wellness':    'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80',
   'car-motor-dealers':     'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1600&q=80',
   'auto-services':         'https://images.unsplash.com/photo-1632823469850-2f77dd9c7f93?auto=format&fit=crop&w=1600&q=80',
   'real-estate-property':  'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80',
@@ -140,12 +145,14 @@ export default async function BusinessProfilePage({ params }: Props) {
   const business = await getBusiness(slug)
   if (!business) notFound()
 
-  const relatedBusinesses = await getRelatedBusinesses(
-    business.subcategory_id,
-    business.category_id ?? '',
-    business.id,
-  )
-  const reviews = await getApprovedReviews(business.id)
+  const [relatedBusinesses, reviews, reviewAggregate] = await Promise.all([
+    getRelatedBusinesses(business.subcategory_id, business.category_id ?? '', business.id),
+    getApprovedReviews(business.id),
+    (async () => {
+      const supabase = await createClient()
+      return getReviewAggregate(supabase, business.id)
+    })(),
+  ])
 
   const whatsappUrl = business.whatsapp ? getWhatsAppUrl(business.whatsapp) : null
   const images = business.images ?? []
@@ -157,11 +164,24 @@ export default async function BusinessProfilePage({ params }: Props) {
   const coverImageUrl = getImageUrl(coverPath)
   const galleryImages = images.filter((i) => !i.is_cover).slice(0, 4)
 
-  const jsonLd = localBusinessJsonLd(business)
+  const jsonLd = localBusinessJsonLd(business, reviewAggregate)
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: 'Home', path: '/' },
+    { name: 'Directory', path: '/directory' },
+    ...(business.category ? [{ name: business.category.name, path: `/directory/${business.category.slug}` }] : []),
+    { name: business.name, path: `/directory/business/${business.slug}` },
+  ])
 
-  const avgRating = reviews.length
-    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-    : null
+  const avgRating = reviewAggregate.average
+
+  const quickFactTags = (business.tags ?? []).filter((t) => {
+    const tag = (t as unknown as { tag: { tag_type: string | null } }).tag
+    return tag && QUICK_FACT_TAG_TYPES.has(tag.tag_type ?? '')
+  })
+  const otherTags = (business.tags ?? []).filter((t) => {
+    const tag = (t as unknown as { tag: { tag_type: string | null } }).tag
+    return !tag || !QUICK_FACT_TAG_TYPES.has(tag.tag_type ?? '')
+  })
 
   return (
     <>
@@ -169,6 +189,11 @@ export default async function BusinessProfilePage({ params }: Props) {
         id="business-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Script
+        id="business-breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
       <div className="min-h-screen bg-brand-surface">
@@ -275,7 +300,7 @@ export default async function BusinessProfilePage({ params }: Props) {
                       </div>
                       <span className="text-sm font-mono font-semibold">{avgRating.toFixed(1)}</span>
                       <span className="text-xs text-muted-foreground">
-                        ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
+                        ({reviewAggregate.count} {reviewAggregate.count === 1 ? 'review' : 'reviews'})
                       </span>
                     </div>
                   </div>
@@ -286,6 +311,24 @@ export default async function BusinessProfilePage({ params }: Props) {
                   <p className="text-muted-foreground leading-relaxed text-sm">{business.description}</p>
                 )}
               </div>
+
+              {/* Quick Facts */}
+              {quickFactTags.length > 0 && (
+                <div className="bg-white rounded-2xl border border-border p-6">
+                  <h2 className="font-semibold mb-4">Quick Facts</h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2.5">
+                    {quickFactTags.map((t) => {
+                      const tag = (t as unknown as { tag: { id: string; name: string } }).tag
+                      return (
+                        <div key={tag.id} className="flex items-center gap-2 text-sm">
+                          <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                          <span>{tag.name}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Opening hours */}
               {business.hours && business.hours.length > 0 && (
@@ -309,9 +352,9 @@ export default async function BusinessProfilePage({ params }: Props) {
               )}
 
               {/* Tags */}
-              {business.tags && business.tags.length > 0 && (
+              {otherTags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {business.tags.map((t) => {
+                  {otherTags.map((t) => {
                     const tag = (t as unknown as { tag: { id: string; name: string; slug: string } }).tag
                     return (
                       <span
@@ -350,7 +393,12 @@ export default async function BusinessProfilePage({ params }: Props) {
               )}
 
               {/* Community Reviews — inline form */}
-              <ReviewSection businessId={business.id} initialReviews={reviews} />
+              <ReviewSection
+                businessId={business.id}
+                initialReviews={reviews}
+                aggregate={reviewAggregate}
+                categorySlug={business.category?.slug}
+              />
             </div>
 
             {/* Sidebar */}

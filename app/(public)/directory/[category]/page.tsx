@@ -1,18 +1,22 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Script from 'next/script'
+import { Phone, AlertTriangle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { CATEGORIES } from '@/data/seed/categories'
+import { CATEGORIES, CATEGORY_FILTER_TAGS } from '@/data/seed/categories'
+import { NATIONAL_EMERGENCY_NUMBER } from '@/data/emergency-contacts'
 import BusinessCard from '@/components/directory/business-card'
 import FeaturedListingBanner from '@/components/directory/featured-listing-banner'
 import AdSlot from '@/components/ads/ad-slot'
-import type { Business, Category, Subcategory, AdSlot as AdSlotType } from '@/types/database'
+import { breadcrumbJsonLd, collectionPageJsonLd, buildCanonical } from '@/lib/seo'
+import type { Business, Category, Subcategory, AdSlot as AdSlotType, Tag } from '@/types/database'
 
 export const revalidate = 3600
 
 interface Props {
   params: Promise<{ category: string }>
-  searchParams: Promise<{ subcategory?: string; area?: string; sort?: string }>
+  searchParams: Promise<{ subcategory?: string; area?: string; sort?: string; tag?: string }>
 }
 
 async function getCategoryData(categorySlug: string) {
@@ -32,7 +36,7 @@ async function getCategoryData(categorySlug: string) {
   }
 }
 
-async function getBusinesses(categorySlug: string, subcategorySlug?: string, areaSlug?: string) {
+async function getBusinesses(categorySlug: string, subcategorySlug?: string, areaSlug?: string, tagSlug?: string) {
   try {
     const supabase = await createClient()
     let query = supabase
@@ -75,6 +79,15 @@ async function getBusinesses(categorySlug: string, subcategorySlug?: string, are
       if (areaData?.id) query = query.eq('area_id', areaData.id)
     }
 
+    if (tagSlug) {
+      const { data: tagData } = await supabase.from('tags').select('id').eq('slug', tagSlug).single()
+      const { data: btRows } = tagData?.id
+        ? await supabase.from('business_tags').select('business_id').eq('tag_id', tagData.id)
+        : { data: [] }
+      const businessIds = (btRows ?? []).map((r) => r.business_id)
+      query = query.in('id', businessIds.length ? businessIds : ['00000000-0000-0000-0000-000000000000'])
+    }
+
     // Order: featured/sponsor (paid) first, then by date
     const { data } = await query
       .order('featured', { ascending: false })
@@ -91,19 +104,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params
   const categoryData = await getCategoryData(category)
   if (!categoryData) return { title: 'Category Not Found' }
+  const description = categoryData.description ?? `Find the best ${categoryData.name.toLowerCase()} businesses along Kiambu Road, Nairobi.`
   return {
     title: `${categoryData.name} — Kiambu Road`,
-    description: categoryData.description ?? `Find the best ${categoryData.name.toLowerCase()} businesses along Kiambu Road, Nairobi.`,
+    description,
+    alternates: { canonical: buildCanonical(`/directory/${category}`) },
+    openGraph: {
+      title: `${categoryData.name} | Kiambu Road Explorer`,
+      description,
+      type: 'website',
+    },
+  }
+}
+
+async function getFilterTags(tagSlugs: string[]): Promise<Tag[]> {
+  if (!tagSlugs.length) return []
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase.from('tags').select('*').in('slug', tagSlugs)
+    // Preserve the curated order from CATEGORY_FILTER_TAGS rather than DB order.
+    const bySlug = new Map((data ?? []).map((t) => [t.slug, t]))
+    return tagSlugs.map((s) => bySlug.get(s)).filter((t): t is Tag => Boolean(t))
+  } catch {
+    return []
   }
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {
   const { category: categorySlug } = await params
-  const { subcategory, area } = await searchParams
+  const { subcategory, area, tag } = await searchParams
 
-  const [categoryData, businesses] = await Promise.all([
+  const filterTagSlugs = CATEGORY_FILTER_TAGS[categorySlug] ?? []
+
+  const [categoryData, businesses, filterTags] = await Promise.all([
     getCategoryData(categorySlug),
-    getBusinesses(categorySlug, subcategory, area),
+    getBusinesses(categorySlug, subcategory, area, tag),
+    getFilterTags(filterTagSlugs),
   ])
 
   // Fetch ad slots for this category page
@@ -132,7 +168,22 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     : null
   const listingBusinesses = topBusiness ? businesses.slice(1) : businesses
 
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: 'Home', path: '/' },
+    { name: 'Directory', path: '/directory' },
+    { name: categoryData.name, path: `/directory/${categorySlug}` },
+  ])
+  const collectionLd = collectionPageJsonLd({
+    name: categoryData.name,
+    description: categoryData.description ?? undefined,
+    path: `/directory/${categorySlug}`,
+    items: businesses.slice(0, 50).map((b) => ({ name: b.name, path: `/directory/business/${b.slug}` })),
+  })
+
   return (
+    <>
+      <Script id="category-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <Script id="category-collection-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
     <div className="min-h-screen bg-brand-surface">
       {/* Breadcrumb + header */}
       <div className="bg-primary py-10">
@@ -152,6 +203,54 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Emergency Help banner — Medical Services only */}
+        {categorySlug === 'medical-services' && (
+          <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-red-700">Need urgent medical help?</p>
+                <p className="text-sm text-red-600/80">
+                  Call {NATIONAL_EMERGENCY_NUMBER} now, or see 24-hour hospitals and ambulance services.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <a href="tel:999" className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors">
+                <Phone className="w-4 h-4" /> Call 999
+              </a>
+              <Link href="/emergency" className="inline-flex items-center px-4 py-2 bg-white border border-red-200 text-red-700 rounded-xl text-sm font-semibold hover:bg-red-50 transition-colors">
+                Full Emergency List
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Tag filter pills — categories with a curated tag set (Medical Services, Malls) */}
+        {filterTags.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
+            <Link
+              href={`/directory/${categorySlug}${subcategory ? `?subcategory=${subcategory}` : ''}`}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-colors ${
+                !tag ? 'bg-foreground text-white' : 'bg-white border border-border text-muted-foreground hover:border-foreground'
+              }`}
+            >
+              All services
+            </Link>
+            {filterTags.map((t) => (
+              <Link
+                key={t.id}
+                href={`/directory/${categorySlug}?tag=${t.slug}${subcategory ? `&subcategory=${subcategory}` : ''}`}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-colors whitespace-nowrap ${
+                  tag === t.slug ? 'bg-foreground text-white' : 'bg-white border border-border text-muted-foreground hover:border-foreground'
+                }`}
+              >
+                {t.name}
+              </Link>
+            ))}
+          </div>
+        )}
+
         {/* Subcategory filter tabs */}
         {subcategories.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
@@ -228,5 +327,6 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         )}
       </div>
     </div>
+    </>
   )
 }

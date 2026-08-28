@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://kiamburoad.com/terms' },
 }
 
-const LAST_UPDATED = 'March 2026'
+const LAST_UPDATED = 'August 2026'
 
 const TERMS = [
   {
@@ -20,7 +20,11 @@ const TERMS = [
   },
   {
     heading: 'Business Listings',
-    body: 'Business owners are responsible for the accuracy of information they submit. Kiambu Road Explorer reserves the right to edit, approve, or remove listings at our sole discretion. We make reasonable efforts to verify listings but cannot guarantee that all information is current or accurate.',
+    body: 'Business owners are responsible for the accuracy of information they submit. Kiambu Road Explorer reserves the right to edit, approve, or remove listings at our sole discretion. We make reasonable efforts to verify listings but cannot guarantee that all information is current or accurate. Some listings are compiled from publicly available sources — including Google Maps and Google Places — as part of building out the directory, and have not been independently verified by our team unless marked "Explorer Verified."',
+  },
+  {
+    heading: 'Data Sourcing & Verification Status',
+    body: 'Kiambu Road Explorer is under active development and a portion of its business listings were sourced from publicly available mapping and business data rather than direct submission or in-person verification. These listings may contain outdated, incomplete, or inaccurate details (including names, addresses, phone numbers, hours, and pricing). You should independently confirm any detail — especially phone numbers, opening hours, licensing, and location — directly with the business before relying on it, and always before travelling to a listing in an emergency. Business owners who find inaccurate or unwanted information about their business may request correction or removal at any time via our Contact page.',
   },
   {
     heading: 'Intellectual Property',
@@ -28,7 +32,7 @@ const TERMS = [
   },
   {
     heading: 'Limitation of Liability',
-    body: 'Kiambu Road Explorer shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the website, reliance on directory listings, or any transactions with listed businesses. Your use of the site is at your sole risk.',
+    body: 'Kiambu Road Explorer shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the website, reliance on directory listings, or any transactions with listed businesses. Your use of the site is at your sole risk. This applies equally to any medical, hospital, or emergency-services information published on the site (including the Emergency Contacts page and any Medical Services category content): it is provided as a convenience aid to help you find help faster, not as a substitute for calling Kenya’s national emergency line (999 / 112) directly, and Kiambu Road Explorer is not responsible for the availability, response time, or quality of care of any listed hospital, clinic, or ambulance service.',
   },
   {
     heading: 'Advertising',

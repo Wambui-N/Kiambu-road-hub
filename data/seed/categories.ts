@@ -24,20 +24,18 @@ export const CATEGORIES = [
     ],
   },
   {
-    name: 'Health & Wellness',
-    slug: 'health-wellness',
+    name: 'Medical Services',
+    slug: 'medical-services',
     icon: 'Heart',
     color: '#10B981',
-    description: 'Hospitals, clinics, gyms, pharmacies and wellness',
+    description: 'Hospitals, clinics, dentists, pharmacies and diagnostic services',
     subcategories: [
       { name: 'Hospitals & Clinics', slug: 'hospitals-clinics' },
       { name: 'Dentists', slug: 'dentists' },
-      { name: 'Gyms & Fitness', slug: 'gyms-fitness' },
       { name: 'Pharmacies', slug: 'pharmacies' },
       { name: 'Lab & X-Ray', slug: 'lab-xray' },
       { name: 'Physiotherapy', slug: 'physiotherapy' },
       { name: 'Nursing & Homecare', slug: 'nursing-homecare' },
-      { name: 'Nutrition', slug: 'nutrition' },
     ],
   },
   {
@@ -134,20 +132,40 @@ export const CATEGORIES = [
     slug: 'retail-shopping',
     icon: 'ShoppingBag',
     color: '#EC4899',
-    description: 'Malls, supermarkets, boutiques and specialty stores',
+    description: 'Supermarkets, hardware and specialty stores',
     subcategories: [
-      { name: 'Malls & Stores', slug: 'malls-stores' },
       { name: 'Groceries & Fresh Foods', slug: 'groceries-fresh-foods' },
       { name: 'Hardware', slug: 'hardware' },
-      { name: 'Boutiques', slug: 'boutiques' },
       { name: 'Furniture & Decor', slug: 'furniture-decor' },
-      { name: 'Beauty & Spas', slug: 'beauty-spas' },
       { name: 'Art Gallery & Curios', slug: 'art-gallery-curios' },
       { name: 'Wines & Spirits', slug: 'wines-spirits' },
       { name: 'Meat Supply', slug: 'meat-supply' },
       { name: 'Water Supply', slug: 'water-supply' },
       { name: 'Sports Equipment', slug: 'sports-equipment' },
       { name: 'Computers & Phones', slug: 'computers-phones' },
+    ],
+  },
+  {
+    name: 'Lifestyle & Wellness',
+    slug: 'lifestyle-wellness',
+    icon: 'Sparkles',
+    color: '#14B8A6',
+    description: 'Gyms, nutrition, beauty, spas and boutiques',
+    subcategories: [
+      { name: 'Gyms & Fitness', slug: 'gyms-fitness' },
+      { name: 'Nutrition', slug: 'nutrition' },
+      { name: 'Beauty & Spas', slug: 'beauty-spas' },
+      { name: 'Boutiques', slug: 'boutiques' },
+    ],
+  },
+  {
+    name: 'Malls',
+    slug: 'malls',
+    icon: 'ShoppingBag',
+    color: '#F472B6',
+    description: 'Shopping malls and large retail stores',
+    subcategories: [
+      { name: 'Malls & Stores', slug: 'malls-stores' },
     ],
   },
   {
@@ -230,6 +248,19 @@ export const CATEGORIES = [
     subcategories: [],
   },
 ] as const
+
+/**
+ * Category slug -> tag slugs (from the `tags` table) shown as filter pills
+ * on that category's directory page. Only categories with a defined,
+ * curated tag set get this richer filterable treatment.
+ */
+export const CATEGORY_FILTER_TAGS: Record<string, string[]> = {
+  'medical-services': [
+    '24-hour', 'emergency', 'maternity', 'paediatrics', 'dental',
+    'laboratory', 'x-ray-imaging', 'pharmacy', 'physiotherapy', 'vaccination',
+  ],
+  'malls': ['parking', 'food-court', 'supermarket-anchor', 'atm', 'cinema', 'kids-play-area'],
+}
 
 export const AREAS = [
   { name: 'Ridgeways',   slug: 'ridgeways',   sort_order: 1 },

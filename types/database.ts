@@ -180,6 +180,8 @@ export interface Review {
   rating: number
   comment: string | null
   status: ModerationStatus
+  helpful_count: number
+  aspect_ratings: Record<string, number> | null
   created_at: string
 }
 

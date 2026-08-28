@@ -10,8 +10,16 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'sonner'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Plus, X } from 'lucide-react'
 import { slugify } from '@/lib/utils'
+
+type MallTenantCategory = 'eat' | 'shop' | 'services' | 'entertainment'
+const MALL_TENANT_CATEGORIES: { value: MallTenantCategory; label: string }[] = [
+  { value: 'eat', label: 'Eat' },
+  { value: 'shop', label: 'Shop' },
+  { value: 'services', label: 'Services' },
+  { value: 'entertainment', label: 'Entertainment' },
+]
 
 interface Category {
   id: string
@@ -39,21 +47,44 @@ const TAG_TYPE_LABELS: Record<string, string> = {
   emergency_criteria: 'Emergency Criteria',
 }
 
+interface MallTenantInput {
+  id?: string
+  name: string
+  category: MallTenantCategory
+}
+
 interface BusinessFormProps {
   categories: Category[]
   areas: Area[]
   tags?: TagOption[]
   initialTagIds?: string[]
+  initialMallTenants?: MallTenantInput[]
   initialData?: Record<string, unknown>
 }
 
-export default function BusinessForm({ categories, areas, tags = [], initialTagIds = [], initialData }: BusinessFormProps) {
+export default function BusinessForm({ categories, areas, tags = [], initialTagIds = [], initialMallTenants = [], initialData }: BusinessFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
     (initialData?.category_id as string) ?? ''
   )
   const [selectedTagIds, setSelectedTagIds] = useState<Set<string>>(new Set(initialTagIds))
+
+  const initialMallFacts = Object.entries(
+    (initialData?.mall_quick_facts as Record<string, string> | null) ?? {}
+  ).map(([key, value]) => ({ key, value }))
+  const [mallFacts, setMallFacts] = useState<{ key: string; value: string }[]>(initialMallFacts)
+  const [mallTenants, setMallTenants] = useState<MallTenantInput[]>(initialMallTenants)
+
+  const addMallFact = () => setMallFacts((prev) => [...prev, { key: '', value: '' }])
+  const updateMallFact = (i: number, field: 'key' | 'value', value: string) =>
+    setMallFacts((prev) => prev.map((f, idx) => (idx === i ? { ...f, [field]: value } : f)))
+  const removeMallFact = (i: number) => setMallFacts((prev) => prev.filter((_, idx) => idx !== i))
+
+  const addMallTenant = () => setMallTenants((prev) => [...prev, { name: '', category: 'eat' }])
+  const updateMallTenant = (i: number, field: 'name' | 'category', value: string) =>
+    setMallTenants((prev) => prev.map((t, idx) => (idx === i ? { ...t, [field]: value } : t)))
+  const removeMallTenant = (i: number) => setMallTenants((prev) => prev.filter((_, idx) => idx !== i))
 
   const tagGroups = tags.reduce<Record<string, TagOption[]>>((acc, t) => {
     const key = t.tag_type ?? 'other'
@@ -72,6 +103,7 @@ export default function BusinessForm({ categories, areas, tags = [], initialTagI
   }
 
   const subcategories = categories.find((c) => c.id === selectedCategoryId)?.subcategories ?? []
+  const isMallCategory = categories.find((c) => c.id === selectedCategoryId)?.slug === 'malls'
 
   const [form, setForm] = useState({
     name: (initialData?.name as string) ?? '',
@@ -120,6 +152,10 @@ export default function BusinessForm({ categories, areas, tags = [], initialTagI
       const { data: { user } } = await supabase.auth.getUser()
       const userId = user?.id ?? null
 
+      const mallFactsObject = isMallCategory
+        ? Object.fromEntries(mallFacts.filter((f) => f.key.trim() && f.value.trim()).map((f) => [f.key.trim(), f.value.trim()]))
+        : null
+
       const payload = {
         ...form,
         google_rating: form.google_rating ? Number(form.google_rating) : null,
@@ -129,6 +165,7 @@ export default function BusinessForm({ categories, areas, tags = [], initialTagI
         area_id: form.area_id || null,
         updated_by: userId,
         published_at: form.status === 'published' ? new Date().toISOString() : (initialData?.published_at as string | null ?? null),
+        mall_quick_facts: mallFactsObject && Object.keys(mallFactsObject).length > 0 ? mallFactsObject : null,
       }
 
       let businessId = initialData?.id as string | undefined
@@ -149,6 +186,22 @@ export default function BusinessForm({ categories, areas, tags = [], initialTagI
           const rows = Array.from(selectedTagIds).map((tag_id) => ({ business_id: businessId, tag_id }))
           const { error: tagError } = await supabase.from('business_tags').insert(rows)
           if (tagError) throw tagError
+        }
+      }
+
+      // Replace mall_tenants — only relevant while this business is in the Malls category
+      if (businessId) {
+        await supabase.from('mall_tenants').delete().eq('mall_id', businessId)
+        const validTenants = isMallCategory ? mallTenants.filter((t) => t.name.trim()) : []
+        if (validTenants.length > 0) {
+          const rows = validTenants.map((t, i) => ({
+            mall_id: businessId,
+            name: t.name.trim(),
+            category: t.category,
+            sort_order: i,
+          }))
+          const { error: tenantError } = await supabase.from('mall_tenants').insert(rows)
+          if (tenantError) throw tenantError
         }
       }
 
@@ -353,6 +406,68 @@ export default function BusinessForm({ categories, areas, tags = [], initialTagI
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Mall hub profile: Quick Facts (key/value) + Inside-the-Mall tenants */}
+      {isMallCategory && (
+        <div className="space-y-6 border-t border-border pt-5">
+          <div className="space-y-2">
+            <Label>Mall Quick Facts</Label>
+            <p className="text-xs text-muted-foreground">e.g. Parking → &quot;Available&quot;, Cinema → &quot;Yes — Century Cinemax&quot;, Banks → &quot;3 (KCB, Equity, NCBA)&quot;</p>
+            {mallFacts.map((fact, i) => (
+              <div key={i} className="flex gap-2">
+                <Input
+                  placeholder="Item (e.g. Parking)"
+                  value={fact.key}
+                  onChange={(e) => updateMallFact(i, 'key', e.target.value)}
+                  className="flex-1"
+                />
+                <Input
+                  placeholder="Details (e.g. Available)"
+                  value={fact.value}
+                  onChange={(e) => updateMallFact(i, 'value', e.target.value)}
+                  className="flex-1"
+                />
+                <Button type="button" variant="outline" size="icon" onClick={() => removeMallFact(i)}>
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={addMallFact} className="gap-1.5">
+              <Plus className="w-3.5 h-3.5" /> Add fact
+            </Button>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Inside the Mall — Tenants</Label>
+            <p className="text-xs text-muted-foreground">Shown grouped by category on the mall&apos;s public profile.</p>
+            {mallTenants.map((tenant, i) => (
+              <div key={i} className="flex gap-2">
+                <Input
+                  placeholder="Tenant name (e.g. Java House)"
+                  value={tenant.name}
+                  onChange={(e) => updateMallTenant(i, 'name', e.target.value)}
+                  className="flex-1"
+                />
+                <select
+                  value={tenant.category}
+                  onChange={(e) => updateMallTenant(i, 'category', e.target.value)}
+                  className="px-3 py-2 rounded-lg border border-border text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  {MALL_TENANT_CATEGORIES.map((c) => (
+                    <option key={c.value} value={c.value}>{c.label}</option>
+                  ))}
+                </select>
+                <Button type="button" variant="outline" size="icon" onClick={() => removeMallTenant(i)}>
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={addMallTenant} className="gap-1.5">
+              <Plus className="w-3.5 h-3.5" /> Add tenant
+            </Button>
+          </div>
         </div>
       )}
 

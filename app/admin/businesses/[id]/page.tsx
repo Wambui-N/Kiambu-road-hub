@@ -10,12 +10,13 @@ interface Props {
 
 async function getFormData(businessId: string) {
   const supabase = await createClient()
-  const [{ data: business }, { data: categories }, { data: areas }, { data: tags }, { data: businessTags }] = await Promise.all([
+  const [{ data: business }, { data: categories }, { data: areas }, { data: tags }, { data: businessTags }, { data: mallTenants }] = await Promise.all([
     supabase.from('businesses').select('*').eq('id', businessId).single(),
     supabase.from('categories').select('id, name, slug, subcategories(id, name, slug)').order('sort_order'),
     supabase.from('areas').select('id, name, slug').order('sort_order'),
     supabase.from('tags').select('id, name, slug, tag_type').order('tag_type').order('name'),
     supabase.from('business_tags').select('tag_id').eq('business_id', businessId),
+    supabase.from('mall_tenants').select('id, name, category').eq('mall_id', businessId).order('category').order('sort_order'),
   ])
   return {
     business,
@@ -23,12 +24,13 @@ async function getFormData(businessId: string) {
     areas: areas ?? [],
     tags: tags ?? [],
     initialTagIds: (businessTags ?? []).map((r) => r.tag_id as string),
+    initialMallTenants: mallTenants ?? [],
   }
 }
 
 export default async function EditBusinessPage({ params }: Props) {
   const { id } = await params
-  const { business, categories, areas, tags, initialTagIds } = await getFormData(id)
+  const { business, categories, areas, tags, initialTagIds, initialMallTenants } = await getFormData(id)
 
   if (!business) notFound()
 
@@ -49,6 +51,7 @@ export default async function EditBusinessPage({ params }: Props) {
         areas={areas}
         tags={tags}
         initialTagIds={initialTagIds}
+        initialMallTenants={initialMallTenants}
         initialData={business as Record<string, unknown>}
       />
     </div>

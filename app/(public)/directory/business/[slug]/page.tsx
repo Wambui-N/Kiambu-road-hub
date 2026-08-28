@@ -100,6 +100,29 @@ async function getRelatedBusinesses(subcategoryId: string | null, categoryId: st
   }
 }
 
+const TENANT_CATEGORY_LABELS: Record<string, string> = {
+  eat: 'Eat',
+  shop: 'Shop',
+  services: 'Services',
+  entertainment: 'Entertainment',
+}
+const TENANT_CATEGORY_ORDER = ['eat', 'shop', 'services', 'entertainment']
+
+async function getMallTenants(mallId: string) {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('mall_tenants')
+      .select('*, linked_business:businesses(id, slug, name)')
+      .eq('mall_id', mallId)
+      .order('category')
+      .order('sort_order')
+    return data ?? []
+  } catch {
+    return []
+  }
+}
+
 async function getApprovedReviews(businessId: string) {
   try {
     const supabase = await createClient()
@@ -145,14 +168,23 @@ export default async function BusinessProfilePage({ params }: Props) {
   const business = await getBusiness(slug)
   if (!business) notFound()
 
-  const [relatedBusinesses, reviews, reviewAggregate] = await Promise.all([
+  const isMall = business.category?.slug === 'malls'
+
+  const [relatedBusinesses, reviews, reviewAggregate, mallTenants] = await Promise.all([
     getRelatedBusinesses(business.subcategory_id, business.category_id ?? '', business.id),
     getApprovedReviews(business.id),
     (async () => {
       const supabase = await createClient()
       return getReviewAggregate(supabase, business.id)
     })(),
+    isMall ? getMallTenants(business.id) : Promise.resolve([]),
   ])
+
+  const tenantsByCategory = TENANT_CATEGORY_ORDER.map((cat) => ({
+    category: cat,
+    label: TENANT_CATEGORY_LABELS[cat],
+    tenants: mallTenants.filter((t) => t.category === cat),
+  })).filter((g) => g.tenants.length > 0)
 
   const whatsappUrl = business.whatsapp ? getWhatsAppUrl(business.whatsapp) : null
   const images = business.images ?? []
@@ -312,8 +344,56 @@ export default async function BusinessProfilePage({ params }: Props) {
                 )}
               </div>
 
+              {/* Mall Quick Facts — richer key/value table, replaces the generic tag checklist for malls */}
+              {isMall && business.mall_quick_facts && Object.keys(business.mall_quick_facts).length > 0 && (
+                <div className="bg-white rounded-2xl border border-border overflow-hidden">
+                  <h2 className="font-semibold p-6 pb-0 mb-2">Quick Facts</h2>
+                  <div className="divide-y divide-border">
+                    {Object.entries(business.mall_quick_facts).map(([key, value]) => (
+                      <div key={key} className="flex items-center justify-between px-6 py-3 text-sm">
+                        <span className="text-muted-foreground capitalize">{key.replace(/_/g, ' ')}</span>
+                        <span className="font-medium text-foreground">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Inside the Mall — tenant directory */}
+              {isMall && tenantsByCategory.length > 0 && (
+                <div className="bg-white rounded-2xl border border-border p-6">
+                  <h2 className="font-semibold mb-4">Inside {business.name}</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {tenantsByCategory.map((group) => (
+                      <div key={group.category}>
+                        <p className="text-xs font-mono uppercase tracking-wide text-muted-foreground mb-2">
+                          {group.label}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {group.tenants.map((t) =>
+                            t.linked_business ? (
+                              <Link
+                                key={t.id}
+                                href={`/directory/business/${t.linked_business.slug}`}
+                                className="text-xs font-mono px-3 py-1 bg-muted hover:bg-primary hover:text-white rounded-full transition-colors"
+                              >
+                                {t.name}
+                              </Link>
+                            ) : (
+                              <span key={t.id} className="text-xs font-mono px-3 py-1 bg-muted rounded-full text-muted-foreground">
+                                {t.name}
+                              </span>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Quick Facts */}
-              {quickFactTags.length > 0 && (
+              {!isMall && quickFactTags.length > 0 && (
                 <div className="bg-white rounded-2xl border border-border p-6">
                   <h2 className="font-semibold mb-4">Quick Facts</h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2.5">

@@ -101,6 +101,7 @@ export interface Business {
   updated_at: string
   created_by: string | null
   updated_by: string | null
+  mall_quick_facts: Record<string, string> | null
   // Joined fields
   category?: Category
   subcategory?: Subcategory
@@ -109,6 +110,19 @@ export interface Business {
   hours?: BusinessHour[]
   tags?: Tag[]
   reviews?: Review[]
+  mall_tenants?: MallTenant[]
+}
+
+export type MallTenantCategory = 'eat' | 'shop' | 'services' | 'entertainment'
+
+export interface MallTenant {
+  id: string
+  mall_id: string
+  name: string
+  category: MallTenantCategory
+  linked_business_id: string | null
+  sort_order: number
+  linked_business?: Pick<Business, 'id' | 'slug' | 'name'>
 }
 
 export interface BusinessImage {

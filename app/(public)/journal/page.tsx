@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 
 const SECTION_ICONS: Record<string, string> = {
   'health-digest': '🏥',
-  'dear-doctor': '👨‍⚕️',
   'this-n-that': '✨',
   'prayer-verse': '🙏',
   'inspiration': '💡',
@@ -23,7 +22,6 @@ const SECTION_ICONS: Record<string, string> = {
 
 const SECTION_COLORS: Record<string, string> = {
   'health-digest': '#10B981',
-  'dear-doctor': '#06B6D4',
   'this-n-that': '#8B5CF6',
   'prayer-verse': '#F59E0B',
   'inspiration': '#EC4899',
@@ -45,8 +43,7 @@ export default function JournalPage() {
           </p>
           <h1 className="font-display text-4xl font-bold text-white mb-3">Lifestyle Journal</h1>
           <p className="text-white/70 text-base max-w-2xl">
-            Health insights, travel guides, business wisdom, and community stories from the Kiambu Road corridor.
-          </p>
+          For a comprehensive lifestyle guide          </p>
         </div>
       </div>
 
@@ -102,9 +99,9 @@ export default function JournalPage() {
         {/* Newsletter CTA */}
         <div className="mt-12 bg-primary rounded-2xl p-8 text-center text-white">
           <h3 className="font-display text-2xl font-bold mb-2">Be the first to read</h3>
-          <p className="text-white/70 text-sm mb-6">
+          {/* <p className="text-white/70 text-sm mb-6">
             Subscribe to the Kiambu Road Explorer newsletter and get new articles delivered to your inbox.
-          </p>
+          </p> */}
           <Link
             href="/#newsletter"
             className="inline-flex items-center bg-accent hover:bg-amber-500 text-black font-semibold px-8 py-3 rounded-xl text-sm transition-colors"

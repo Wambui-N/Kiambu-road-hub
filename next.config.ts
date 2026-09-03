@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         destination: '/directory/medical-services/:path*',
         permanent: true,
       },
+      {
+        source: '/journal/dear-doctor',
+        destination: '/dear-doctor',
+        permanent: true,
+      },
     ]
   },
   images: {

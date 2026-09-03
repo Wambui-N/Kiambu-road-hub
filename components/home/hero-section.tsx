@@ -99,7 +99,9 @@ export default function HeroSection({ areas = [], heroAdSlot = null }: HeroSecti
               }}
               className="text-white/65 text-sm sm:text-base mb-10"
             >
-              Discover businesses, find exact locations, and connect with local services
+              Helping you discover, compare and connect with the best of Kiambu
+
+Road
             </motion.p>
 
             {/* Search bar */}

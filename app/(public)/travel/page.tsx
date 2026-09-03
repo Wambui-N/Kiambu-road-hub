@@ -115,11 +115,10 @@ export default function TravelPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Travel & Adventure</p>
           <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">
-            Plan Your Perfect Trip
+          Going Places with Us...
           </h1>
           <p className="text-white/80 text-base leading-relaxed max-w-2xl mb-5">
-            We arrange personalised travel experiences across Kenya and beyond. From wildlife safaris and coastal escapes to mountain hikes and romantic honeymoons.
-          </p>
+          Contact us for all your tours, safaris and hotel reservations          </p>
           {/* Service chips */}
           <div className="flex flex-wrap gap-2">
             {TRAVEL_TYPES.map((t) => (

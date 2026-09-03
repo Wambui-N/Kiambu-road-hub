@@ -68,7 +68,7 @@ export default async function DirectoryPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-display text-4xl font-bold text-white mb-3">Business Directory</h1>
           <p className="text-white/70">
-            Explore {displayCategories.length} categories of local businesses along Kiambu Road
+            Explore {displayCategories.length} categories of local businesses and services
           </p>
         </div>
       </div>

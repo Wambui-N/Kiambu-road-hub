@@ -33,7 +33,7 @@ export default function FeaturedBusinesses({ businesses }: FeaturedBusinessesPro
         >
           <div>
             <h2 className="font-display text-3xl font-bold text-foreground">Featured Businesses</h2>
-            <p className="text-muted-foreground mt-1">Top-rated local businesses on Kiambu Road</p>
+            <p className="text-muted-foreground mt-1">Sample the top-rated listings</p>
           </div>
           <div className="flex gap-2">
             <button

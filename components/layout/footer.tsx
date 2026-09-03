@@ -20,7 +20,7 @@ export default function Footer() {
                 Stay in the loop
               </h3>
               <p className="text-primary-foreground/80 text-sm mt-1">
-                Get updates on new listings and local news.
+              Subscribe to our news and updates
               </p>
             </div>
             <NewsletterForm />
@@ -37,7 +37,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="text-white font-semibold text-sm">Join our Facebook Community</p>
-              <p className="text-white/50 text-xs">Connect with neighbours along the Kiambu Road corridor</p>
+              <p className="text-white/50 text-xs">Become an active member of the Kiambu Explorer Community</p>
             </div>
           </div>
           <a
@@ -64,9 +64,9 @@ export default function Footer() {
             <p className="text-sm text-white/60 leading-relaxed mb-4">
               Your complete business directory and lifestyle journal for the Kiambu Road corridor, Nairobi.
             </p>
-            <p className="text-xs text-white/40 mb-3">
+            {/* <p className="text-xs text-white/40 mb-3">
               Serving Ridgeways · Thindigua · Runda · Ruaka · Kiambu Town
-            </p>
+            </p> */}
             <div className="flex gap-3">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">

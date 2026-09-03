@@ -16,6 +16,7 @@ const navLinks = [
   { label: 'Directory', href: '/directory' },
   { label: 'Lifestyle Vibes', href: '/journal' },
   { label: 'Newswatch', href: '/journal/newswatch' },
+  { label: 'Dear Doctor', href: '/dear-doctor' },
   { label: 'Jobs & Careers', href: '/jobs' },
   { label: 'Price Comparison', href: '/prices' },
   { label: 'Travel', href: '/travel' },

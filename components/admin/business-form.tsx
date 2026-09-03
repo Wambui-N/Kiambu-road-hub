@@ -163,6 +163,7 @@ export default function BusinessForm({ categories, areas, tags = [], initialTagI
         category_id: form.category_id || null,
         subcategory_id: form.subcategory_id || null,
         area_id: form.area_id || null,
+        price_range: form.price_range || null,
         updated_by: userId,
         published_at: form.status === 'published' ? new Date().toISOString() : (initialData?.published_at as string | null ?? null),
         mall_quick_facts: mallFactsObject && Object.keys(mallFactsObject).length > 0 ? mallFactsObject : null,
@@ -213,7 +214,13 @@ export default function BusinessForm({ categories, areas, tags = [], initialTagI
         router.push('/admin/businesses')
       }
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Failed to save')
+      const message =
+        err instanceof Error
+          ? err.message
+          : (err && typeof err === 'object' && 'message' in err && typeof err.message === 'string')
+            ? err.message
+            : 'Failed to save'
+      toast.error(message)
     } finally {
       setLoading(false)
     }

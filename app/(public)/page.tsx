@@ -159,7 +159,7 @@ export default async function HomePage() {
               From the Lifestyle Journal
             </h2>
             <p className="text-muted-foreground mt-2">
-              Health, travel, business and community stories from around Kiambu
+            Health, travel, business and general community vibes
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

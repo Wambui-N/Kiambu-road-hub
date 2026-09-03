@@ -359,13 +359,60 @@ export interface Profile {
   id: string
   full_name: string | null
   avatar_path: string | null
+  phone_number: string | null
   created_at: string
   updated_at: string
+}
+
+export type DoctorServiceType = 'consultation' | 'counselling'
+export type DoctorConsultationStatus = 'new' | 'contacted' | 'closed'
+
+export interface DoctorConsultation {
+  id: string
+  service_type: DoctorServiceType
+  age: number
+  gender: 'male' | 'female'
+  county: string | null
+  marital_status: 'single' | 'married' | null
+  message: string
+  email_sent: boolean
+  status: DoctorConsultationStatus
+  created_at: string
 }
 
 export interface AdminRoleRecord {
   user_id: string
   role: AdminRole
+}
+
+// ─── Ask Kiambu Road (community forum) ────────────────────────────────────────
+
+export type ForumPostType = 'question' | 'tip'
+export type ForumStatus = 'published' | 'hidden'
+
+export interface ForumPost {
+  id: string
+  author_id: string
+  author_name: string
+  post_type: ForumPostType
+  title: string
+  body: string
+  status: ForumStatus
+  reply_count: number
+  upvote_count: number
+  created_at: string
+  updated_at: string
+}
+
+export interface ForumReply {
+  id: string
+  post_id: string
+  author_id: string
+  author_name: string
+  body: string
+  status: ForumStatus
+  upvote_count: number
+  created_at: string
 }
 
 export interface AuditLog {

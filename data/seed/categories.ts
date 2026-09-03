@@ -277,7 +277,6 @@ export const AREAS = [
 
 export const JOURNAL_SECTIONS = [
   { name: 'Health Digest',           slug: 'health-digest',           tagline: 'Health: the greatest wealth',                      sort_order: 1  },
-  { name: 'Dear Doctor',             slug: 'dear-doctor',             tagline: 'Ask the expert',                                   sort_order: 2  },
   { name: "This N' That",            slug: 'this-n-that',             tagline: 'Enriching your lifestyle',                         sort_order: 3  },
   { name: 'Prayer & Verse',          slug: 'prayer-verse',            tagline: 'Beyond the scriptures',                            sort_order: 4  },
   { name: 'Inspiration',             slug: 'inspiration',             tagline: 'The hidden voice',                                 sort_order: 5  },
@@ -296,7 +295,6 @@ export type JournalSectionSlug = typeof JOURNAL_SECTIONS[number]['slug']
 
 export const SECTION_COLORS: Record<JournalSectionSlug, string> = {
   'health-digest':          '#10B981',
-  'dear-doctor':            '#06B6D4',
   'this-n-that':            '#8B5CF6',
   'prayer-verse':           '#A78BFA',
   'inspiration':            '#F59E0B',

@@ -26,7 +26,6 @@ const SECTOR_GROUPS: SectorGroup[] = [
     bgColor: '#F0FDF4',
     links: [
       { label: 'Health Digest', href: '/journal/health-digest' },
-      { label: 'Dear Doctor', href: '/journal/dear-doctor' },
       { label: "This N' That", href: '/journal/this-n-that' },
       { label: 'Prayer & Verse', href: '/journal/prayer-verse' },
       { label: 'Inspiration', href: '/journal/inspiration' },
@@ -61,6 +60,7 @@ const SECTOR_GROUPS: SectorGroup[] = [
 ]
 
 const QUICK_ACTIONS: SectorLink[] = [
+  { label: 'Dear Doctor', href: '/dear-doctor' },
   { label: 'Advertise with Us', href: '/advertise' },
   { label: 'List Your Business', href: '/list-your-business' },
   { label: 'Other Services', href: '/other-services' },

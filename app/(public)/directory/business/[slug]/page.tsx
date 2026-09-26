@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import BusinessCard from '@/components/directory/business-card'
 import ReviewSection from '@/components/directory/review-section'
+import BusinessImagePlaceholder from '@/components/directory/business-image-placeholder'
 import { getWhatsAppUrl, getImageUrl, getPriceRangeLabel } from '@/lib/utils'
 import { buildTrackedUrl } from '@/lib/tracking'
 import { localBusinessJsonLd, breadcrumbJsonLd } from '@/lib/seo'
@@ -19,28 +20,6 @@ import { getReviewAggregate } from '@/lib/reviews'
 import type { Business } from '@/types/database'
 
 const QUICK_FACT_TAG_TYPES = new Set(['quick_fact', 'medical_service', 'emergency_criteria'])
-
-const CATEGORY_IMAGE_MAP: Record<string, string> = {
-  'eat-drink-stay':        'https://images.unsplash.com/photo-1768697359488-9cc9937056a6?auto=format&fit=crop&w=1600&q=80',
-  'medical-services':      'https://images.unsplash.com/photo-1755995083683-50d08cd83d09?auto=format&fit=crop&w=1600&q=80',
-  'education-childcare':   'https://images.unsplash.com/photo-1549380883-4dd936bbc0fa?auto=format&fit=crop&w=1600&q=80',
-  'retail-shopping':       'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1600&q=80',
-  'malls':                 'https://images.unsplash.com/photo-1672363547647-8fad02572412?auto=format&fit=crop&w=1600&q=80',
-  'lifestyle-wellness':    'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80',
-  'car-motor-dealers':     'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1600&q=80',
-  'auto-services':         'https://images.unsplash.com/photo-1632823469850-2f77dd9c7f93?auto=format&fit=crop&w=1600&q=80',
-  'real-estate-property':  'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80',
-  'building-construction': 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80',
-  'home-garden':           'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1600&q=80',
-  'professional-services': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80',
-  'leisure-outdoors':      'https://images.unsplash.com/photo-1540206395-68808572332f?auto=format&fit=crop&w=1600&q=80',
-  'transport-logistics':   'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1600&q=80',
-  'security-emergency':    'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=1600&q=80',
-  'faith-community':       'https://images.unsplash.com/photo-1438232992991-995b671e4267?auto=format&fit=crop&w=1600&q=80',
-  'finance':               'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80',
-  'membership-clubs':      'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=80',
-  default:                 'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1600&q=80',
-}
 
 export const revalidate = 3600
 
@@ -189,11 +168,7 @@ export default async function BusinessProfilePage({ params }: Props) {
   const whatsappUrl = business.whatsapp ? getWhatsAppUrl(business.whatsapp) : null
   const images = business.images ?? []
   const coverImage = images.find((i) => i.is_cover) ?? images[0]
-  const categorySlug = business.category?.slug
-  const coverPath =
-    coverImage?.image_path ??
-    (categorySlug ? CATEGORY_IMAGE_MAP[categorySlug] ?? CATEGORY_IMAGE_MAP.default : CATEGORY_IMAGE_MAP.default)
-  const coverImageUrl = getImageUrl(coverPath)
+  const coverImageUrl = coverImage ? getImageUrl(coverImage.image_path) : null
   const galleryImages = images.filter((i) => !i.is_cover).slice(0, 4)
 
   const jsonLd = localBusinessJsonLd(business, reviewAggregate)
@@ -256,14 +231,23 @@ export default async function BusinessProfilePage({ params }: Props) {
             <div className="lg:flex-1 space-y-6">
               {/* Cover image */}
               <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden bg-muted">
-                <Image
-                  src={coverImageUrl}
-                  alt={coverImage?.alt_text ?? business.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 65vw"
-                />
+                {coverImageUrl ? (
+                  <Image
+                    src={coverImageUrl}
+                    alt={coverImage?.alt_text ?? business.name}
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 65vw"
+                  />
+                ) : (
+                  <BusinessImagePlaceholder
+                    name={business.name}
+                    categorySlug={business.category?.slug}
+                    categoryColor={business.category?.color}
+                    categoryIcon={business.category?.icon}
+                  />
+                )}
               </div>
 
               {/* Gallery grid */}

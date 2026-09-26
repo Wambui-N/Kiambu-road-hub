@@ -6,9 +6,6 @@
 -- Run AFTER 022_rename_journal_sections.sql
 -- =============================================================================
 
+-- Scope revised: Dear Doctor returns as a plain "Coming Soon" journal section
+-- (republished in 022) — only the paid consultation feature itself is removed.
 DROP TABLE IF EXISTS doctor_consultations;
-
--- Already archived by 018_dear_doctor.sql and filtered out of every section
--- list in code — deleting the leftover row outright per "remove it all
--- together" rather than leaving a harmless-but-orphaned archived row.
-DELETE FROM journal_sections WHERE slug = 'dear-doctor';

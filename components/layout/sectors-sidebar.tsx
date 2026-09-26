@@ -26,10 +26,11 @@ const SECTOR_GROUPS: SectorGroup[] = [
     bgColor: '#F0FDF4',
     links: [
       { label: 'Health Digest', href: '/journal/health-digest' },
+      { label: 'Dear Doctor', href: '/journal/dear-doctor' },
       { label: 'Lifestyle Blog', href: '/journal/this-n-that' },
       { label: 'Prayer & Verse', href: '/journal/prayer-verse' },
       { label: 'Inspiration', href: '/journal/inspiration' },
-      { label: 'E-Books', href: '/journal/e-books' },
+      { label: 'Explorer Publications', href: '/journal/e-books' },
     ],
   },
   {
@@ -52,7 +53,7 @@ const SECTOR_GROUPS: SectorGroup[] = [
       { label: 'Talent Search', href: '/talent-search' },
       { label: 'Prices at a Glance', href: '/prices' },
       { label: 'Business Agency', href: '/journal/business-notes' },
-      { label: 'Community Programmes', href: '/journal/business-opportunities' },
+      { label: 'Community Projects', href: '/journal/business-opportunities' },
       { label: 'Explorer Merchandise', href: '/journal/opinion' },
       { label: 'Newswatch', href: '/journal/newswatch' },
     ],

@@ -16,3 +16,8 @@ UPDATE journal_sections SET name = 'Lifestyle Blog'        WHERE slug = 'this-n-
 UPDATE journal_sections SET name = 'Explorer Merchandise'  WHERE slug = 'opinion';
 UPDATE journal_sections SET name = 'Kiambu Retreats'       WHERE slug = 'kiambu-here-n-there';
 UPDATE journal_sections SET name = 'Community Programmes' WHERE slug = 'business-opportunities';
+UPDATE journal_sections SET name = 'Explorer Publications' WHERE slug = 'e-books';
+
+-- Dear Doctor is coming back as a plain section (no consultation feature —
+-- see 023's revised scope). It was archived by 018_dear_doctor.sql; republish it.
+UPDATE journal_sections SET status = 'published' WHERE slug = 'dear-doctor';

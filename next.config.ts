@@ -14,11 +14,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/journal/dear-doctor',
-        destination: '/journal',
-        permanent: true,
-      },
-      {
         source: '/dear-doctor',
         destination: '/journal',
         permanent: true,

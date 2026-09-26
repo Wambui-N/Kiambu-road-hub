@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 const SECTION_ICONS: Record<string, string> = {
   'health-digest': '🏥',
+  'dear-doctor': '🩺',
   'this-n-that': '✨',
   'prayer-verse': '🙏',
   'inspiration': '💡',
@@ -17,11 +18,13 @@ const SECTION_ICONS: Record<string, string> = {
   'destination-review': '✈️',
   'nature-trivia': '🌿',
   'business-notes': '💼',
-  'opinion': '📝',
+  'opinion': '🛍️',
+  'e-books': '📚',
 }
 
 const SECTION_COLORS: Record<string, string> = {
   'health-digest': '#10B981',
+  'dear-doctor': '#06B6D4',
   'this-n-that': '#8B5CF6',
   'prayer-verse': '#F59E0B',
   'inspiration': '#EC4899',
@@ -31,6 +34,7 @@ const SECTION_COLORS: Record<string, string> = {
   'business-notes': '#E8A020',
   'business-opportunities': '#D97706',
   'opinion': '#64748B',
+  'e-books': '#EF4444',
 }
 
 export default function JournalPage() {

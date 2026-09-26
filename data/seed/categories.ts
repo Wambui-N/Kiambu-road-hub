@@ -277,15 +277,16 @@ export const AREAS = [
 
 export const JOURNAL_SECTIONS = [
   { name: 'Health Digest',           slug: 'health-digest',           tagline: 'Health: the greatest wealth',                      sort_order: 1  },
+  { name: 'Dear Doctor',             slug: 'dear-doctor',             tagline: 'Ask the expert',                                   sort_order: 2  },
   { name: 'Lifestyle Blog',          slug: 'this-n-that',             tagline: 'Enriching your lifestyle',                         sort_order: 3  },
   { name: 'Prayer & Verse',          slug: 'prayer-verse',            tagline: 'Beyond the scriptures',                            sort_order: 4  },
   { name: 'Inspiration',             slug: 'inspiration',             tagline: 'The hidden voice',                                 sort_order: 5  },
-  { name: 'E-Books',                 slug: 'e-books',                 tagline: 'Read your way to a good life',                     sort_order: 6  },
+  { name: 'Explorer Publications',   slug: 'e-books',                 tagline: 'Read your way to a good life',                     sort_order: 6  },
   { name: 'Kiambu Retreats',         slug: 'kiambu-here-n-there',     tagline: 'Your Kiambu Travel Guide',                         sort_order: 7  },
   { name: 'Destination beyond',      slug: 'destination-review',      tagline: 'Beyond the horizon',                               sort_order: 8  },
   { name: 'Sponsored Features',      slug: 'nature-trivia',           tagline: 'Bits and pieces on nature and wildlife',           sort_order: 9  },
   { name: 'Business Agency',        slug: 'business-notes',          tagline: 'Quotes that mean business',                        sort_order: 10 },
-  { name: 'Community Programmes',   slug: 'business-opportunities',  tagline: 'Properties, business and investment',              sort_order: 11 },
+  { name: 'Community Projects',     slug: 'business-opportunities',  tagline: 'Campaigns making a difference on Kiambu Road',     sort_order: 11 },
   { name: 'Explorer Merchandise',    slug: 'opinion',                 tagline: 'Letter from the publisher',                        sort_order: 12 },
   { name: 'Newswatch',               slug: 'newswatch',               tagline: 'This and that about Kiambu',                       sort_order: 13 },
 ] as const
@@ -295,6 +296,7 @@ export type JournalSectionSlug = typeof JOURNAL_SECTIONS[number]['slug']
 
 export const SECTION_COLORS: Record<JournalSectionSlug, string> = {
   'health-digest':          '#10B981',
+  'dear-doctor':            '#14B8A6',
   'this-n-that':            '#8B5CF6',
   'prayer-verse':           '#A78BFA',
   'inspiration':            '#F59E0B',

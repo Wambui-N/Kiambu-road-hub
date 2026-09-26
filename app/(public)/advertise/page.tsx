@@ -12,32 +12,60 @@ import { ChevronDown, CheckCircle2, Loader2, MessageCircle, Phone } from 'lucide
 const WHY_ADVERTISE = [
   {
     icon: '👥',
-    text: 'Nucleus audience of 40,000+ residents in Kiambu, Ruaka, and Gigiri — able and ready consumers.',
+    text: 'We target a nucleus audience of over 40,000 people who reside within the Kiambu, Ruaka, and Gigiri areas. The majority are able and ready consumers of many products and services',
   },
   {
     icon: '📱',
-    text: 'Reach 2,000+ people by SMS weekly and 10,000 by email monthly across greater Nairobi.',
+    text: 'We reach over 2,000 people by sms every week and 10,000 by email in the greater Nairobi area every month',
   },
   {
     icon: '💬',
-    text: 'Advertisements are connected directly to your WhatsApp — customers reach you instantly.',
+    text: 'The advertisement is connected to your WhatsApp. Customers will reach you directly',
   },
   {
     icon: '📲',
-    text: 'Daily social media engagement drives continuous traffic and exposure to your ad.',
+    text: 'We engage our readers on social media daily, attracting attention to our site, which gives you potential exposure',
   },
   {
     icon: '⭐',
-    text: 'Main advertisers become sponsors — acknowledged in every article with links to their sites.',
+    text: 'We carry a brief feature promoting all the main advertisers',
   },
-  {
-    icon: '📄',
-    text: 'Hard copy leaflet printed and distributed freely to major business outlets on Kiambu Road and satellite areas: Ruaka, Rosslyn, Gigiri, Thome, Thika Road, Muthaiga.',
-  },
-  {
-    icon: '📰',
-    text: 'Regular articles on health, business, lifestyle, travel, and leisure keep the community engaged and loyal — your ad reaches an active readership.',
-  },
+]
+
+const HOMEPAGE_BANNER_SIZES = [
+  { size: 'Size 1', price: 'KES 150,000 per year' },
+  { size: 'Size 2', price: 'KES 80,000 per year' },
+  { size: 'Size 3', price: 'KES 60,000 per year' },
+]
+
+const RATE_ITEMS = [
+  { label: 'Category-page sponsorship', price: 'KES 80,000 per year' },
+  { label: 'Subcategory-page sponsorship', price: 'KES 60,000 per year' },
+  { label: 'WhatsApp Channel sponsorship', price: 'KES 10,000 per month' },
+  { label: 'SMS sponsorship', price: 'KES 10,000 per month' },
+  { label: 'Social media promotion', price: 'KES 20,000 per month' },
+]
+
+const ADVERTORIAL_RATES = [
+  { label: 'Client ready', price: 'KES 10,000 per feature' },
+  { label: 'Plus writing', price: 'KES 30,000 per feature' },
+]
+
+const EXPLORER_PACKAGE_FEATURES = [
+  'Premium listing',
+  'Featured position',
+  'Website advertisement',
+  'Social media mention',
+  'WhatsApp feature',
+  'Inclusion in relevant newsletter',
+]
+
+const PREMIUM_LISTING_FEATURES = [
+  'Mention in the premium column on the home page',
+  'Priority position on category',
+  'More photographs',
+  'Enhanced description',
+  'Featured placement and promotions, etc.',
 ]
 
 const TERMS = [
@@ -99,12 +127,23 @@ export default function AdvertisePage() {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-14">
 
-        {/* Intro paragraph */}
-        <section className="prose max-w-none">
+        {/* Intro paragraphs */}
+        <section className="prose max-w-none space-y-4">
           <p className="text-muted-foreground leading-relaxed text-base">
-            Kiambu Road is a highly cosmopolitan area, both nationally and internationally. It hosts people from all parts of Kenya and
-            offers residence and business to foreign visitors and residents working in the diplomatic community of Gigiri, which is just
-            next door. We invite you to advertise your products and services to this community through our site.
+            Research shows that Kiambu Road and the adjoining Ruaka have the highest uptake of housing units in all the Nairobi
+            satellite towns. With an uptake of 93%, compared to an average of 73% for the other satellite towns.
+          </p>
+          <p className="text-muted-foreground leading-relaxed text-base">
+            A recent report by a leading real estate firm ranked Thindigua on Kiambu Road with the highest consumer rating of 22.0%,
+            compared to Ruiru at 19.7%, Kitengela at 19.4%, and Kikuyu at 18.2%.
+          </p>
+          <p className="text-muted-foreground leading-relaxed text-base">
+            Additionally, Kiambu Road is a highly cosmopolitan area, both nationally and internationally. It hosts people from all
+            parts of Kenya and offers residence and business to foreign visitors and residents working in the diplomatic community
+            of Gigiri, which is just next door.
+          </p>
+          <p className="text-muted-foreground leading-relaxed text-base">
+            We invite you to advertise your products and services to this community through our site.
           </p>
         </section>
 
@@ -142,6 +181,81 @@ export default function AdvertisePage() {
             </div>
           ))}
         </div>
+
+        {/* Advertising Rates */}
+        <section>
+          <h2 className="font-display text-2xl font-bold text-foreground mb-6">Advertising Rates</h2>
+
+          <div className="space-y-4">
+            {/* Homepage banner */}
+            <div className="bg-white rounded-2xl border border-border p-5">
+              <p className="font-semibold text-foreground mb-3">Homepage banner</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {HOMEPAGE_BANNER_SIZES.map((item) => (
+                  <div key={item.size} className="bg-muted/40 rounded-xl p-4 text-center">
+                    <p className="text-xs font-mono text-muted-foreground mb-1">{item.size}</p>
+                    <p className="font-semibold text-primary">{item.price}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Sponsored business feature (advertorial) */}
+            <div className="bg-white rounded-2xl border border-border p-5">
+              <p className="font-semibold text-foreground mb-3">Sponsored business feature (advertorial)</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {ADVERTORIAL_RATES.map((item) => (
+                  <div key={item.label} className="bg-muted/40 rounded-xl p-4 text-center">
+                    <p className="text-xs font-mono text-muted-foreground mb-1">{item.label}</p>
+                    <p className="font-semibold text-primary">{item.price}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Remaining flat-rate items */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {RATE_ITEMS.map((item) => (
+                <div key={item.label} className="bg-white rounded-2xl border border-border p-5 flex items-center justify-between gap-4">
+                  <p className="text-sm text-foreground">{item.label}</p>
+                  <p className="font-semibold text-primary whitespace-nowrap">{item.price}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Packages */}
+        <section>
+          <h2 className="font-display text-2xl font-bold text-foreground mb-6">Explorer Business Package &amp; Premium Listings</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl border-2 border-primary p-6 flex flex-col">
+              <p className="font-display text-lg font-bold text-foreground mb-1">Explorer Business Package</p>
+              <p className="font-display text-3xl font-bold text-primary mb-5">KES 300,000 <span className="text-sm font-normal text-muted-foreground">per year</span></p>
+              <ul className="space-y-2.5 flex-1">
+                {EXPLORER_PACKAGE_FEATURES.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="text-primary font-bold mt-0.5">✓</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-border p-6 flex flex-col">
+              <p className="font-display text-lg font-bold text-foreground mb-1">Premium Listings Package</p>
+              <p className="font-display text-3xl font-bold text-primary mb-5">KES 20,000 <span className="text-sm font-normal text-muted-foreground">per month</span></p>
+              <ul className="space-y-2.5 flex-1">
+                {PREMIUM_LISTING_FEATURES.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="text-primary font-bold mt-0.5">✓</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
 
         {/* Advertising Terms accordion */}
         <section>

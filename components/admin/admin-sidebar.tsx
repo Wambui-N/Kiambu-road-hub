@@ -6,6 +6,7 @@ import {
   LayoutDashboard, Building2, FolderTree, FileText,
   Briefcase, DollarSign, Inbox, MessageSquare,
   Star, Megaphone, Users, ThumbsUp, Mail, MapPin, Search, TrendingUp,
+  Handshake, Tent, HeartHandshake, ShoppingBag, ClipboardList, Gift,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -16,6 +17,10 @@ const navItems = [
   { label: 'Articles',         href: '/admin/articles',         icon: FileText },
   { label: 'Jobs Board',       href: '/admin/jobs',             icon: Briefcase },
   { label: 'Prices',           href: '/admin/prices',           icon: DollarSign },
+  { label: 'Agency Services',  href: '/admin/agency-services',  icon: Handshake },
+  { label: 'Store Products',   href: '/admin/store-products',   icon: ShoppingBag },
+  { label: 'Retreat Packages', href: '/admin/retreat-packages', icon: Tent },
+  { label: 'Community Projects', href: '/admin/community-programmes', icon: HeartHandshake },
   { label: 'Submissions',      href: '/admin/submissions',      icon: Inbox },
   { label: 'Messages',         href: '/admin/messages',         icon: MessageSquare },
 ]
@@ -31,6 +36,12 @@ const moderationItems = [
   { label: 'Travel Inquiries', href: '/admin/travel-inquiries', icon: Search },
   { label: 'Talent Search',    href: '/admin/talent-inquiries', icon: Users },
   { label: 'Price Submissions',href: '/admin/price-submissions',icon: ThumbsUp },
+  { label: 'Agency Inquiries', href: '/admin/agency-inquiries', icon: Handshake },
+  { label: 'Retreat Inquiries',href: '/admin/retreat-inquiries',icon: Tent },
+  { label: 'Project Signups',  href: '/admin/programme-signups',icon: ClipboardList },
+  { label: 'Store Orders',     href: '/admin/store-orders',     icon: ShoppingBag },
+  { label: 'Partner Inquiries',href: '/admin/partner-inquiries',icon: HeartHandshake },
+  { label: 'Donations',        href: '/admin/donations',        icon: Gift },
   { label: 'Subscribers',      href: '/admin/subscribers',      icon: Mail },
   { label: 'Feedback',         href: '/admin/feedback',         icon: MessageSquare },
 ]

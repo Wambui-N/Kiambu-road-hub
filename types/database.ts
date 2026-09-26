@@ -7,6 +7,11 @@ export type AdminRole = 'super_admin' | 'editor' | 'data_entry' | 'support'
 export type PriceRange = '$' | '$$' | '$$$' | '$$$$'
 export type ModerationStatus = 'pending' | 'approved' | 'rejected'
 export type MessageStatus = 'new' | 'read' | 'replied' | 'responded' | 'closed'
+export type InquiryStatus = 'new' | 'contacted' | 'closed'
+export type ProductType = 'merchandise' | 'ebook'
+export type StoreOrderStatus = 'pending_payment' | 'paid' | 'fulfilled' | 'cancelled'
+export type DonationFrequency = 'one_time' | 'weekly' | 'monthly' | 'annual'
+export type DonationStatus = 'pending_payment' | 'received' | 'cancelled'
 
 // ─── Reference tables ────────────────────────────────────────────────────────
 
@@ -350,6 +355,152 @@ export interface ContactMessage {
   subject: string | null
   message: string
   status: MessageStatus
+  created_at: string
+}
+
+// ─── Explorer Magazine functional sections ───────────────────────────────────
+
+export interface AgencyService {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  price_note: string | null
+  image_path: string | null
+  status: ContentStatus
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface AgencyServiceInquiry {
+  id: string
+  service_id: string | null
+  name: string
+  email: string
+  phone: string
+  message: string | null
+  status: InquiryStatus
+  created_at: string
+  service?: Pick<AgencyService, 'id' | 'name' | 'slug'>
+}
+
+export interface RetreatPackage {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  price: number | null
+  currency: string
+  duration_note: string | null
+  image_path: string | null
+  status: ContentStatus
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface RetreatInquiry {
+  id: string
+  package_id: string | null
+  name: string
+  email: string
+  phone: string
+  preferred_dates: string | null
+  people_count: number | null
+  message: string | null
+  status: InquiryStatus
+  created_at: string
+  package?: Pick<RetreatPackage, 'id' | 'name' | 'slug'>
+}
+
+export interface CommunityProgramme {
+  id: string
+  name: string
+  slug: string
+  tagline: string | null
+  description: string | null
+  body_content: string | null
+  donate_project_label: string | null
+  schedule_note: string | null
+  image_path: string | null
+  status: ContentStatus
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface ProgrammeSignup {
+  id: string
+  programme_id: string | null
+  name: string
+  email: string
+  phone: string
+  message: string | null
+  status: InquiryStatus
+  created_at: string
+  programme?: Pick<CommunityProgramme, 'id' | 'name' | 'slug'>
+}
+
+export interface StoreProduct {
+  id: string
+  product_type: ProductType
+  name: string
+  slug: string
+  description: string | null
+  price: number
+  currency: string
+  image_path: string | null
+  digital_file_path: string | null
+  status: ContentStatus
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface StoreOrderItem {
+  product_id: string
+  name: string
+  price: number
+  quantity: number
+  product_type: ProductType
+}
+
+export interface StoreOrder {
+  id: string
+  customer_name: string
+  email: string
+  phone: string
+  delivery_address: string | null
+  items: StoreOrderItem[]
+  total_amount: number
+  currency: string
+  status: StoreOrderStatus
+  admin_notes: string | null
+  created_at: string
+}
+
+export interface PartnerInquiry {
+  id: string
+  name: string
+  email: string
+  phone: string | null
+  message: string | null
+  status: InquiryStatus
+  created_at: string
+}
+
+export interface DonationPledge {
+  id: string
+  donor_name: string
+  email: string
+  phone: string | null
+  amount: number
+  currency: string
+  frequency: DonationFrequency
+  project: string | null
+  additional_instructions: string | null
+  status: DonationStatus
   created_at: string
 }
 

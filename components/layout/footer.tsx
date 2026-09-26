@@ -98,6 +98,7 @@ export default function Footer() {
               {[
                 { label: 'About Us', href: '/about' },
                 { label: 'Advertise With Us', href: '/advertise' },
+                { label: 'Partner With Us', href: '/partner-with-us' },
                 { label: 'Other Services', href: '/other-services' },
               ].map((item) => (
                 <li key={item.href}>

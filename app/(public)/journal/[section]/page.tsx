@@ -8,6 +8,21 @@ import SectorsSidebar from '@/components/layout/sectors-sidebar'
 import { Calendar, Clock, MessageCircle, Share2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import type { Article } from '@/types/database'
+import AgencyServicesGrid from '@/components/journal/agency-services-grid'
+import RetreatPackagesGrid from '@/components/journal/retreat-packages-grid'
+import CommunityProgrammesGrid from '@/components/journal/community-programmes-grid'
+import StoreProductsGrid from '@/components/journal/store-products-grid'
+
+// Slugs that render a dedicated feature template instead of the generic
+// article grid below. Everything else (including the restored Dear Doctor,
+// which is a plain section with no articles yet) falls through unchanged.
+const FUNCTIONAL_SLUGS = new Set([
+  'business-notes',
+  'kiambu-here-n-there',
+  'business-opportunities',
+  'opinion',
+  'e-books',
+])
 
 interface Props {
   params: Promise<{ section: string }>
@@ -115,7 +130,8 @@ export default async function JournalSectionPage({ params }: Props) {
   const section = JOURNAL_SECTIONS.find((s) => s.slug === sectionSlug)
   if (!section) notFound()
 
-  const articles = await getSectionArticles(sectionSlug)
+  const isFunctional = FUNCTIONAL_SLUGS.has(sectionSlug)
+  const articles = isFunctional ? [] : await getSectionArticles(sectionSlug)
   const sectionColor = SECTION_COLORS[sectionSlug as keyof typeof SECTION_COLORS] ?? '#1B6B3A'
 
   return (
@@ -151,9 +167,19 @@ export default async function JournalSectionPage({ params }: Props) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="lg:flex lg:gap-10">
-          {/* Articles grid */}
+          {/* Articles grid / functional feature */}
           <div className="lg:flex-1">
-            {articles.length === 0 ? (
+            {sectionSlug === 'business-notes' ? (
+              <AgencyServicesGrid sectionColor={sectionColor} />
+            ) : sectionSlug === 'kiambu-here-n-there' ? (
+              <RetreatPackagesGrid sectionColor={sectionColor} />
+            ) : sectionSlug === 'business-opportunities' ? (
+              <CommunityProgrammesGrid sectionColor={sectionColor} />
+            ) : sectionSlug === 'opinion' ? (
+              <StoreProductsGrid productType="merchandise" sectionSlug={sectionSlug} sectionColor={sectionColor} />
+            ) : sectionSlug === 'e-books' ? (
+              <StoreProductsGrid productType="ebook" sectionSlug={sectionSlug} sectionColor={sectionColor} />
+            ) : articles.length === 0 ? (
               <div className="text-center py-20">
                 <p className="text-5xl mb-5">✍️</p>
                 <h2 className="font-display text-2xl font-semibold mb-3">Articles coming soon</h2>

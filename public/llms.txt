@@ -11,7 +11,7 @@ Some listings are compiled from publicly available sources (e.g. Google Maps/Pla
 - [Business Directory](https://kiamburoad.com/directory): browse all categories (Eat, Drink & Stay; Medical Services; Lifestyle & Wellness; Malls; Retail & Shopping; Real Estate & Property; Car & Motor Dealers; Auto Services; Education & Childcare; Home & Garden; Building & Construction; Professional Services; Leisure & Outdoors; Transport & Logistics; Security & Emergency; Faith & Community; Finance; Membership Clubs).
 - [Price Comparison](https://kiamburoad.com/prices): community-sourced prices for groceries, fuel, medical, and dining items across local outlets, with per-item detail pages.
 - [Emergency Contacts](https://kiamburoad.com/emergency): national emergency numbers (999/112), 24-hour local hospitals, and ambulance services for the Kiambu Road corridor.
-- [Journal](https://kiamburoad.com/journal): lifestyle and community articles across sections like Health Digest, Dear Doctor, Newswatch, and Business Notes.
+- [Explorer Magazine](https://kiamburoad.com/journal): lifestyle and community articles across sections like Health Digest, Newswatch, and Business Agency.
 - [Jobs](https://kiamburoad.com/jobs): local job listings.
 - [Travel](https://kiamburoad.com/travel): travel inquiries for the region.
 

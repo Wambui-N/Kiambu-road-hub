@@ -150,7 +150,6 @@ export default function PrivacyPage() {
               <h3 className="font-semibold text-sm text-muted-foreground font-mono mb-3">RELATED PAGES</h3>
               <div className="flex flex-wrap gap-3">
                 <Link href="/travel" className="text-sm text-primary font-semibold hover:underline">→ Tours and Travel</Link>
-                <Link href="/journal/dear-doctor" className="text-sm text-primary font-semibold hover:underline">→ Consult a Doctor</Link>
                 <Link href="/terms" className="text-sm text-primary font-semibold hover:underline">→ Terms &amp; Conditions</Link>
               </div>
             </div>

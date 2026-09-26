@@ -156,10 +156,10 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="font-display text-3xl font-bold text-foreground">
-              From the Lifestyle Journal
+              Current Features
             </h2>
             <p className="text-muted-foreground mt-2">
-            Health, travel, business and general community vibes
+            A look at what&rsquo;s on the pages this month
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -168,22 +168,22 @@ export default async function HomePage() {
                 section: 'Health Digest',
                 slug: 'health-digest',
                 color: '#10B981',
-                title: 'Coming Soon',
-                excerpt: 'Our health and wellness articles are being prepared. Check back shortly.',
+                title: 'Wellness, close to home',
+                excerpt: 'Practical health tips, clinic spotlights and wellness advice for the Kiambu Road community.',
               },
               {
-                section: "Kiambu Here N' There",
+                section: 'Kiambu Retreats',
                 slug: 'kiambu-here-n-there',
                 color: '#3B82F6',
-                title: 'Coming Soon',
-                excerpt: 'Local travel guides and hidden gems around Kiambu Road are being compiled.',
+                title: 'Escapes worth the drive',
+                excerpt: "Weekend getaways, hidden gems and travel guides from around the Kiambu Road corridor and beyond.",
               },
               {
-                section: 'Business Notes',
+                section: 'Business Agency',
                 slug: 'business-notes',
                 color: '#E8A020',
-                title: 'Coming Soon',
-                excerpt: 'Business insights, tips and local entrepreneurship stories — launching soon.',
+                title: 'The corridor at work',
+                excerpt: "Local entrepreneurship stories, business tips and insights from Kiambu Road's growing economy.",
               },
             ].map((item) => (
               <a

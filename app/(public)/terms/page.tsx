@@ -77,7 +77,6 @@ const DISCLAIMER =
 
 const FOOTER_LINKS = [
   { label: 'Tours and Travel', href: '/travel' },
-  { label: 'Consult a Doctor', href: '/journal/dear-doctor' },
   { label: 'Contact Us', href: '/contact' },
 ]
 

@@ -26,7 +26,7 @@ const SECTOR_GROUPS: SectorGroup[] = [
     bgColor: '#F0FDF4',
     links: [
       { label: 'Health Digest', href: '/journal/health-digest' },
-      { label: "This N' That", href: '/journal/this-n-that' },
+      { label: 'Lifestyle Blog', href: '/journal/this-n-that' },
       { label: 'Prayer & Verse', href: '/journal/prayer-verse' },
       { label: 'Inspiration', href: '/journal/inspiration' },
       { label: 'E-Books', href: '/journal/e-books' },
@@ -38,9 +38,9 @@ const SECTOR_GROUPS: SectorGroup[] = [
     bgColor: '#EFF6FF',
     links: [
       { label: 'Travel Booking', href: '/travel' },
-      { label: "Kiambu Here N' There", href: '/journal/kiambu-here-n-there' },
+      { label: 'Kiambu Retreats', href: '/journal/kiambu-here-n-there' },
       { label: 'Destination beyond', href: '/journal/destination-review' },
-      { label: 'Nature Trivia', href: '/journal/nature-trivia' },
+      { label: 'Sponsored Features', href: '/journal/nature-trivia' },
     ],
   },
   {
@@ -51,16 +51,15 @@ const SECTOR_GROUPS: SectorGroup[] = [
       { label: 'Jobs Board', href: '/jobs' },
       { label: 'Talent Search', href: '/talent-search' },
       { label: 'Prices at a Glance', href: '/prices' },
-      { label: 'Business Notes', href: '/journal/business-notes' },
-      { label: 'Business Opportunities', href: '/journal/business-opportunities' },
-      { label: 'Opinion', href: '/journal/opinion' },
+      { label: 'Business Agency', href: '/journal/business-notes' },
+      { label: 'Community Programmes', href: '/journal/business-opportunities' },
+      { label: 'Explorer Merchandise', href: '/journal/opinion' },
       { label: 'Newswatch', href: '/journal/newswatch' },
     ],
   },
 ]
 
 const QUICK_ACTIONS: SectorLink[] = [
-  { label: 'Dear Doctor', href: '/dear-doctor' },
   { label: 'Advertise with Us', href: '/advertise' },
   { label: 'List Your Business', href: '/list-your-business' },
   { label: 'Other Services', href: '/other-services' },

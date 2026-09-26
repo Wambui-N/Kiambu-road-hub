@@ -364,22 +364,6 @@ export interface Profile {
   updated_at: string
 }
 
-export type DoctorServiceType = 'consultation' | 'counselling'
-export type DoctorConsultationStatus = 'new' | 'contacted' | 'closed'
-
-export interface DoctorConsultation {
-  id: string
-  service_type: DoctorServiceType
-  age: number
-  gender: 'male' | 'female'
-  county: string | null
-  marital_status: 'single' | 'married' | null
-  message: string
-  email_sent: boolean
-  status: DoctorConsultationStatus
-  created_at: string
-}
-
 export interface AdminRoleRecord {
   user_id: string
   role: AdminRole

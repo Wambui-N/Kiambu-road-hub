@@ -29,7 +29,8 @@ const SECTION_COLORS: Record<string, string> = {
   'destination-review': '#14B8A6',
   'nature-trivia': '#22C55E',
   'business-notes': '#E8A020',
-  'opinion': '#EF4444',
+  'business-opportunities': '#D97706',
+  'opinion': '#64748B',
 }
 
 export default function JournalPage() {

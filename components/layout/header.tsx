@@ -14,9 +14,11 @@ import { useRouter } from 'next/navigation'
 
 const navLinks = [
   { label: 'Directory', href: '/directory' },
-  { label: 'Lifestyle Vibes', href: '/journal' },
+  { label: 'Explorer Magazine', href: '/journal' },
   { label: 'Newswatch', href: '/journal/newswatch' },
-  { label: 'Dear Doctor', href: '/dear-doctor' },
+  { label: 'People', href: '/people' },
+  { label: 'Events & Expos', href: '/events' },
+  { label: 'Books & Guides', href: '/books-and-guides' },
   { label: 'Jobs & Careers', href: '/jobs' },
   { label: 'Price Comparison', href: '/prices' },
   { label: 'Travel', href: '/travel' },

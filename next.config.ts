@@ -18,6 +18,16 @@ const nextConfig: NextConfig = {
         destination: '/dear-doctor',
         permanent: true,
       },
+      {
+        source: '/directory/property-construction',
+        destination: '/directory/building-construction',
+        permanent: true,
+      },
+      {
+        source: '/directory/property-construction/:path*',
+        destination: '/directory/building-construction/:path*',
+        permanent: true,
+      },
     ]
   },
   images: {

@@ -32,7 +32,7 @@ export default function FeaturedBusinesses({ businesses }: FeaturedBusinessesPro
           className="flex items-end justify-between mb-8"
         >
           <div>
-            <h2 className="font-display text-3xl font-bold text-foreground">Featured Businesses</h2>
+            <h2 className="font-display text-3xl font-bold text-foreground">Premium Listings</h2>
             <p className="text-muted-foreground mt-1">Sample the top-rated listings</p>
           </div>
           <div className="flex gap-2">

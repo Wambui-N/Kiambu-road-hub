@@ -136,12 +136,12 @@ export default function Header() {
               </Link>
             ))}
           </nav>
-          <nav className="flex items-center justify-center gap-5 h-8 border-t border-border/60">
+          <nav className="flex items-center justify-center gap-5 h-9 border-t border-border/60">
             {SECONDARY_NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-xs font-medium text-muted-foreground whitespace-nowrap pb-[2px] hover:text-primary
+                className="relative text-sm font-semibold text-foreground/75 whitespace-nowrap pb-[2px] hover:text-primary
                   after:absolute after:left-0 after:bottom-0 after:h-px after:w-0 after:bg-primary
                   after:transition-all after:duration-300 after:ease-out
                   hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm"

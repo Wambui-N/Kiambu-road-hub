@@ -75,7 +75,7 @@ export default async function AskKiambuRoadPage() {
             Ask Kiambu Road
           </h1>
           <p className="text-muted-foreground text-base max-w-2xl">
-            A place for residents, business owners and visitors along the Kiambu Road corridor to ask questions, share advice, and help each other out.
+            Platform for information exchange – ask questions, share advice or useful tips
           </p>
         </div>
       </div>

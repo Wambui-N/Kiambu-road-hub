@@ -1,46 +1,78 @@
+import type { ReactNode } from 'react'
+
 /**
  * Renders plain-text content with a small convention so admins can write
  * structured campaign copy in a plain textarea:
  *  - a line starting with "## " becomes a subheading
  *  - consecutive lines starting with "- " become a bullet list
- *  - blank-line-separated blocks become paragraphs
+ *  - other consecutive non-blank lines are joined into a paragraph
+ * Processes line-by-line rather than by blank-line blocks, since an intro
+ * sentence or heading is often followed immediately (single newline) by its
+ * bullet list in the source text.
  */
 export default function SimpleMarkdown({ text }: { text: string }) {
-  const blocks = text.split(/\n\n+/)
+  const lines = text.split('\n')
+  const nodes: ReactNode[] = []
+  let paragraphLines: string[] = []
+  let listItems: string[] = []
 
-  return (
-    <div className="space-y-4">
-      {blocks.map((block, i) => {
-        const lines = block.split('\n').filter((l) => l.trim().length > 0)
-        if (lines.length === 0) return null
+  const flushParagraph = () => {
+    if (paragraphLines.length === 0) return
+    nodes.push(
+      <p key={nodes.length} className="text-sm text-muted-foreground leading-relaxed">
+        {paragraphLines.join(' ')}
+      </p>
+    )
+    paragraphLines = []
+  }
 
-        if (lines[0].startsWith('## ')) {
-          return (
-            <h3 key={i} className="font-display text-lg font-bold text-foreground pt-2">
-              {lines[0].slice(3)}
-            </h3>
-          )
-        }
+  const flushList = () => {
+    if (listItems.length === 0) return
+    nodes.push(
+      <ul key={nodes.length} className="space-y-2">
+        {listItems.map((item, j) => (
+          <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
+            <span className="text-primary font-bold mt-0.5">✓</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    )
+    listItems = []
+  }
 
-        if (lines.every((l) => l.startsWith('- '))) {
-          return (
-            <ul key={i} className="space-y-2">
-              {lines.map((l, j) => (
-                <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="text-primary font-bold mt-0.5">✓</span>
-                  {l.slice(2)}
-                </li>
-              ))}
-            </ul>
-          )
-        }
+  for (const rawLine of lines) {
+    const line = rawLine.trim()
 
-        return (
-          <p key={i} className="text-sm text-muted-foreground leading-relaxed">
-            {block}
-          </p>
-        )
-      })}
-    </div>
-  )
+    if (line === '') {
+      flushParagraph()
+      flushList()
+      continue
+    }
+
+    if (line.startsWith('## ')) {
+      flushParagraph()
+      flushList()
+      nodes.push(
+        <h3 key={nodes.length} className="font-display text-lg font-bold text-foreground pt-2">
+          {line.slice(3)}
+        </h3>
+      )
+      continue
+    }
+
+    if (line.startsWith('- ')) {
+      flushParagraph()
+      listItems.push(line.slice(2))
+      continue
+    }
+
+    flushList()
+    paragraphLines.push(line)
+  }
+
+  flushParagraph()
+  flushList()
+
+  return <div className="space-y-4">{nodes}</div>
 }

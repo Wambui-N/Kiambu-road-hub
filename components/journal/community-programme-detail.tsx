@@ -70,7 +70,7 @@ export default function CommunityProgrammeDetail({ programme, sectionColor }: { 
 
       {/* Full campaign body */}
       {programme.body_content && (
-        <div className="bg-white rounded-2xl border border-border p-6 sm:p-8 max-w-3xl">
+        <div className="bg-white rounded-2xl border border-border p-6 sm:p-8">
           <SimpleMarkdown text={programme.body_content} />
         </div>
       )}

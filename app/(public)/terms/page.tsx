@@ -77,6 +77,7 @@ const DISCLAIMER =
 
 const FOOTER_LINKS = [
   { label: 'Tours and Travel', href: '/travel' },
+  { label: 'Refund Policy', href: '/refund-policy' },
   { label: 'Contact Us', href: '/contact' },
 ]
 
@@ -133,6 +134,7 @@ export default function TermsPage() {
                 <li><Link href="/" className="text-foreground hover:text-primary">Home</Link></li>
                 <li><Link href="/directory" className="text-foreground hover:text-primary">Directory</Link></li>
                 <li><Link href="/privacy" className="text-foreground hover:text-primary">Privacy Policy</Link></li>
+                <li><Link href="/refund-policy" className="text-foreground hover:text-primary">Refund Policy</Link></li>
                 <li><Link href="/contact" className="text-foreground hover:text-primary">Contact Us</Link></li>
               </ul>
             </div>

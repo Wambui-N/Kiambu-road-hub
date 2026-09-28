@@ -98,7 +98,7 @@ export default function ForumSection({ initialPosts, isSignedIn }: ForumSectionP
             <HelpCircle className="w-5 h-5 text-blue-700" />
           </div>
           <h3 className="font-display font-semibold text-foreground mb-1.5">
-            Any burning question for which you need assistance?
+            Any burning question you need assistance with?
           </h3>
           <p className="text-sm text-muted-foreground">Ask the Kiambu Road community</p>
         </button>
@@ -171,7 +171,7 @@ export default function ForumSection({ initialPosts, isSignedIn }: ForumSectionP
       {!isSignedIn && (
         <div className="bg-muted/40 border border-border rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap">
           <p className="text-sm text-muted-foreground">
-            Sign up to ask questions, share advice, and reply to your neighbours.
+            Sign up to create and send a post
           </p>
           <div className="flex gap-2 shrink-0">
             <Link href="/sign-in?next=%2Fask-kiambu-road">
@@ -194,7 +194,7 @@ export default function ForumSection({ initialPosts, isSignedIn }: ForumSectionP
         {posts.length === 0 ? (
           <div className="bg-white border border-dashed border-border rounded-2xl p-10 text-center">
             <p className="text-sm text-muted-foreground">
-              No posts yet — be the first to ask a question or share advice.
+              No posts yet — be the first to post.
             </p>
           </div>
         ) : (

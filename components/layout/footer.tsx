@@ -145,6 +145,7 @@ export default function Footer() {
               {[
                 { label: 'Terms & Conditions', href: '/terms' },
                 { label: 'Privacy Policy', href: '/privacy' },
+                { label: 'Refund Policy', href: '/refund-policy' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="text-sm text-white/60 hover:text-white transition-colors">
@@ -172,6 +173,7 @@ export default function Footer() {
           <div className="flex flex-wrap gap-4 text-xs text-white/40">
             <Link href="/terms" className="hover:text-white/70 transition-colors">Terms</Link>
             <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy</Link>
+            <Link href="/refund-policy" className="hover:text-white/70 transition-colors">Refund Policy</Link>
             <Link href="/sitemap.xml" className="hover:text-white/70 transition-colors">Sitemap</Link>
           </div>
         </div>

@@ -54,18 +54,18 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
           {categories.map((category) => {
             const Icon = iconMap[category.icon ?? ''] ?? ShoppingBag
             return (
-              <motion.div key={category.id} variants={cardVariants}>
-                <Link href={`/directory/${category.slug}`}>
+              <motion.div key={category.id} variants={cardVariants} className="h-full">
+                <Link href={`/directory/${category.slug}`} className="block h-full">
                   <motion.div
                     whileHover={{
                       y: -4,
                       boxShadow: '0 12px 40px rgba(27,107,58,0.15)',
                     }}
                     transition={{ duration: 0.2 }}
-                    className="group flex flex-col items-center gap-3 p-4 bg-white rounded-2xl border border-border hover:border-primary cursor-pointer transition-colors text-center"
+                    className="group flex h-full w-full flex-col items-center justify-center gap-3 p-4 bg-white rounded-2xl border border-border hover:border-primary cursor-pointer transition-colors text-center"
                   >
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors"
+                      className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors shrink-0"
                       style={{ backgroundColor: (category.color ?? '#1B6B3A') + '20' }}
                     >
                       <Icon
@@ -73,12 +73,12 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
                         style={{ color: category.color ?? '#1B6B3A' }}
                       />
                     </div>
-                    <div>
-                      <p className="text-xs font-semibold text-foreground leading-tight">
+                    <div className="flex flex-col items-center justify-center min-h-[2.5rem]">
+                      <p className="text-xs font-semibold text-foreground leading-tight line-clamp-2">
                         {category.name}
                       </p>
                       {category.business_count !== undefined && (
-                        <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
+                        <p className="text-[10px] text-muted-foreground font-mono mt-1">
                           {category.business_count} businesses
                         </p>
                       )}

@@ -42,7 +42,7 @@ export default function HeroSection({ areas = [], heroAdSlot = null }: HeroSecti
       {/* Background image — absolute wrapper gives fill a sized parent */}
       <div className="absolute inset-0">
         <Image
-          src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1920&q=80"
+          src="/hero.jpg"
           alt="Kiambu Road, Nairobi"
           fill
           priority

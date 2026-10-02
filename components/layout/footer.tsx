@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Mail, Facebook, Twitter, Instagram, Youtube, Users } from 'lucide-react'
 import NewsletterForm from '@/components/layout/newsletter-form'
 import QuickLinks from '@/components/home/quick-links'
@@ -52,14 +53,26 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Logo band */}
+      <div className="border-b border-white/10 py-4 sm:py-6 flex items-center justify-center">
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/dark KRE logo.png"
+            alt="Kiambu Road Explorer"
+            width={1564}
+            height={578}
+            className="h-24 sm:h-28 w-auto"
+          />
+        </Link>
+      </div>
+
       {/* Main footer columns */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand col */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <span className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">K</span>
-              <span className="font-display font-bold text-lg text-white">Kiambu Road Explorer</span>
+            <Link href="/" className="font-display font-bold text-lg text-white mb-3 block">
+              Kiambu Road Explorer
             </Link>
             <p className="text-sm text-white/60 leading-relaxed mb-4">
               Your complete business directory and lifestyle journal for the Kiambu Road corridor, Nairobi.

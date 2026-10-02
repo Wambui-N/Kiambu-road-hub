@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -59,19 +60,18 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-border shadow-sm">
       {/* Row 1 — Brand + Actions */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+        <div className="flex items-center justify-between pt-4 pb-3">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold">
-              K
-            </span>
-            <span className="font-display font-bold text-lg text-foreground leading-tight hidden sm:block">
-              Kiambu Road Explorer
-            </span>
-            <span className="font-display font-bold text-lg text-foreground leading-tight sm:hidden">
-              KRH
-            </span>
+          <Link href="/" className="flex items-center shrink-0">
+            <Image
+              src="/KRE sm logo.png"
+              alt="Kiambu Road Explorer"
+              width={1564}
+              height={444}
+              priority
+              className="h-10 sm:h-12 w-auto"
+            />
           </Link>
 
           {/* Right actions */}
@@ -121,7 +121,7 @@ export default function Header() {
 
       {/* Row 2 — Navigation links (desktop only), split into primary + secondary rows */}
       <div className="hidden md:block mt-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
           <nav className="flex items-center justify-center gap-6 h-9">
             {PRIMARY_NAV_LINKS.map((link) => (
               <Link

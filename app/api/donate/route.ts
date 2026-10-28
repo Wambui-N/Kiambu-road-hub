@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { initializePaystackTransaction, isPaystackConfigured } from '@/lib/paystack'
 
 const VALID_FREQUENCIES = ['one_time', 'weekly', 'monthly', 'annual']
 
@@ -27,19 +28,38 @@ export async function POST(req: NextRequest) {
     }
 
     const supabase = await createAdminClient()
-    const { error } = await supabase.from('donation_pledges').insert({
-      donor_name: donor_name.trim(),
-      email: email.toLowerCase().trim(),
-      phone: phone?.trim() || null,
-      amount: parsedAmount,
-      currency: 'KES',
-      frequency,
-      project: project?.trim() || null,
-      additional_instructions: additional_instructions?.trim() || null,
-      status: 'pending_payment',
-    })
+    const { data: pledge, error } = await supabase
+      .from('donation_pledges')
+      .insert({
+        donor_name: donor_name.trim(),
+        email: email.toLowerCase().trim(),
+        phone: phone?.trim() || null,
+        amount: parsedAmount,
+        currency: 'KES',
+        frequency,
+        project: project?.trim() || null,
+        additional_instructions: additional_instructions?.trim() || null,
+        status: 'pending_payment',
+      })
+      .select('id')
+      .single()
 
     if (error) throw error
+
+    if (isPaystackConfigured()) {
+      try {
+        const { authorization_url } = await initializePaystackTransaction({
+          email: email.toLowerCase().trim(),
+          amountKes: parsedAmount,
+          reference: `donation_${pledge.id}`,
+          callbackUrl: `${req.nextUrl.origin}/payment-complete`,
+          metadata: { record_type: 'donation_pledge', record_id: pledge.id },
+        })
+        return NextResponse.json({ success: true, authorization_url })
+      } catch (paystackError: unknown) {
+        console.error('Paystack initialize failed:', paystackError)
+      }
+    }
 
     return NextResponse.json({ success: true })
   } catch (err: unknown) {

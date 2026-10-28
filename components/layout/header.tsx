@@ -15,21 +15,21 @@ import { useRouter } from 'next/navigation'
 
 const PRIMARY_NAV_LINKS = [
   { label: 'Directory', href: '/directory' },
-  { label: 'Explorer Magazine', href: '/journal' },
-  { label: 'Jobs & Careers', href: '/jobs' },
-  { label: 'Price Comparison', href: '/prices' },
+  { label: 'Magazine', href: '/journal' },
+  { label: 'Events & Expos', href: '/events' },
   { label: 'Travel', href: '/travel' },
+  { label: 'People', href: '/people' },
 ]
+
+const SHOP_LINK = { label: 'Shop', href: '/shop' }
 
 const SECONDARY_NAV_LINKS = [
-  { label: 'Newswatch', href: '/journal/newswatch' },
-  { label: 'People', href: '/people' },
-  { label: 'Events & Expos', href: '/events' },
-  { label: 'Books & Guides', href: '/books-and-guides' },
+  { label: 'News', href: '/journal/newswatch' },
+  { label: 'Jobs & Careers', href: '/jobs' },
+  { label: 'Compare Prices', href: '/prices' },
+  { label: 'Books', href: '/journal/e-books' },
   { label: 'Ask Kiambu Road', href: '/ask-kiambu-road' },
 ]
-
-const navLinks = [...PRIMARY_NAV_LINKS, ...SECONDARY_NAV_LINKS]
 
 const PHONE_NUMBER = '+254 720 950 500'
 const PHONE_HREF = 'tel:+254720950500'
@@ -65,12 +65,12 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0">
             <Image
-              src="/KRE sm logo.png"
+              src="/KRE logo.png"
               alt="Kiambu Road Explorer"
               width={1564}
-              height={444}
+              height={578}
               priority
-              className="h-10 sm:h-12 w-auto"
+              className="h-12 sm:h-14 w-auto"
             />
           </Link>
 
@@ -119,32 +119,44 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Row 2 — Navigation links (desktop only), split into primary + secondary rows */}
-      <div className="hidden md:block mt-1">
+      {/* Row 2 — Primary nav band (desktop only) */}
+      <div className="hidden md:block bg-primary">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-          <nav className="flex items-center justify-center gap-6 h-9">
+          <nav className="flex items-center justify-center gap-7 h-12">
             {PRIMARY_NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-sm font-semibold text-primary whitespace-nowrap pb-[2px]
-                  after:absolute after:left-0 after:bottom-0 after:h-px after:w-0 after:bg-primary
+                className="relative text-base font-bold tracking-wide uppercase text-white/90 whitespace-nowrap pb-[2px]
+                  after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-white
                   after:transition-all after:duration-300 after:ease-out
-                  hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm"
+                  hover:text-white hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 rounded-sm"
               >
                 {link.label}
               </Link>
             ))}
+            <Link
+              href={SHOP_LINK.href}
+              className="text-sm font-bold tracking-wide uppercase text-white border-2 border-white/70 rounded-full px-5 py-1.5 whitespace-nowrap hover:bg-white hover:text-primary transition-colors"
+            >
+              {SHOP_LINK.label}
+            </Link>
           </nav>
-          <nav className="flex items-center justify-center gap-5 h-9 border-t border-border/60">
+        </div>
+      </div>
+
+      {/* Row 3 — Secondary nav band (desktop only) */}
+      <div className="hidden md:block bg-accent">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+          <nav className="flex items-center justify-center gap-6 h-10">
             {SECONDARY_NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-sm font-semibold text-foreground/75 whitespace-nowrap pb-[2px] hover:text-primary
-                  after:absolute after:left-0 after:bottom-0 after:h-px after:w-0 after:bg-primary
+                className="relative text-sm font-bold text-accent-foreground/80 whitespace-nowrap pb-[2px] hover:text-accent-foreground
+                  after:absolute after:left-0 after:bottom-0 after:h-px after:w-0 after:bg-accent-foreground
                   after:transition-all after:duration-300 after:ease-out
-                  hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm"
+                  hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-foreground/40 rounded-sm"
               >
                 {link.label}
               </Link>
@@ -207,7 +219,7 @@ export default function Header() {
                 <Siren className="w-4 h-4" />
                 Emergency Contacts
               </Link>
-              {navLinks.map((link) => (
+              {PRIMARY_NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -222,6 +234,30 @@ export default function Header() {
                   </span>
                 </Link>
               ))}
+              <Link
+                href={SHOP_LINK.href}
+                onClick={() => setMobileOpen(false)}
+                className="mx-4 my-1 px-4 py-2.5 rounded-lg text-base font-bold text-center uppercase tracking-wide bg-primary text-white hover:bg-primary/90 transition-colors"
+              >
+                {SHOP_LINK.label}
+              </Link>
+              <div className="border-t border-border mt-3 pt-2">
+                {SECONDARY_NAV_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="group px-4 py-3 rounded-lg text-base font-semibold text-foreground/80 hover:bg-muted hover:text-primary transition-colors block"
+                  >
+                    <span className="relative inline-block pb-[2px]
+                      after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-primary
+                      after:transition-all after:duration-300 after:ease-out
+                      group-hover:after:w-full">
+                      {link.label}
+                    </span>
+                  </Link>
+                ))}
+              </div>
               <div className="border-t border-border mt-4 pt-4">
                 <p className="px-4 text-xs font-mono text-muted-foreground mb-2 uppercase tracking-wide">
                   Quick categories

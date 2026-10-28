@@ -20,11 +20,11 @@ async function getProducts(productType: ProductType): Promise<StoreProduct[]> {
 
 export default async function StoreProductsGrid({
   productType,
-  sectionSlug,
+  basePath,
   sectionColor,
 }: {
   productType: ProductType
-  sectionSlug: string
+  basePath: string
   sectionColor: string
 }) {
   const products = await getProducts(productType)
@@ -60,7 +60,7 @@ export default async function StoreProductsGrid({
           return (
             <Link
               key={product.id}
-              href={`/journal/${sectionSlug}/${product.slug}`}
+              href={`${basePath}/${product.slug}`}
               className="group bg-white rounded-2xl border border-border overflow-hidden hover:border-primary hover:shadow-md transition-all flex flex-col"
             >
               <div className="relative h-40 overflow-hidden bg-muted shrink-0 flex items-center justify-center">
@@ -68,6 +68,11 @@ export default async function StoreProductsGrid({
                   <Image src={imageUrl} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 50vw" />
                 ) : (
                   <span className="text-4xl">{isEbook ? '📖' : '🛍️'}</span>
+                )}
+                {product.coming_soon && (
+                  <span className="absolute top-3 left-3 text-[10px] font-mono font-bold bg-black/70 text-white px-2 py-0.5 rounded-full">
+                    Coming Soon
+                  </span>
                 )}
               </div>
               <div className="p-5 flex flex-col flex-1">
@@ -77,9 +82,13 @@ export default async function StoreProductsGrid({
                 {product.description && (
                   <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-3">{product.description}</p>
                 )}
-                <p className="font-mono font-bold mt-auto pt-2 text-sm" style={{ color: sectionColor }}>
-                  {product.currency} {Number(product.price).toLocaleString()}
-                </p>
+                {product.coming_soon ? (
+                  <p className="font-mono text-xs text-muted-foreground mt-auto pt-2">Not yet available</p>
+                ) : (
+                  <p className="font-mono font-bold mt-auto pt-2 text-sm" style={{ color: sectionColor }}>
+                    {product.currency} {Number(product.price).toLocaleString()}
+                  </p>
+                )}
               </div>
             </Link>
           )

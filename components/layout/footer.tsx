@@ -110,6 +110,8 @@ export default function Footer() {
             <ul className="space-y-2">
               {[
                 { label: 'About Us', href: '/about' },
+                { label: 'People', href: '/people' },
+                { label: 'Events & Expos', href: '/events' },
                 { label: 'Advertise With Us', href: '/advertise' },
                 { label: 'Partner With Us', href: '/partner-with-us' },
                 { label: 'Other Services', href: '/other-services' },

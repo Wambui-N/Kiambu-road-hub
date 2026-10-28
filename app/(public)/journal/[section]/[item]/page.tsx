@@ -30,7 +30,6 @@ async function getItem(sectionSlug: string, itemSlug: string) {
       const { data } = await supabase.from('community_programmes').select('*').eq('slug', itemSlug).eq('status', 'published').single()
       return data ? { kind: 'community_programme' as const, data: data as CommunityProgramme } : null
     }
-    case 'opinion':
     case 'e-books': {
       const { data } = await supabase.from('store_products').select('*').eq('slug', itemSlug).eq('status', 'published').single()
       return data ? { kind: 'store_product' as const, data: data as StoreProduct } : null

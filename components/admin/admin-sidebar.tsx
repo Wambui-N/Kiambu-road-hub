@@ -7,6 +7,7 @@ import {
   Briefcase, DollarSign, Inbox, MessageSquare,
   Star, Megaphone, Users, ThumbsUp, Mail, MapPin, Search, TrendingUp,
   Handshake, Tent, HeartHandshake, ShoppingBag, ClipboardList, Gift,
+  CalendarDays, UserCircle, Heart,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -21,6 +22,8 @@ const navItems = [
   { label: 'Store Products',   href: '/admin/store-products',   icon: ShoppingBag },
   { label: 'Retreat Packages', href: '/admin/retreat-packages', icon: Tent },
   { label: 'Community Projects', href: '/admin/community-programmes', icon: HeartHandshake },
+  { label: 'Events & Expos',   href: '/admin/events',           icon: CalendarDays },
+  { label: 'People Profiles',  href: '/admin/people-profiles',  icon: UserCircle },
   { label: 'Submissions',      href: '/admin/submissions',      icon: Inbox },
   { label: 'Messages',         href: '/admin/messages',         icon: MessageSquare },
 ]
@@ -40,6 +43,8 @@ const moderationItems = [
   { label: 'Retreat Inquiries',href: '/admin/retreat-inquiries',icon: Tent },
   { label: 'Project Signups',  href: '/admin/programme-signups',icon: ClipboardList },
   { label: 'Store Orders',     href: '/admin/store-orders',     icon: ShoppingBag },
+  { label: 'Event Inquiries',  href: '/admin/event-inquiries',  icon: CalendarDays },
+  { label: 'Story Submissions',href: '/admin/people-submissions',icon: Heart },
   { label: 'Partner Inquiries',href: '/admin/partner-inquiries',icon: HeartHandshake },
   { label: 'Donations',        href: '/admin/donations',        icon: Gift },
   { label: 'Subscribers',      href: '/admin/subscribers',      icon: Mail },

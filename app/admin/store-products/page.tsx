@@ -69,7 +69,13 @@ export default async function AdminStoreProductsPage() {
                       <p className="text-[10px] font-mono text-muted-foreground">{item.slug}</p>
                     </td>
                     <td className="px-4 py-3 text-xs text-muted-foreground capitalize">{item.product_type}</td>
-                    <td className="px-4 py-3 text-xs text-muted-foreground">{item.currency} {Number(item.price).toLocaleString()}</td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">
+                      {item.coming_soon ? (
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Coming Soon</span>
+                      ) : (
+                        `${item.currency} ${Number(item.price).toLocaleString()}`
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${STATUS_COLOR[item.status] ?? ''}`}>
                         {item.status}

@@ -20,6 +20,7 @@ const OPTIONAL_VARS = [
   'RESEND_API_KEY',
   'NEXT_PUBLIC_SITE_URL',
   'ADMIN_EMAIL',
+  'PAYSTACK_SECRET_KEY',
 ] as const
 
 type ServerVar = (typeof REQUIRED_SERVER_VARS)[number]
@@ -66,5 +67,6 @@ export function getEnvSummary(): Record<string, string> {
     RESEND_API_KEY: mask(process.env.RESEND_API_KEY),
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: mask(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY),
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? '(not set)',
+    PAYSTACK_SECRET_KEY: mask(process.env.PAYSTACK_SECRET_KEY),
   }
 }

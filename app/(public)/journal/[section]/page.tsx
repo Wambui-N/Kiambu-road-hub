@@ -20,7 +20,6 @@ const FUNCTIONAL_SLUGS = new Set([
   'business-notes',
   'kiambu-here-n-there',
   'business-opportunities',
-  'opinion',
   'e-books',
 ])
 
@@ -175,10 +174,26 @@ export default async function JournalSectionPage({ params }: Props) {
               <RetreatPackagesGrid sectionColor={sectionColor} />
             ) : sectionSlug === 'business-opportunities' ? (
               <CommunityProgrammesGrid sectionColor={sectionColor} />
-            ) : sectionSlug === 'opinion' ? (
-              <StoreProductsGrid productType="merchandise" sectionSlug={sectionSlug} sectionColor={sectionColor} />
             ) : sectionSlug === 'e-books' ? (
-              <StoreProductsGrid productType="ebook" sectionSlug={sectionSlug} sectionColor={sectionColor} />
+              <>
+                <div className="rounded-2xl p-6 mb-8 bg-white border border-border">
+                  <h2 className="font-display text-xl font-bold mb-2">Practical ideas. Useful knowledge. Local perspectives.</h2>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                    Explorer Publications publishes practical, accessible materials for entrepreneurs, businesses, professionals,
+                    residents and anyone seeking useful knowledge and fresh local insight. We produce concise e-books, how-to guides,
+                    business guides, research reports, surveys and special publications on entrepreneurship, customer service,
+                    business opportunities, local markets, property, hospitality, lifestyle and community issues.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {['Books & Guides', 'Research & Reports', 'Explorer Guides'].map((type) => (
+                      <span key={type} className="text-xs font-mono font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: sectionColor + '15', color: sectionColor }}>
+                        {type}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <StoreProductsGrid productType="ebook" basePath="/journal/e-books" sectionColor={sectionColor} />
+              </>
             ) : articles.length === 0 ? (
               <div className="text-center py-20">
                 <p className="text-5xl mb-5">✍️</p>

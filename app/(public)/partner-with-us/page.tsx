@@ -110,7 +110,12 @@ function PartnerWithUsContent() {
           additional_instructions: instructions,
         }),
       })
+      const json = await res.json()
       if (!res.ok) throw new Error('Submission failed')
+      if (json.authorization_url) {
+        window.location.href = json.authorization_url
+        return
+      }
       setDonationSubmitted(true)
     } catch {
       toast.error('Something went wrong. Please try again.')
@@ -372,10 +377,6 @@ function PartnerWithUsContent() {
                 <Label>Phone</Label>
                 <Input type="tel" value={donorForm.phone} onChange={(e) => setDonorField('phone', e.target.value)} />
               </div>
-
-              <p className="text-xs text-muted-foreground">
-                No online payment is collected yet — we&apos;ll reach out to arrange payment once your pledge is submitted.
-              </p>
 
               <Button type="submit" disabled={donationLoading} className="w-full bg-primary hover:bg-primary/90 py-3 h-auto">
                 {donationLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}

@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/ask-kiambu-road`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'daily', priority: 0.7 },
     { url: `${BASE_URL}/people`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${BASE_URL}/events`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${BASE_URL}/books-and-guides`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE_URL}/shop`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE_URL}/advertise`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/partner-with-us`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/list-your-business`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.8 },
@@ -105,6 +105,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
+  // Shop product pages
+  const { data: storeProducts } = await supabase
+    .from('store_products')
+    .select('slug, updated_at')
+    .eq('status', 'published')
+
+  const shopRoutes: MetadataRoute.Sitemap = (storeProducts ?? []).map((p) => ({
+    url: `${BASE_URL}/shop/${p.slug}`,
+    lastModified: new Date(p.updated_at),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }))
+
+  // People profile pages
+  const { data: peopleProfiles } = await supabase
+    .from('people_profiles')
+    .select('slug, updated_at')
+    .eq('status', 'published')
+
+  const peopleRoutes: MetadataRoute.Sitemap = (peopleProfiles ?? []).map((p) => ({
+    url: `${BASE_URL}/people/${p.slug}`,
+    lastModified: new Date(p.updated_at),
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
+  }))
+
+  // Event pages
+  const { data: events } = await supabase
+    .from('events')
+    .select('slug, updated_at')
+    .eq('status', 'published')
+
+  const eventRoutes: MetadataRoute.Sitemap = (events ?? []).map((e) => ({
+    url: `${BASE_URL}/events/${e.slug}`,
+    lastModified: new Date(e.updated_at),
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
+  }))
+
   return [
     ...staticRoutes,
     ...categoryRoutes,
@@ -112,5 +151,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...businessRoutes,
     ...articleRoutes,
     ...priceItemRoutes,
+    ...shopRoutes,
+    ...peopleRoutes,
+    ...eventRoutes,
   ]
 }

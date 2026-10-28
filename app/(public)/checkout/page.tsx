@@ -40,6 +40,11 @@ export default function CheckoutPage() {
       })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error ?? 'Checkout failed')
+      if (json.authorization_url) {
+        // Cart is cleared on /payment-complete once payment is actually confirmed.
+        window.location.href = json.authorization_url
+        return
+      }
       setOrderId(json.order_id)
       clearCart()
     } catch (err: unknown) {
@@ -111,9 +116,6 @@ export default function CheckoutPage() {
                 <Input value={form.delivery_address} onChange={(e) => set('delivery_address', e.target.value)} required />
               </div>
             )}
-            <p className="text-xs text-muted-foreground">
-              No online payment yet — we&apos;ll reach out to arrange payment{hasMerchandise ? ' and delivery' : ''} once your order is placed.
-            </p>
             <Button type="submit" disabled={loading} className="w-full bg-primary hover:bg-primary/90 h-12">
               {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
               {loading ? 'Placing Order...' : 'Place Order'}

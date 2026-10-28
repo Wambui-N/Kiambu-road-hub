@@ -43,18 +43,33 @@ export default function StoreProductDetail({ product, sectionColor }: { product:
       </div>
 
       <div className="bg-white rounded-2xl border border-border p-6 space-y-5">
-        <h1 className="font-display text-2xl font-bold">{product.name}</h1>
-        <p className="font-mono font-bold text-xl" style={{ color: sectionColor }}>
-          {product.currency} {Number(product.price).toLocaleString()}
-        </p>
+        <div className="flex items-center gap-2">
+          <h1 className="font-display text-2xl font-bold">{product.name}</h1>
+          {product.coming_soon && (
+            <span className="text-[10px] font-mono font-bold bg-muted text-muted-foreground px-2 py-0.5 rounded-full whitespace-nowrap">
+              Coming Soon
+            </span>
+          )}
+        </div>
+        {!product.coming_soon && (
+          <p className="font-mono font-bold text-xl" style={{ color: sectionColor }}>
+            {product.currency} {Number(product.price).toLocaleString()}
+          </p>
+        )}
         {product.description && (
           <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line">{product.description}</p>
         )}
 
-        <Button onClick={handleAddToCart} className="w-full bg-primary hover:bg-primary/90 h-12">
-          {added ? <CheckCircle2 className="w-4 h-4 mr-2" /> : <ShoppingCart className="w-4 h-4 mr-2" />}
-          {added ? 'Added to Cart' : 'Add to Cart'}
-        </Button>
+        {product.coming_soon ? (
+          <Button disabled className="w-full h-12">
+            Not Yet Available
+          </Button>
+        ) : (
+          <Button onClick={handleAddToCart} className="w-full bg-primary hover:bg-primary/90 h-12">
+            {added ? <CheckCircle2 className="w-4 h-4 mr-2" /> : <ShoppingCart className="w-4 h-4 mr-2" />}
+            {added ? 'Added to Cart' : 'Add to Cart'}
+          </Button>
+        )}
 
         <p className="text-center text-xs text-muted-foreground">
           <Link href="/cart" className="font-semibold hover:underline" style={{ color: sectionColor }}>
@@ -62,7 +77,7 @@ export default function StoreProductDetail({ product, sectionColor }: { product:
           </Link>
         </p>
 
-        {isEbook && (
+        {isEbook && !product.coming_soon && (
           <p className="text-xs text-muted-foreground text-center pt-2 border-t border-border">
             Digital delivery — you&apos;ll receive a download link by email once your order is confirmed.
           </p>

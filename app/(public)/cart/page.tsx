@@ -16,11 +16,16 @@ export default function CartPage() {
           <ShoppingCart className="w-14 h-14 text-muted-foreground mx-auto mb-4" />
           <h1 className="font-display text-2xl font-bold mb-3">Your cart is empty</h1>
           <p className="text-muted-foreground text-sm mb-8">
-            Browse Explorer Merchandise or Explorer Publications to add something.
+            Browse the Shop or Explorer Publications to add something.
           </p>
-          <Link href="/journal" className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors">
-            ← Back to Journal
-          </Link>
+          <div className="flex items-center justify-center gap-3">
+            <Link href="/shop" className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors">
+              Shop →
+            </Link>
+            <Link href="/journal/e-books" className="inline-flex items-center border border-border px-6 py-3 rounded-xl text-sm font-semibold hover:bg-muted transition-colors">
+              Publications →
+            </Link>
+          </div>
         </div>
       </div>
     )

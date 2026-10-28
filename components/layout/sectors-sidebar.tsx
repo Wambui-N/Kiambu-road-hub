@@ -54,7 +54,7 @@ const SECTOR_GROUPS: SectorGroup[] = [
       { label: 'Prices at a Glance', href: '/prices' },
       { label: 'Business Agency', href: '/journal/business-notes' },
       { label: 'Community Projects', href: '/journal/business-opportunities' },
-      { label: 'Explorer Merchandise', href: '/journal/opinion' },
+      { label: 'Shop', href: '/shop' },
       { label: 'Newswatch', href: '/journal/newswatch' },
     ],
   },

@@ -26,7 +26,8 @@ export default async function DonationsPage() {
         <h1 className="font-display text-2xl font-bold">Donation Pledges</h1>
         <p className="text-sm text-muted-foreground mt-0.5">{donations.length} total · {pendingCount} awaiting payment</p>
         <p className="text-xs text-muted-foreground mt-1">
-          No online payment is collected yet — contact each donor to arrange payment, then update status here.
+          Donations paid via Paystack (card/M-Pesa) update to &quot;received&quot; automatically. For pledges without a
+          payment reference, contact the donor to arrange payment and update status here manually.
         </p>
       </div>
 
@@ -42,6 +43,9 @@ export default async function DonationsPage() {
                     <div className="flex items-center gap-2 mb-1">
                       <p className="font-medium text-sm">{d.donor_name}</p>
                       <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${STATUS_COLOR[d.status] ?? ''}`}>{d.status}</span>
+                      {d.payment_reference && (
+                        <span className="text-[10px] font-mono text-muted-foreground">· ref: {d.payment_reference}</span>
+                      )}
                     </div>
                     <p className="text-xs text-muted-foreground">
                       {d.phone && <><a href={`tel:${d.phone}`} className="hover:text-primary">{d.phone}</a> · </>}

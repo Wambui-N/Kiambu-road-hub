@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { initializePaystackTransaction, isPaystackConfigured } from '@/lib/paystack'
 import type { StoreOrderItem } from '@/types/database'
 
 interface CartLine {
@@ -84,6 +85,25 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (insertError) throw insertError
+
+    // Real payment is configured — hand the customer straight to Paystack
+    // instead of the "we'll contact you" fallback below.
+    if (isPaystackConfigured()) {
+      try {
+        const { authorization_url } = await initializePaystackTransaction({
+          email: email.toLowerCase().trim(),
+          amountKes: total_amount,
+          reference: `order_${order.id}`,
+          callbackUrl: `${req.nextUrl.origin}/payment-complete`,
+          metadata: { record_type: 'store_order', record_id: order.id },
+        })
+        return NextResponse.json({ success: true, order_id: order.id, authorization_url })
+      } catch (paystackError: unknown) {
+        // Order already exists as pending_payment — nothing is lost. Fall
+        // through to the manual-contact flow rather than failing the request.
+        console.error('Paystack initialize failed:', paystackError)
+      }
+    }
 
     try {
       const resendKey = process.env.RESEND_API_KEY

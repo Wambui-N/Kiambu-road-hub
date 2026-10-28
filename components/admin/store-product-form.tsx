@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Switch } from '@/components/ui/switch'
 import FileUploadField from '@/components/admin/file-upload-field'
 import { toast } from 'sonner'
 import { slugify } from '@/lib/utils'
@@ -29,17 +30,18 @@ export default function StoreProductForm({ initialData }: StoreProductFormProps)
     currency: (initialData?.currency as string) ?? 'KES',
     image_path: (initialData?.image_path as string) ?? '',
     digital_file_path: (initialData?.digital_file_path as string) ?? '',
+    coming_soon: (initialData?.coming_soon as boolean) ?? false,
     status: (initialData?.status as string) ?? 'draft',
   })
 
   const selectClass = 'w-full px-3 py-2 rounded-lg border border-border text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary'
   const isEbook = form.product_type === 'ebook'
 
-  const setField = (key: string, value: string) => {
+  const setField = (key: string, value: string | boolean) => {
     setForm((prev) => {
       const updated = { ...prev, [key]: value }
       if (key === 'name' && !initialData) {
-        updated.slug = slugify(value)
+        updated.slug = slugify(value as string)
       }
       return updated
     })
@@ -47,13 +49,13 @@ export default function StoreProductForm({ initialData }: StoreProductFormProps)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.name || !form.slug || !form.price) return
+    if (!form.name || !form.slug || (!form.price && !form.coming_soon)) return
     setLoading(true)
     try {
       const supabase = createClient()
       const payload = {
         ...form,
-        price: Number(form.price),
+        price: Number(form.price || 0),
         digital_file_path: isEbook ? form.digital_file_path : null,
       }
       if (initialData?.id) {
@@ -114,8 +116,8 @@ export default function StoreProductForm({ initialData }: StoreProductFormProps)
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label>Price *</Label>
-          <Input type="number" min="0" value={form.price} onChange={(e) => setField('price', e.target.value)} required />
+          <Label>Price {!form.coming_soon && '*'}</Label>
+          <Input type="number" min="0" value={form.price} onChange={(e) => setField('price', e.target.value)} disabled={form.coming_soon} required={!form.coming_soon} />
         </div>
         <div className="space-y-1.5">
           <Label>Status</Label>
@@ -123,6 +125,11 @@ export default function StoreProductForm({ initialData }: StoreProductFormProps)
             {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Switch checked={form.coming_soon} onCheckedChange={(v) => setField('coming_soon', v)} id="coming_soon" />
+        <Label htmlFor="coming_soon" className="cursor-pointer">Coming soon (shows a badge, hides price and Add to Cart)</Label>
       </div>
 
       <FileUploadField

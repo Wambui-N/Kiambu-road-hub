@@ -452,6 +452,7 @@ export interface StoreProduct {
   currency: string
   image_path: string | null
   digital_file_path: string | null
+  coming_soon: boolean
   status: ContentStatus
   sort_order: number
   created_at: string
@@ -477,7 +478,61 @@ export interface StoreOrder {
   currency: string
   status: StoreOrderStatus
   admin_notes: string | null
+  payment_reference: string | null
+  paid_at: string | null
   created_at: string
+}
+
+export interface PeopleProfile {
+  id: string
+  name: string
+  slug: string
+  role_connection: string | null
+  photo_path: string | null
+  story: string | null
+  featured_month: string | null
+  status: ContentStatus
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface PeopleStorySubmission {
+  id: string
+  name: string
+  email: string
+  phone: string | null
+  message: string | null
+  status: InquiryStatus
+  created_at: string
+}
+
+export interface KiambuEvent {
+  id: string
+  name: string
+  slug: string
+  tagline: string | null
+  description: string | null
+  body_content: string | null
+  venue_note: string | null
+  date_note: string | null
+  image_path: string | null
+  status: ContentStatus
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface EventInquiry {
+  id: string
+  event_id: string | null
+  name: string
+  email: string
+  phone: string
+  message: string | null
+  status: InquiryStatus
+  created_at: string
+  event?: Pick<KiambuEvent, 'id' | 'name' | 'slug'>
 }
 
 export interface PartnerInquiry {
@@ -501,6 +556,8 @@ export interface DonationPledge {
   project: string | null
   additional_instructions: string | null
   status: DonationStatus
+  payment_reference: string | null
+  paid_at: string | null
   created_at: string
 }
 

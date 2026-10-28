@@ -27,7 +27,8 @@ export default async function StoreOrdersPage() {
         <h1 className="font-display text-2xl font-bold">Store Orders</h1>
         <p className="text-sm text-muted-foreground mt-0.5">{orders.length} total · {pendingCount} awaiting payment</p>
         <p className="text-xs text-muted-foreground mt-1">
-          No online payment is collected yet — contact each customer to arrange payment, then update status here.
+          Orders paid via Paystack (card/M-Pesa) update to &quot;paid&quot; automatically. For orders without a payment
+          reference, contact the customer to arrange payment and update status here manually.
         </p>
       </div>
 
@@ -44,6 +45,9 @@ export default async function StoreOrdersPage() {
                       <p className="font-medium text-sm">{order.customer_name}</p>
                       <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${STATUS_COLOR[order.status] ?? ''}`}>{order.status}</span>
                       <span className="text-[10px] font-mono text-muted-foreground">#{order.id.slice(0, 8)}</span>
+                      {order.payment_reference && (
+                        <span className="text-[10px] font-mono text-muted-foreground">· ref: {order.payment_reference}</span>
+                      )}
                     </div>
                     <p className="text-xs text-muted-foreground">
                       <a href={`tel:${order.phone}`} className="hover:text-primary">{order.phone}</a> · <a href={`mailto:${order.email}`} className="hover:text-primary">{order.email}</a>

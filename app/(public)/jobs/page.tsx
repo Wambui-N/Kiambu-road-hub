@@ -52,9 +52,10 @@ export default async function JobsPage() {
       <div className="bg-primary py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Kiambu Road Explorer</p>
-          <h1 className="font-display text-4xl font-bold text-white mb-2">Jobs Board</h1>
-          <p className="text-white/70 text-sm">
-            Local employment opportunities along the Kiambu Road corridor
+          <h1 className="font-display text-4xl font-bold text-white mb-2">Jobs &amp; Careers</h1>
+          <p className="text-white/70 text-sm max-w-2xl">
+            We bring together job openings and career opportunities to help job seekers discover what is available and
+            connect with potential employers.
           </p>
         </div>
       </div>
@@ -206,6 +207,35 @@ export default async function JobsPage() {
                 Go to Talent Search <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
+          </div>
+        </div>
+
+        {/* For Employers / For Job Seekers */}
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="bg-white rounded-2xl border border-border p-6">
+            <h3 className="font-display text-sm font-bold text-primary uppercase tracking-wide mb-2">For Employers</h3>
+            <p className="font-display text-lg font-bold mb-2">Looking for the right people?</p>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              Advertise your vacancies, seek recommendations and connect with suitable people.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Contact us for more information{' '}
+              <a href="mailto:info@kiamburoad.com" className="text-primary font-semibold hover:underline">
+                info@kiamburoad.com
+              </a>
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-border p-6">
+            <h3 className="font-display text-sm font-bold text-primary uppercase tracking-wide mb-2">For Job Seekers</h3>
+            <p className="font-display text-lg font-bold mb-2">Please do your due diligence.</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Kiambu Road Explorer shares job opportunities as a service to our readers but does not guarantee the
+              authenticity, suitability or terms of any vacancy or employer. Job seekers should independently verify
+              employers, job offers and any requests for payments or personal information before proceeding. Explorer
+              does not accept responsibility for losses, disputes or other consequences arising from applications or
+              employment arrangements made through opportunities featured on this site.
+            </p>
           </div>
         </div>
       </div>

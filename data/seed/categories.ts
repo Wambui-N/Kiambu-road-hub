@@ -282,13 +282,12 @@ export const JOURNAL_SECTIONS = [
   { name: 'Prayer & Verse',          slug: 'prayer-verse',            tagline: 'Beyond the scriptures',                            sort_order: 4  },
   { name: 'Inspiration',             slug: 'inspiration',             tagline: 'The hidden voice',                                 sort_order: 5  },
   { name: 'Explorer Publications',   slug: 'e-books',                 tagline: 'Read your way to a good life',                     sort_order: 6  },
-  { name: 'Kiambu Retreats',         slug: 'kiambu-here-n-there',     tagline: 'Your Kiambu Travel Guide',                         sort_order: 7  },
+  { name: 'Kiambu Retreats',         slug: 'kiambu-here-n-there',     tagline: 'You don\'t always have to travel far to feel far away', sort_order: 7  },
   { name: 'Destination beyond',      slug: 'destination-review',      tagline: 'Beyond the horizon',                               sort_order: 8  },
   { name: 'Sponsored Features',      slug: 'nature-trivia',           tagline: 'Bits and pieces on nature and wildlife',           sort_order: 9  },
   { name: 'Business Agency',        slug: 'business-notes',          tagline: 'Quotes that mean business',                        sort_order: 10 },
   { name: 'Community Projects',     slug: 'business-opportunities',  tagline: 'Campaigns making a difference on Kiambu Road',     sort_order: 11 },
-  { name: 'Explorer Merchandise',    slug: 'opinion',                 tagline: 'Letter from the publisher',                        sort_order: 12 },
-  { name: 'Newswatch',               slug: 'newswatch',               tagline: 'This and that about Kiambu',                       sort_order: 13 },
+  { name: 'News',                    slug: 'newswatch',               tagline: 'For the latest news, stories, events and statements', sort_order: 13 },
 ] as const
 
 export type CategorySlug = typeof CATEGORIES[number]['slug']
@@ -306,6 +305,5 @@ export const SECTION_COLORS: Record<JournalSectionSlug, string> = {
   'nature-trivia':          '#22C55E',
   'business-notes':         '#E8A020',
   'business-opportunities': '#D97706',
-  'opinion':                '#64748B',
   'newswatch':              '#EC4899',
 }

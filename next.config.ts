@@ -33,6 +33,26 @@ const nextConfig: NextConfig = {
         destination: '/directory/building-construction/:path*',
         permanent: true,
       },
+      {
+        source: '/books-and-guides',
+        destination: '/journal/e-books',
+        permanent: true,
+      },
+      {
+        source: '/books-and-guides/:path*',
+        destination: '/journal/e-books',
+        permanent: true,
+      },
+      {
+        source: '/journal/opinion',
+        destination: '/shop',
+        permanent: true,
+      },
+      {
+        source: '/journal/opinion/:path*',
+        destination: '/shop/:path*',
+        permanent: true,
+      },
     ]
   },
   images: {

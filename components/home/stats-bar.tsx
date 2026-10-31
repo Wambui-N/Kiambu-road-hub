@@ -1,36 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion, useInView, useMotionValue, useSpring, animate } from 'framer-motion'
+import { motion } from 'framer-motion'
+import AnimatedCounter from '@/components/shared/animated-counter'
+import { revealVariants, staggerContainerVariants } from '@/lib/motion'
 
 interface StatItem {
   value: number
   suffix?: string
   label: string
-}
-
-function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: string }) {
-  const [display, setDisplay] = useState(0)
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true })
-
-  useEffect(() => {
-    if (!inView) return
-    const controls = animate(0, value, {
-      duration: 2,
-      ease: 'easeOut' as const,
-      onUpdate(v) {
-        setDisplay(Math.round(v))
-      },
-    })
-    return () => controls.stop()
-  }, [inView, value])
-
-  return (
-    <span ref={ref} className="text-3xl sm:text-4xl font-display font-bold text-white">
-      {display.toLocaleString()}{suffix}
-    </span>
-  )
 }
 
 const stats: StatItem[] = [
@@ -42,25 +19,22 @@ const stats: StatItem[] = [
 
 export default function StatsBar() {
   return (
-    <section className="bg-brand-surface-dark py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-surface-dark py-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={staggerContainerVariants}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8"
         >
-          {stats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="text-center"
-            >
-              <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+          {stats.map((stat) => (
+            <motion.div key={stat.label} variants={revealVariants} className="text-center">
+              <AnimatedCounter
+                value={stat.value}
+                suffix={stat.suffix}
+                className="text-3xl sm:text-4xl font-display font-medium text-white"
+              />
               <p className="text-white/50 text-xs font-mono mt-1 tracking-wide uppercase">
                 {stat.label}
               </p>

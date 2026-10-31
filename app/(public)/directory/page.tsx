@@ -62,11 +62,11 @@ export default async function DirectoryPage() {
   }))
 
   return (
-    <div className="min-h-screen bg-brand-surface">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-primary py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-display text-4xl font-bold text-white mb-3">Business Directory</h1>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 text-center">
+          <h1 className="font-display text-4xl font-medium text-white mb-3">Business Directory</h1>
           <p className="text-white/70">
             Explore {displayCategories.length} categories of local businesses and services
           </p>
@@ -75,25 +75,25 @@ export default async function DirectoryPage() {
 
       {/* Banner ad slot */}
       <div className="bg-muted border-b border-border py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="h-24 bg-white border-2 border-dashed border-border rounded-xl flex items-center justify-center text-sm text-muted-foreground">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+          <div className="h-24 bg-card border-2 border-dashed border-border rounded-lg flex items-center justify-center text-sm text-muted-foreground">
             <Link href="/advertise" className="hover:text-primary transition-colors">
-              📢 Banner Ad Slot — <strong>Contact us to advertise here</strong>
+              Banner Ad Slot — <strong>Contact us to advertise here</strong>
             </Link>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayCategories.map((category) => {
             const Icon = iconMap[category.icon ?? ''] ?? ShoppingBag
             return (
               <Link key={category.id} href={`/directory/${category.slug}`}>
-                <div className="group bg-white rounded-2xl border border-border p-6 hover:border-primary transition-all hover:shadow-md">
+                <div className="group bg-card rounded-lg border border-border p-6 hover:border-primary transition-colors">
                   <div className="flex items-start gap-4">
                     <div
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+                      className="w-14 h-14 rounded-lg flex items-center justify-center shrink-0"
                       style={{ backgroundColor: (category.color ?? '#1B6B3A') + '20' }}
                     >
                       <Icon
@@ -109,7 +109,7 @@ export default async function DirectoryPage() {
                         {category.description}
                       </p>
                     </div>
-                    <span className="text-xs font-mono text-muted-foreground bg-muted px-2 py-1 rounded-full shrink-0">
+                    <span className="text-xs font-mono text-muted-foreground bg-muted px-2 py-1 rounded-md shrink-0">
                       {(category as { count?: number }).count ?? 0}
                     </span>
                   </div>
@@ -119,13 +119,13 @@ export default async function DirectoryPage() {
                       {(category.subcategories as { name: string; slug: string }[]).slice(0, 4).map((sub) => (
                         <span
                           key={sub.slug}
-                          className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-muted text-muted-foreground"
+                          className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-muted text-muted-foreground"
                         >
                           {sub.name}
                         </span>
                       ))}
                       {category.subcategories.length > 4 && (
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-muted text-muted-foreground">
                           +{category.subcategories.length - 4} more
                         </span>
                       )}

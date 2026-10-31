@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search, Menu, X, ChevronDown, Phone, Siren,
@@ -47,7 +47,15 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [scrolled, setScrolled] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 8)
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -59,10 +67,14 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-border shadow-sm">
+    <header
+      className={`sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b transition-shadow duration-200 ${
+        scrolled ? 'border-border shadow-sm' : 'border-border'
+      }`}
+    >
       {/* Row 1 — Brand + Actions */}
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-        <div className="flex items-center justify-between pt-4 pb-3">
+        <div className={`flex items-center justify-between transition-[padding] duration-200 ${scrolled ? 'pt-2.5 pb-2.5' : 'pt-4 pb-3'}`}>
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0">
             <Image
@@ -71,7 +83,7 @@ export default function Header() {
               width={1564}
               height={578}
               priority
-              className="h-12 sm:h-14 w-auto"
+              className={`w-auto transition-[height] duration-200 ${scrolled ? 'h-10 sm:h-11' : 'h-12 sm:h-14'}`}
             />
           </Link>
 
@@ -80,7 +92,7 @@ export default function Header() {
             <Link
               href="/emergency"
               aria-label="Emergency contacts"
-              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-full px-3 py-1.5 transition-colors"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-md px-3 py-1.5 transition-colors"
             >
               <Siren className="w-3.5 h-3.5 shrink-0" />
               Emergency
@@ -104,7 +116,7 @@ export default function Header() {
             </button>
 
             <Link href="/list-your-business" className="hidden sm:block">
-              <Button size="sm" className="bg-accent hover:bg-amber-500 text-black font-semibold text-xs px-3">
+              <Button variant="outline" size="sm" className="text-xs px-3">
                 List Your Business
               </Button>
             </Link>
@@ -138,7 +150,7 @@ export default function Header() {
             ))}
             <Link
               href={SHOP_LINK.href}
-              className="text-sm font-bold tracking-wide uppercase text-white border-2 border-white/70 rounded-full px-5 py-1.5 whitespace-nowrap hover:bg-white hover:text-primary transition-colors"
+              className="text-sm font-bold tracking-wide uppercase text-white border border-white/70 rounded-md px-5 py-1.5 whitespace-nowrap hover:bg-white hover:text-primary transition-colors"
             >
               {SHOP_LINK.label}
             </Link>
@@ -146,18 +158,18 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Row 3 — Secondary nav band (desktop only) */}
-      <div className="hidden md:block bg-accent">
+      {/* Row 3 — Secondary nav band (desktop only). Neutral sand chrome — gold stays reserved for page-level CTAs. */}
+      <div className="hidden md:block bg-surface-sand border-t border-border">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
           <nav className="flex items-center justify-center gap-6 h-10">
             {SECONDARY_NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-sm font-bold text-accent-foreground/80 whitespace-nowrap pb-[2px] hover:text-accent-foreground
-                  after:absolute after:left-0 after:bottom-0 after:h-px after:w-0 after:bg-accent-foreground
+                className="relative text-xs font-mono font-semibold uppercase tracking-wide text-muted-foreground whitespace-nowrap pb-[2px] hover:text-primary
+                  after:absolute after:left-0 after:bottom-0 after:h-px after:w-0 after:bg-primary
                   after:transition-all after:duration-300 after:ease-out
-                  hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-foreground/40 rounded-sm"
+                  hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-sm"
               >
                 {link.label}
               </Link>
@@ -209,7 +221,7 @@ export default function Header() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 top-14 bg-white z-40 md:hidden overflow-y-auto"
+            className="fixed inset-0 top-14 bg-background z-40 md:hidden overflow-y-auto"
           >
             <nav className="px-4 py-6 flex flex-col gap-1">
               <Link
@@ -286,7 +298,7 @@ export default function Header() {
                   <span className="text-sm font-medium">{PHONE_NUMBER}</span>
                 </a>
                 <Link href="/list-your-business" onClick={() => setMobileOpen(false)}>
-                  <Button className="w-full bg-accent hover:bg-amber-500 text-black font-semibold">
+                  <Button variant="outline" className="w-full">
                     List Your Business
                   </Button>
                 </Link>

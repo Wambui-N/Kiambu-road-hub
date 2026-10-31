@@ -29,8 +29,8 @@ const cardVariants = {
 
 export default function CategoryGrid({ categories }: CategoryGridProps) {
   return (
-    <section className="py-16 bg-brand-surface">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 bg-background">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -38,7 +38,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
           transition={{ duration: 0.5 }}
           className="text-center mb-10"
         >
-          <h2 className="font-display text-3xl font-bold text-foreground">Browse by Category</h2>
+          <h2 className="font-display text-3xl font-medium text-foreground">Browse by Category</h2>
           <p className="text-muted-foreground mt-2">
             Explore {categories.length} categories of local businesses along Kiambu Road
           </p>
@@ -57,15 +57,13 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
               <motion.div key={category.id} variants={cardVariants} className="h-full">
                 <Link href={`/directory/${category.slug}`} className="block h-full">
                   <motion.div
-                    whileHover={{
-                      y: -4,
-                      boxShadow: '0 12px 40px rgba(27,107,58,0.15)',
-                    }}
-                    transition={{ duration: 0.2 }}
-                    className="group flex h-full w-full flex-col items-center justify-center gap-3 p-4 bg-white rounded-2xl border border-border hover:border-primary cursor-pointer transition-colors text-center"
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
+                    className="group flex h-full w-full flex-col items-center justify-center gap-3 p-4 bg-card rounded-lg border border-border hover:border-primary cursor-pointer transition-colors text-center"
                   >
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors shrink-0"
+                      className="w-12 h-12 rounded-lg flex items-center justify-center transition-colors shrink-0"
                       style={{ backgroundColor: (category.color ?? '#1B6B3A') + '20' }}
                     >
                       <Icon

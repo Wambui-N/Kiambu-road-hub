@@ -8,16 +8,16 @@ const FB_COMMUNITY_URL = 'https://www.facebook.com/groups/kiamburoadcommunity'
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-surface-dark text-white">
+    <footer className="bg-surface-dark text-white">
       {/* Quick links row */}
       <QuickLinks />
 
       {/* Newsletter bar */}
       <div className="bg-primary py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <h3 className="font-display text-xl font-semibold text-white">
+              <h3 className="font-display text-xl font-medium text-white">
                 Stay in the loop
               </h3>
               <p className="text-primary-foreground/80 text-sm mt-1">
@@ -29,15 +29,15 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Facebook community CTA band */}
-      <div className="bg-[#1877F2]/10 border-t border-[#1877F2]/20 py-5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+      {/* Facebook community CTA band — neutral chrome, blue reserved for the icon + button */}
+      <div className="bg-white/5 border-t border-white/10 py-5">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#1877F2]/20 flex items-center justify-center shrink-0">
-              <Users className="w-5 h-5 text-[#1877F2]" />
+            <div className="w-9 h-9 rounded-md bg-[#1877F2] flex items-center justify-center shrink-0">
+              <Users className="w-5 h-5 text-white" />
             </div>
             <div>
-              <p className="text-white font-semibold text-sm">Join our Facebook Community</p>
+              <p className="text-white font-medium text-sm">Join our Facebook Community</p>
               <p className="text-white/50 text-xs">Become an active member of the Kiambu Explorer Community</p>
             </div>
           </div>
@@ -45,7 +45,7 @@ export default function Footer() {
             href={FB_COMMUNITY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 inline-flex items-center gap-2 bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-semibold px-5 py-2 rounded-xl transition-colors"
+            className="shrink-0 inline-flex items-center gap-2 bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors"
           >
             <Facebook className="w-4 h-4" />
             Join on Facebook
@@ -67,11 +67,11 @@ export default function Footer() {
       </div>
 
       {/* Main footer columns */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand col */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="font-display font-bold text-lg text-white mb-3 block">
+            <Link href="/" className="font-display font-medium text-lg text-white mb-3 block">
               Kiambu Road Explorer
             </Link>
             <p className="text-sm text-white/60 leading-relaxed mb-4">
@@ -97,7 +97,7 @@ export default function Footer() {
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                 <Youtube className="w-4 h-4" />
               </a>
-              <a href="https://wa.me/254700000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+              <a href="https://wa.me/254720950500" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-xs font-bold">
                 WA
               </a>

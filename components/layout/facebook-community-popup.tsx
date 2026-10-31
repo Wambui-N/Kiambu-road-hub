@@ -65,22 +65,22 @@ export default function FacebookCommunityPopup() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 40 }}
           transition={{ type: 'spring', damping: 22, stiffness: 200 }}
-          className="fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-border overflow-hidden"
+          className="fixed bottom-4 right-4 z-50 w-80 max-w-[calc(100vw-2rem)] bg-card rounded-lg shadow-sm border border-border overflow-hidden"
         >
-          {/* Facebook-branded header band */}
-          <div className="bg-[#1877F2] px-5 py-4 flex items-start justify-between gap-3">
+          {/* Header — neutral chrome, Facebook blue reserved for the icon mark */}
+          <div className="bg-surface-sand px-5 py-4 flex items-start justify-between gap-3 border-b border-border">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-md bg-[#1877F2] flex items-center justify-center shrink-0">
                 <Users className="w-5 h-5 text-white" />
               </div>
-              <p className="text-white font-display font-bold text-sm leading-snug">
+              <p className="text-foreground font-display font-medium text-sm leading-snug">
                 Join our Facebook<br />Community
               </p>
             </div>
             <button
               onClick={dismiss}
               aria-label="Close"
-              className="text-white/70 hover:text-white transition-colors mt-0.5 shrink-0"
+              className="text-muted-foreground hover:text-foreground transition-colors mt-0.5 shrink-0"
             >
               <X className="w-4 h-4" />
             </button>
@@ -97,7 +97,7 @@ export default function FacebookCommunityPopup() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={dismiss}
-                className="w-full inline-flex items-center justify-center bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+                className="w-full inline-flex items-center justify-center bg-[#1877F2] hover:bg-[#166fe5] text-white text-sm font-semibold px-4 py-2.5 rounded-md transition-colors"
               >
                 Join on Facebook
               </a>

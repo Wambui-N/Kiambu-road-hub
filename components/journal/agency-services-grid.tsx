@@ -1,6 +1,5 @@
-import Link from 'next/link'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
+import EditorialCard from '@/components/shared/editorial-card'
 import type { AgencyService } from '@/types/database'
 
 async function getServices(): Promise<AgencyService[]> {
@@ -43,28 +42,18 @@ export default async function AgencyServicesGrid({ sectionColor }: { sectionColo
             ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/store-media/${service.image_path}`
             : null
           return (
-            <Link
+            <EditorialCard
               key={service.id}
               href={`/journal/business-notes/${service.slug}`}
-              className="group bg-white rounded-2xl border border-border overflow-hidden hover:border-primary hover:shadow-md transition-all flex flex-col"
-            >
-              {imageUrl && (
-                <div className="relative h-40 overflow-hidden bg-muted shrink-0">
-                  <Image src={imageUrl} alt={service.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 50vw" />
-                </div>
-              )}
-              <div className="p-5 flex flex-col flex-1">
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-2">
-                  {service.name}
-                </h3>
-                {service.description && (
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-3">{service.description}</p>
-                )}
-                {service.price_note && (
-                  <p className="text-xs font-mono mt-auto pt-2" style={{ color: sectionColor }}>{service.price_note}</p>
-                )}
-              </div>
-            </Link>
+              imageUrl={imageUrl}
+              imageAlt={service.name}
+              fallbackEmoji="💼"
+              imageHeight="h-40"
+              title={service.name}
+              description={service.description}
+              meta={service.price_note}
+              metaColor={sectionColor}
+            />
           )
         })}
       </div>

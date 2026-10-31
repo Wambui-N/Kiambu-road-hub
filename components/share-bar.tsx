@@ -130,7 +130,7 @@ export default function ShareBar({ url, title, variant = 'inline' }: ShareBarPro
 
   if (variant === 'inline') {
     return (
-      <div className="bg-white rounded-2xl border border-border p-6">
+      <div className="bg-card rounded-lg border border-border p-6">
         <ShareButtons url={url} title={title} />
       </div>
     )
@@ -152,7 +152,7 @@ export default function ShareBar({ url, title, variant = 'inline' }: ShareBarPro
               }
             }}
             title={btn.label}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs hover:scale-110 transition-transform shadow-md"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs hover:scale-110 transition-transform"
             style={{ backgroundColor: btn.color }}
           >
             {btn.icon}
@@ -173,7 +173,7 @@ export default function ShareBar({ url, title, variant = 'inline' }: ShareBarPro
             transition={{ type: 'spring', damping: 18 }}
             className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4"
           >
-            <div className="bg-white rounded-2xl border border-border shadow-xl p-6">
+            <div className="bg-card rounded-lg border border-border shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <span className="font-semibold text-sm">Enjoy this blog? Please spread the word :)</span>
                 <button

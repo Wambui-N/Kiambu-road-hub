@@ -1,6 +1,5 @@
-import Link from 'next/link'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
+import EditorialCard from '@/components/shared/editorial-card'
 import type { PeopleProfile } from '@/types/database'
 
 async function getProfiles(): Promise<PeopleProfile[]> {
@@ -40,30 +39,17 @@ export default async function PeopleList() {
           ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/store-media/${profile.photo_path}`
           : null
         return (
-          <Link
+          <EditorialCard
             key={profile.id}
             href={`/people/${profile.slug}`}
-            className="group bg-white rounded-2xl border border-border overflow-hidden hover:border-primary hover:shadow-md transition-all flex flex-col"
-          >
-            <div className="relative h-48 overflow-hidden bg-muted shrink-0 flex items-center justify-center">
-              {photoUrl ? (
-                <Image src={photoUrl} alt={profile.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
-              ) : (
-                <span className="text-4xl">🧑‍🤝‍🧑</span>
-              )}
-            </div>
-            <div className="p-5 flex flex-col flex-1">
-              <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-1">
-                {profile.name}
-              </h3>
-              {profile.role_connection && (
-                <p className="text-sm text-muted-foreground leading-relaxed mb-2">{profile.role_connection}</p>
-              )}
-              {profile.featured_month && (
-                <p className="text-xs font-mono text-primary mt-auto pt-2">{profile.featured_month}</p>
-              )}
-            </div>
-          </Link>
+            imageUrl={photoUrl}
+            imageAlt={profile.name}
+            fallbackEmoji="🧑‍🤝‍🧑"
+            imageHeight="h-48"
+            title={profile.name}
+            description={profile.role_connection}
+            meta={profile.featured_month}
+          />
         )
       })}
     </div>

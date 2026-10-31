@@ -40,85 +40,101 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
 
-  /* Brand tokens */
-  --color-brand-green: var(--brand-green);
-  --color-brand-green-light: var(--brand-green-light);
-  --color-brand-gold: var(--brand-gold);
-  --color-brand-gold-dark: var(--brand-gold-dark);
+  /* Japandi surface + accent tokens */
+  --color-surface-sand: var(--surface-sand);
+  --color-surface-dark: var(--surface-dark);
+  --color-sage: var(--sage);
+  --color-sage-foreground: var(--sage-foreground);
+
+  /* Legacy brand aliases — kept so existing bg-brand-surface* call sites
+     keep working while they're migrated page-by-page in a later pass */
   --color-brand-surface: var(--brand-surface);
   --color-brand-surface-dark: var(--brand-surface-dark);
 }
 
 :root {
-  /* shadcn base — overridden with Kiambu Green palette */
-  --background: oklch(0.98 0.004 90);
-  --foreground: oklch(0.12 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.12 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.12 0 0);
-  --primary: oklch(0.40 0.13 148);          /* Deep Kiambu Green #1B6B3A */
+  /* Japandi x Utilitarian — warm neutrals + deep green + gold, OKLCH */
+  --background: oklch(0.97 0.006 85);        /* warm off-white */
+  --foreground: oklch(0.22 0.006 75);        /* charcoal */
+  --card: oklch(0.99 0.004 85);              /* near-white card fill */
+  --card-foreground: oklch(0.22 0.006 75);
+  --popover: oklch(0.99 0.004 85);
+  --popover-foreground: oklch(0.22 0.006 75);
+  --primary: oklch(0.40 0.13 148);           /* Deep Kiambu Green #1B6B3A */
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.95 0.01 90);
-  --secondary-foreground: oklch(0.25 0 0);
-  --muted: oklch(0.95 0.005 90);
-  --muted-foreground: oklch(0.52 0.01 266);
+  --secondary: oklch(0.93 0.014 75);         /* sand-tinted secondary surface */
+  --secondary-foreground: oklch(0.22 0.006 75);
+  --muted: oklch(0.95 0.01 75);
+  --muted-foreground: oklch(0.46 0.014 75); /* muted warm grey, AA on bg + sand */
   --accent: oklch(0.76 0.14 75);            /* Warm Gold #E8A020 */
-  --accent-foreground: oklch(0.12 0 0);
+  --accent-foreground: oklch(0.14 0.01 75); /* dark charcoal text — never gold-on-light */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.90 0.012 75);           /* Warm border #E5E0D8 */
-  --input: oklch(0.90 0.012 75);
+  --border: oklch(0.87 0.016 70);           /* thin warm-grey border */
+  --input: oklch(0.87 0.016 70);
   --ring: oklch(0.40 0.13 148);
-  --radius: 0.625rem;
+  --radius: 0.5rem; /* 8px base — buttons/cards land in the 6-10px small-radius range */
 
-  /* Brand custom tokens */
-  --brand-green: #1B6B3A;
-  --brand-green-light: #2D9E58;
-  --brand-gold: #E8A020;
-  --brand-gold-dark: #C47F10;
-  --brand-surface: #F7F5F0;
-  --brand-surface-dark: #1A1F16;
+  /* Secondary base (Japandi sand/stone) — alternating sections + card fills */
+  --surface-sand: oklch(0.93 0.018 70);
+  /* Dark neutral surface — footer, stat bands (replaces the old near-black brand-surface-dark) */
+  --surface-dark: oklch(0.20 0.02 148);
+  /* Soft sage tint of the primary green — subtle fills, tags, hover states */
+  --sage: oklch(0.91 0.04 148);
+  --sage-foreground: oklch(0.22 0.006 75);
+
+  /* Legacy brand aliases — same values as the tokens above, no independent hex anymore */
+  --brand-surface: var(--background);
+  --brand-surface-dark: var(--surface-dark);
 
   /* Typography */
   --font-sans: 'DM Sans', system-ui, sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: var(--font-sans); /* headings now use DM Sans, not a serif */
   --font-mono: 'JetBrains Mono', monospace;
 
-  --sidebar: oklch(0.97 0.005 148);
-  --sidebar-foreground: oklch(0.12 0 0);
+  --sidebar: oklch(0.96 0.012 75);
+  --sidebar-foreground: oklch(0.22 0.006 75);
   --sidebar-primary: oklch(0.40 0.13 148);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.93 0.01 148);
-  --sidebar-accent-foreground: oklch(0.25 0 0);
-  --sidebar-border: oklch(0.90 0.012 75);
+  --sidebar-accent: oklch(0.91 0.04 148);
+  --sidebar-accent-foreground: oklch(0.22 0.006 75);
+  --sidebar-border: oklch(0.87 0.016 70);
   --sidebar-ring: oklch(0.40 0.13 148);
 }
 
 .dark {
-  --background: oklch(0.15 0.02 148);      /* Dark forest #1A1F16 */
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.20 0.02 148);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.20 0.02 148);
-  --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.58 0.15 148);         /* Leaf Green in dark mode */
-  --primary-foreground: oklch(0.12 0 0);
-  --secondary: oklch(0.25 0.02 148);
-  --secondary-foreground: oklch(0.97 0 0);
-  --muted: oklch(0.25 0.02 148);
-  --muted-foreground: oklch(0.65 0.01 148);
+  --background: oklch(0.17 0.016 148);
+  --foreground: oklch(0.96 0.004 85);
+  --card: oklch(0.21 0.018 148);
+  --card-foreground: oklch(0.96 0.004 85);
+  --popover: oklch(0.21 0.018 148);
+  --popover-foreground: oklch(0.96 0.004 85);
+  --primary: oklch(0.58 0.15 148);
+  --primary-foreground: oklch(0.14 0 0);
+  --secondary: oklch(0.26 0.018 148);
+  --secondary-foreground: oklch(0.96 0.004 85);
+  --muted: oklch(0.26 0.018 148);
+  --muted-foreground: oklch(0.66 0.012 148);
   --accent: oklch(0.76 0.14 75);
-  --accent-foreground: oklch(0.12 0 0);
+  --accent-foreground: oklch(0.14 0.01 75);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.58 0.15 148);
-  --sidebar: oklch(0.18 0.02 148);
-  --sidebar-foreground: oklch(0.97 0 0);
+
+  --surface-sand: oklch(0.24 0.02 100);
+  --surface-dark: oklch(0.12 0.016 148);
+  --sage: oklch(0.28 0.05 148);
+  --sage-foreground: oklch(0.96 0.004 85);
+
+  --brand-surface: var(--background);
+  --brand-surface-dark: var(--surface-dark);
+
+  --sidebar: oklch(0.19 0.018 148);
+  --sidebar-foreground: oklch(0.96 0.004 85);
   --sidebar-primary: oklch(0.58 0.15 148);
-  --sidebar-primary-foreground: oklch(0.12 0 0);
-  --sidebar-accent: oklch(0.25 0.02 148);
-  --sidebar-accent-foreground: oklch(0.97 0 0);
+  --sidebar-primary-foreground: oklch(0.14 0 0);
+  --sidebar-accent: oklch(0.26 0.018 148);
+  --sidebar-accent-foreground: oklch(0.96 0.004 85);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.58 0.15 148);
 }
@@ -133,25 +149,28 @@
   }
   h1, h2, h3 {
     font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
   }
   .font-display {
     font-family: var(--font-display);
+    font-weight: 500;
   }
   .font-mono {
     font-family: var(--font-mono);
   }
 }
 
-/* Utility classes for brand colours */
+/* Legacy brand-colour utilities — brand-surface* kept as aliases of the
+   unified tokens above (migrated page-by-page); the old independent-hex
+   green/gold utilities had zero call sites and have been removed. */
 @layer utilities {
-  .bg-brand-green { background-color: var(--brand-green); }
-  .bg-brand-green-light { background-color: var(--brand-green-light); }
-  .bg-brand-gold { background-color: var(--brand-gold); }
   .bg-brand-surface { background-color: var(--brand-surface); }
   .bg-brand-surface-dark { background-color: var(--brand-surface-dark); }
-  .text-brand-green { color: var(--brand-green); }
-  .text-brand-green-light { color: var(--brand-green-light); }
-  .text-brand-gold { color: var(--brand-gold); }
-  .border-brand-green { border-color: var(--brand-green); }
-  .border-brand-gold { border-color: var(--brand-gold); }
+
+  /* Consistent muted/warm grade for fallback & category photography (Japandi cohesion) */
+  .muted-photo {
+    filter: saturate(0.82) sepia(0.08) brightness(0.98);
+  }
 }

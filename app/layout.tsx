@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, DM_Sans, JetBrains_Mono } from 'next/font/google'
+import { DM_Sans, JetBrains_Mono } from 'next/font/google'
 import { Suspense } from 'react'
+import { MotionConfig } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import AttributionTracker from '@/components/analytics/attribution-tracker'
 import './globals.css'
@@ -8,12 +9,6 @@ import './globals.css'
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
-  display: 'swap',
-})
-
-const playfairDisplay = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-display',
   display: 'swap',
 })
 
@@ -67,15 +62,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${playfairDisplay.variable} ${jetbrainsMono.variable}`}
+      className={`${dmSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased" suppressHydrationWarning>
-        {children}
-        <Toaster richColors position="top-right" />
-        <Suspense fallback={null}>
-          <AttributionTracker />
-        </Suspense>
+        <MotionConfig reducedMotion="user">
+          {children}
+          <Toaster richColors position="top-right" />
+          <Suspense fallback={null}>
+            <AttributionTracker />
+          </Suspense>
+        </MotionConfig>
       </body>
     </html>
   )

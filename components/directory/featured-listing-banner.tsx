@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Phone, MessageCircle, Globe, MapPin, BadgeCheck, Crown, Star, ExternalLink } from 'lucide-react'
+import { BadgeCheck, Crown, ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { getWhatsAppUrl, getImageUrl, truncateWords } from '@/lib/utils'
-import { buildTrackedUrl } from '@/lib/tracking'
+import { getImageUrl, truncateWords } from '@/lib/utils'
 import BusinessImagePlaceholder from '@/components/directory/business-image-placeholder'
 import type { Business } from '@/types/database'
 
@@ -14,13 +13,7 @@ interface Props {
 export default function FeaturedListingBanner({ business }: Props) {
   const coverImage = business.images?.find((i) => i.is_cover) ?? business.images?.[0]
   const imageUrl = coverImage ? getImageUrl(coverImage.image_path) : null
-  const whatsappUrl = business.whatsapp ? getWhatsAppUrl(business.whatsapp) : null
-
-  const locationParts = [
-    business.road_street,
-    business.building_name,
-    business.area?.name,
-  ].filter(Boolean)
+  const profileHref = `/directory/business/${business.slug}`
 
   const reviews = business.reviews ?? []
   const avgRating = reviews.length
@@ -33,22 +26,27 @@ export default function FeaturedListingBanner({ business }: Props) {
       ? truncateWords(business.description, 25)
       : null
 
+  const factParts = [
+    business.area?.name,
+    business.price_range,
+    avgRating !== null ? `★ ${avgRating.toFixed(1)}` : null,
+    business.opening_hours_text,
+  ].filter(Boolean)
+
   return (
-    <div className="relative w-full bg-white rounded-2xl border-2 border-accent overflow-hidden shadow-md mb-6">
-      {/* Featured ribbon */}
-      <div className="absolute top-0 left-0 z-10 bg-accent text-black text-[10px] font-mono font-bold px-3 py-1 rounded-br-xl flex items-center gap-1">
+    <div className="relative w-full bg-card rounded-lg border border-accent overflow-hidden mb-6">
+      <div className="absolute top-0 left-0 z-10 bg-accent text-accent-foreground text-[10px] font-mono font-bold px-3 py-1 rounded-br-md flex items-center gap-1">
         <Crown className="w-3 h-3" /> Featured Listing
       </div>
 
       <div className="flex flex-col sm:flex-row">
-        {/* Cover image */}
         <div className="relative sm:w-64 lg:w-80 h-52 sm:h-auto shrink-0 overflow-hidden">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={coverImage?.alt_text ?? business.name}
               fill
-              className="object-cover"
+              className="object-cover muted-photo"
               sizes="(max-width: 640px) 100vw, 320px"
               priority
             />
@@ -60,105 +58,43 @@ export default function FeaturedListingBanner({ business }: Props) {
               categoryIcon={business.category?.icon}
             />
           )}
-          {business.price_range && (
-            <div className="absolute bottom-3 right-3">
-              <span className="text-[10px] font-mono font-bold bg-black/60 text-white px-2 py-0.5 rounded-full">
-                {business.price_range}
-              </span>
-            </div>
-          )}
         </div>
 
-        {/* Content */}
-        <div className="flex-1 p-5 sm:p-6 flex flex-col gap-3 pt-8 sm:pt-6">
-          {/* Name + badges */}
+        <div className="flex-1 p-5 sm:p-6 flex flex-col gap-2 pt-8 sm:pt-6">
           <div className="flex flex-wrap items-start gap-2">
-            <Link href={`/directory/business/${business.slug}`}>
-              <h2 className="font-display text-xl font-bold text-foreground hover:text-primary transition-colors leading-tight">
+            <Link href={profileHref}>
+              <h2 className="font-display text-xl font-medium text-foreground hover:text-primary transition-colors leading-tight">
                 {business.name}
               </h2>
             </Link>
             <div className="flex gap-1.5 flex-wrap">
               {business.verified && (
-                <Badge className="bg-primary text-white text-[10px] font-mono gap-1">
+                <Badge className="bg-primary text-primary-foreground text-[10px] font-mono gap-1">
                   <BadgeCheck className="w-2.5 h-2.5" /> Verified
                 </Badge>
               )}
               {business.subcategory && (
-                <Badge variant="secondary" className="text-[10px]">
+                <Badge variant="secondary" className="text-[10px] font-mono">
                   {business.subcategory.name}
                 </Badge>
               )}
             </div>
           </div>
 
-          {/* Rating */}
-          {avgRating !== null && (
-            <div className="flex items-center gap-1.5">
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: 5 }, (_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-3.5 h-3.5 ${i < Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
-                  />
-                ))}
-              </div>
-              <span className="text-xs font-mono text-muted-foreground">
-                {avgRating.toFixed(1)} ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
-              </span>
-            </div>
+          {factParts.length > 0 && (
+            <p className="text-xs font-mono text-muted-foreground">{factParts.join('  ·  ')}</p>
           )}
 
-          {/* Location */}
-          {locationParts.length > 0 && (
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <MapPin className="w-3.5 h-3.5 shrink-0" />
-              <span>{locationParts.join(', ')}</span>
-            </div>
-          )}
-
-          {/* Description */}
           {description && (
             <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
           )}
 
-          {/* Action buttons */}
-          <div className="flex flex-wrap gap-2 mt-auto pt-1">
-            {business.phone && (
-              <a
-                href={buildTrackedUrl(`tel:${business.phone}`, { linkType: 'phone', surface: 'featured_banner', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
-                className="flex items-center gap-1.5 text-sm h-9 px-4 rounded-lg border border-border bg-background hover:bg-muted transition-colors font-medium"
-              >
-                <Phone className="w-3.5 h-3.5" /> Call
-              </a>
-            )}
-            {whatsappUrl && (
-              <a
-                href={buildTrackedUrl(whatsappUrl, { linkType: 'whatsapp', surface: 'featured_banner', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm h-9 px-4 rounded-lg border border-green-500 text-green-700 hover:bg-green-50 transition-colors font-medium"
-              >
-                <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
-              </a>
-            )}
-            {business.website && (
-              <a
-                href={buildTrackedUrl(business.website, { linkType: 'website', surface: 'featured_banner', businessId: business.id, businessSlug: business.slug, categorySlug: business.category?.slug })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm h-9 px-4 rounded-lg border border-border bg-background hover:bg-muted transition-colors font-medium"
-              >
-                <Globe className="w-3.5 h-3.5" /> Website
-              </a>
-            )}
-            <Link
-              href={`/directory/business/${business.slug}`}
-              className="flex items-center gap-1.5 text-sm h-9 px-4 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium ml-auto"
-            >
-              <ExternalLink className="w-3.5 h-3.5" /> View Profile
-            </Link>
-          </div>
+          <Link
+            href={profileHref}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-foreground bg-accent hover:bg-accent/85 transition-colors h-9 px-4 rounded-md mt-auto pt-0 w-fit"
+          >
+            View Profile <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
       </div>
     </div>

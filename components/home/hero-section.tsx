@@ -38,178 +38,167 @@ export default function HeroSection({ areas = [], heroAdSlot = null }: HeroSecti
   }
 
   return (
-    <section className="relative overflow-hidden min-h-[560px] flex items-center">
-      {/* Background image — absolute wrapper gives fill a sized parent */}
+    <section className="relative overflow-hidden min-h-[520px] flex items-center">
+      {/* Background photo — muted grade for a calmer, cohesive tone */}
       <div className="absolute inset-0">
         <Image
           src="/hero.jpg"
           alt="Kiambu Road, Nairobi"
           fill
           priority
-          className="object-cover"
+          className="object-cover muted-photo"
           sizes="100vw"
         />
       </div>
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/55" />
-      {/* Green tint overlay */}
-      <div className="absolute inset-0 bg-linear-to-br from-[#1B6B3A]/60 via-transparent to-[#1B6B3A]/30" />
+      {/* Flat legibility scrim behind the left-aligned text — no colour tint */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
-        <div className="max-w-3xl mx-auto text-center">
+      <div className="relative max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 w-full py-16">
+        <div className="max-w-xl">
           <motion.div
             initial="hidden"
             animate="visible"
-            variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
           >
             <motion.p
               variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } },
+                hidden: { opacity: 0, y: 14 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
               }}
-              className="text-amber-300 font-mono text-sm tracking-widest uppercase mb-3"
+              className="flex items-center gap-1.5 text-white/80 font-mono text-xs tracking-widest uppercase mb-3"
             >
-              📍 Kiambu Road, Nairobi
+              <MapPin className="w-3.5 h-3.5" />
+              Kiambu Road, Nairobi
             </motion.p>
 
             <motion.h1
               variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } },
+                hidden: { opacity: 0, y: 14 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
               }}
-              className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4"
+              className="font-display text-4xl sm:text-5xl font-medium text-white leading-tight mb-4"
             >
               Kiambu Road Explorer
             </motion.h1>
 
             <motion.p
               variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } },
+                hidden: { opacity: 0, y: 14 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
               }}
-              className="text-white/85 text-lg sm:text-xl mb-2"
+              className="text-white/85 text-lg mb-1"
             >
-              Your Complete Business Directory & Lifestyle Journal
+              Your complete business directory &amp; lifestyle journal
             </motion.p>
 
             <motion.p
               variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } },
+                hidden: { opacity: 0, y: 14 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
               }}
-              className="text-white/65 text-sm sm:text-base mb-10"
+              className="text-white/65 text-sm mb-8"
             >
-              Helping you discover, compare and connect with the best of Kiambu
-
-Road
+              Helping you discover, compare and connect with the best of Kiambu Road
             </motion.p>
-
-            {/* Search bar */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } },
-              }}
-            >
-              <form onSubmit={handleSearch}>
-                <div className="flex flex-col sm:flex-row gap-2 bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/20">
-                  {/* Category selector */}
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => { setCatOpen((v) => !v); setAreaOpen(false) }}
-                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/15 hover:bg-white/25 text-white text-sm font-medium whitespace-nowrap transition-colors w-full sm:w-auto"
-                    >
-                      {selectedLabel}
-                      <ChevronDown className="w-4 h-4" />
-                    </button>
-                    {catOpen && (
-                      <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-xl z-20 min-w-[220px] py-1 border border-border max-h-72 overflow-y-auto">
-                        <button
-                          type="button"
-                          onClick={() => { setCategoryValue(''); setCatOpen(false) }}
-                          className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${!categoryValue ? 'text-primary font-semibold' : 'text-foreground'}`}
-                        >
-                          All Categories
-                        </button>
-                        {CATEGORY_OPTIONS.map((cat) => (
-                          <button
-                            key={cat.value}
-                            type="button"
-                            onClick={() => { setCategoryValue(cat.value); setCatOpen(false) }}
-                            className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${categoryValue === cat.value ? 'text-primary font-semibold' : 'text-foreground'}`}
-                          >
-                            {cat.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Text input */}
-                  <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-4">
-                    <Search className="w-4 h-4 text-muted-foreground shrink-0" />
-                    <input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Search restaurants, hospitals, schools..."
-                      className="flex-1 py-3 text-sm text-foreground placeholder:text-muted-foreground bg-transparent outline-none min-w-0"
-                    />
-
-                    {/* Area selector inside the text input box */}
-                    {areas.length > 0 && (
-                      <div className="relative shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => { setAreaOpen((v) => !v); setCatOpen(false) }}
-                          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors whitespace-nowrap py-1 px-2 rounded-lg hover:bg-muted"
-                        >
-                          <MapPin className="w-3 h-3" />
-                          <span className="max-w-[90px] truncate">{compactAreaLabel}</span>
-                          <ChevronDown className="w-3 h-3" />
-                        </button>
-                        {areaOpen && (
-                          <div className="absolute top-full right-0 mt-1 bg-white rounded-xl shadow-xl z-20 min-w-[180px] py-1 border border-border max-h-60 overflow-y-auto">
-                            <button
-                              type="button"
-                              onClick={() => { setAreaValue(''); setAreaOpen(false) }}
-                              className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${!areaValue ? 'text-primary font-semibold' : 'text-foreground'}`}
-                            >
-                              All Areas
-                            </button>
-                            {areas.map((area) => (
-                              <button
-                                key={area.id}
-                                type="button"
-                                onClick={() => { setAreaValue(area.slug); setAreaOpen(false) }}
-                                className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${areaValue === area.slug ? 'text-primary font-semibold' : 'text-foreground'}`}
-                              >
-                                {area.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="bg-accent hover:bg-amber-500 text-black font-bold px-8 py-3 rounded-xl h-auto text-sm"
-                  >
-                    Search
-                  </Button>
-                </div>
-              </form>
-
-              {/* Hero ad slot — shown below the search bar */}
-              {heroAdSlot && (
-                <div className="mt-4">
-                  <AdSlot slot={heroAdSlot} tier="secondary" className="w-full rounded-xl overflow-hidden" />
-                </div>
-              )}
-            </motion.div>
           </motion.div>
+
+          {/* Search bar — mounted plainly, outside the stagger, so it's usable immediately */}
+          <div>
+            <form onSubmit={handleSearch}>
+              <div className="flex flex-col sm:flex-row gap-2 bg-white/10 backdrop-blur-md p-2 rounded-lg border border-white/20">
+                {/* Category selector */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => { setCatOpen((v) => !v); setAreaOpen(false) }}
+                    className="flex items-center gap-2 px-4 py-3 rounded-md bg-white/15 hover:bg-white/25 text-white text-sm font-medium whitespace-nowrap transition-colors w-full sm:w-auto"
+                  >
+                    {selectedLabel}
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  {catOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-card rounded-lg shadow-sm z-20 min-w-[220px] py-1 border border-border max-h-72 overflow-y-auto">
+                      <button
+                        type="button"
+                        onClick={() => { setCategoryValue(''); setCatOpen(false) }}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${!categoryValue ? 'text-primary font-semibold' : 'text-foreground'}`}
+                      >
+                        All Categories
+                      </button>
+                      {CATEGORY_OPTIONS.map((cat) => (
+                        <button
+                          key={cat.value}
+                          type="button"
+                          onClick={() => { setCategoryValue(cat.value); setCatOpen(false) }}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${categoryValue === cat.value ? 'text-primary font-semibold' : 'text-foreground'}`}
+                        >
+                          {cat.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Text input */}
+                <div className="flex-1 flex items-center gap-2 bg-white rounded-md px-4">
+                  <Search className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search restaurants, hospitals, schools..."
+                    className="flex-1 py-3 text-sm text-foreground placeholder:text-muted-foreground bg-transparent outline-none min-w-0"
+                  />
+
+                  {/* Area selector inside the text input box */}
+                  {areas.length > 0 && (
+                    <div className="relative shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => { setAreaOpen((v) => !v); setCatOpen(false) }}
+                        className="flex items-center gap-1 text-xs font-mono text-muted-foreground hover:text-primary transition-colors whitespace-nowrap py-1 px-2 rounded-md hover:bg-muted"
+                      >
+                        <MapPin className="w-3 h-3" />
+                        <span className="max-w-[90px] truncate">{compactAreaLabel}</span>
+                        <ChevronDown className="w-3 h-3" />
+                      </button>
+                      {areaOpen && (
+                        <div className="absolute top-full right-0 mt-1 bg-card rounded-lg shadow-sm z-20 min-w-[180px] py-1 border border-border max-h-60 overflow-y-auto">
+                          <button
+                            type="button"
+                            onClick={() => { setAreaValue(''); setAreaOpen(false) }}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${!areaValue ? 'text-primary font-semibold' : 'text-foreground'}`}
+                          >
+                            All Areas
+                          </button>
+                          {areas.map((area) => (
+                            <button
+                              key={area.id}
+                              type="button"
+                              onClick={() => { setAreaValue(area.slug); setAreaOpen(false) }}
+                              className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${areaValue === area.slug ? 'text-primary font-semibold' : 'text-foreground'}`}
+                            >
+                              {area.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <Button type="submit" size="lg" className="px-8 h-auto py-3 text-sm font-semibold">
+                  Search
+                </Button>
+              </div>
+            </form>
+
+            {/* Hero ad slot — shown below the search bar */}
+            {heroAdSlot && (
+              <div className="mt-4">
+                <AdSlot slot={heroAdSlot} tier="secondary" className="w-full rounded-lg overflow-hidden" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>

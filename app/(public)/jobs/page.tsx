@@ -12,47 +12,45 @@ export const metadata: Metadata = {
 
 export const revalidate = 1800
 
-const JOB_TYPE_LABEL: Record<string, string> = {
-  full_time: 'Full Time',
-  part_time: 'Part Time',
-  contract: 'Contract',
-  internship: 'Internship',
+const JOB_TYPES = [
+  { value: 'full_time', label: 'Full Time' },
+  { value: 'part_time', label: 'Part Time' },
+  { value: 'contract', label: 'Contract' },
+  { value: 'internship', label: 'Internship' },
+]
+
+interface Props {
+  searchParams: Promise<{ type?: string }>
 }
 
-const JOB_TYPE_COLOR: Record<string, string> = {
-  full_time: 'bg-primary/10 text-primary',
-  part_time: 'bg-blue-100 text-blue-700',
-  contract: 'bg-amber-100 text-amber-700',
-  internship: 'bg-purple-100 text-purple-700',
-}
-
-async function getJobs() {
+async function getJobs(jobType?: string) {
   try {
     const supabase = await createClient()
-    const { data } = await supabase
+    let query = supabase
       .from('job_listings')
       .select('*, area:areas(name, slug)')
       .eq('status', 'published')
-      .order('published_at', { ascending: false })
-      .limit(60)
+
+    if (jobType) query = query.eq('job_type', jobType)
+
+    const { data } = await query.order('published_at', { ascending: false }).limit(60)
     return data ?? []
   } catch {
     return []
   }
 }
 
-export default async function JobsPage() {
-  const jobs = await getJobs()
-
-  const allTypes = ['All', 'Full Time', 'Part Time', 'Contract', 'Internship']
+export default async function JobsPage({ searchParams }: Props) {
+  const { type } = await searchParams
+  const jobs = await getJobs(type)
 
   return (
-    <div className="min-h-screen bg-brand-surface">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-primary py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-accent font-mono text-xs uppercase tracking-widest mb-2">Kiambu Road Explorer</p>
-          <h1 className="font-display text-4xl font-bold text-white mb-2">Jobs &amp; Careers</h1>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+          <p className="text-white/70 font-mono text-xs uppercase tracking-widest mb-2">Kiambu Road Explorer</p>
+          <h1 className="font-display text-4xl font-medium text-white mb-2">Jobs &amp; Careers</h1>
           <p className="text-white/70 text-sm max-w-2xl">
             We bring together job openings and career opportunities to help job seekers discover what is available and
             connect with potential employers.
@@ -60,32 +58,45 @@ export default async function JobsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-10">
         <div className="lg:flex lg:gap-8">
           <div className="lg:flex-1">
             {/* Filter tabs */}
             <div className="flex gap-2 flex-wrap mb-6">
-              {allTypes.map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  className="px-4 py-1.5 rounded-full text-xs font-mono font-semibold border border-border bg-white hover:border-primary hover:text-primary transition-colors"
+              <Link
+                href="/jobs"
+                className={`px-4 py-1.5 rounded-md text-xs font-mono font-semibold border transition-colors ${
+                  !type ? 'bg-primary text-primary-foreground border-primary' : 'border-border bg-card hover:border-primary hover:text-primary'
+                }`}
+              >
+                All
+              </Link>
+              {JOB_TYPES.map((t) => (
+                <Link
+                  key={t.value}
+                  href={`/jobs?type=${t.value}`}
+                  className={`px-4 py-1.5 rounded-md text-xs font-mono font-semibold border transition-colors ${
+                    type === t.value ? 'bg-primary text-primary-foreground border-primary' : 'border-border bg-card hover:border-primary hover:text-primary'
+                  }`}
                 >
-                  {type}
-                </button>
+                  {t.label}
+                </Link>
               ))}
             </div>
 
             {jobs.length === 0 ? (
               <div className="text-center py-20">
-                <div className="text-6xl mb-5">💼</div>
-                <h2 className="font-display text-2xl font-semibold mb-3">Job listings coming soon</h2>
+                <h2 className="font-display text-2xl font-medium mb-3">
+                  {type ? 'No listings in this category yet' : 'Job listings coming soon'}
+                </h2>
                 <p className="text-muted-foreground text-sm max-w-md mx-auto mb-8">
-                  We are building the jobs board. Check back soon for local employment opportunities.
+                  {type
+                    ? 'Check back soon, or browse all listings.'
+                    : 'We are building the jobs board. Check back soon for local employment opportunities.'}
                 </p>
                 <Link
                   href="/jobs/post"
-                  className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
+                  className="inline-flex items-center bg-accent text-accent-foreground px-6 py-3 rounded-md text-sm font-semibold hover:bg-accent/85 transition-colors"
                 >
                   Post a Job
                 </Link>
@@ -102,21 +113,21 @@ export default async function JobsPage() {
                     const isExpiring = job.deadline
                       ? new Date(job.deadline) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
                       : false
-                    const typeClass = job.job_type ? JOB_TYPE_COLOR[job.job_type] ?? 'bg-muted text-foreground' : 'bg-muted text-foreground'
+                    const jobTypeLabel = JOB_TYPES.find((t) => t.value === job.job_type)?.label ?? job.job_type
 
                     return (
-                      <div key={job.id} className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-all">
+                      <div key={job.id} className="bg-card rounded-lg border border-border p-6 hover:border-primary transition-colors">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap mb-1">
-                              <h2 className="font-display font-semibold text-lg text-foreground">{job.title}</h2>
-                              {job.job_type && (
-                                <Badge className={`text-[10px] font-mono border-0 ${typeClass}`}>
-                                  {JOB_TYPE_LABEL[job.job_type] ?? job.job_type}
+                              <h2 className="font-display font-medium text-lg text-foreground">{job.title}</h2>
+                              {jobTypeLabel && (
+                                <Badge variant="outline" className="text-[10px] font-mono">
+                                  {jobTypeLabel}
                                 </Badge>
                               )}
                               {isExpiring && (
-                                <Badge className="text-[10px] font-mono bg-red-100 text-red-700 border-0">
+                                <Badge className="text-[10px] font-mono bg-destructive/10 text-destructive border-0">
                                   Closing soon
                                 </Badge>
                               )}
@@ -124,7 +135,7 @@ export default async function JobsPage() {
                             {job.company && (
                               <p className="text-sm font-semibold text-muted-foreground mb-3">{job.company}</p>
                             )}
-                            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground mb-3">
+                            <div className="flex flex-wrap gap-4 text-xs font-mono text-muted-foreground mb-3">
                               {(area?.name ?? job.location_text) && (
                                 <span className="flex items-center gap-1">
                                   <MapPin className="w-3 h-3" />
@@ -155,7 +166,7 @@ export default async function JobsPage() {
                             {job.contact_email && (
                               <a
                                 href={`mailto:${job.contact_email}`}
-                                className="inline-flex items-center justify-center bg-primary text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-primary/90 transition-colors"
+                                className="inline-flex items-center justify-center border border-primary text-primary px-4 py-2 rounded-md text-xs font-semibold hover:bg-sage transition-colors"
                               >
                                 Apply
                               </a>
@@ -163,7 +174,7 @@ export default async function JobsPage() {
                             {job.contact_phone && (
                               <a
                                 href={`tel:${job.contact_phone}`}
-                                className="inline-flex items-center justify-center border border-border text-foreground px-4 py-2 rounded-lg text-xs font-semibold hover:bg-muted transition-colors"
+                                className="inline-flex items-center justify-center border border-border text-foreground px-4 py-2 rounded-md text-xs font-semibold hover:bg-muted transition-colors"
                               >
                                 Call
                               </a>
@@ -178,15 +189,15 @@ export default async function JobsPage() {
             )}
 
             {/* Post a job CTA */}
-            <div className="mt-10 bg-white rounded-2xl border border-border p-8">
-              <h3 className="font-display text-xl font-bold mb-2">Are you hiring?</h3>
+            <div className="mt-10 bg-card rounded-lg border border-border p-8">
+              <h3 className="font-display text-xl font-medium mb-2">Are you hiring?</h3>
               <p className="text-sm text-muted-foreground mb-4 max-w-md">
                 Post a job listing and reach qualified candidates along the Kiambu Road corridor.
                 Listings are reviewed by our team and published within 1–2 business days.
               </p>
               <Link
                 href="/jobs/post"
-                className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-8 py-3 rounded-md text-sm font-semibold hover:bg-accent/85 transition-colors"
               >
                 Post a Job <ChevronRight className="w-4 h-4" />
               </Link>
@@ -195,14 +206,14 @@ export default async function JobsPage() {
 
           {/* Talent search side panel */}
           <div className="lg:w-80 mt-8 lg:mt-0 space-y-4">
-            <div className="bg-white rounded-2xl border border-border p-6 lg:sticky lg:top-24">
-              <h3 className="font-display text-lg font-bold mb-3">Looking for talent?</h3>
+            <div className="bg-card rounded-lg border border-border p-6 lg:sticky lg:top-24">
+              <h3 className="font-display text-lg font-medium mb-3">Looking for talent?</h3>
               <p className="text-sm text-muted-foreground mb-5">
                 Need to hire? Our Talent Search service connects you directly with skilled candidates in the Kiambu Road area.
               </p>
               <Link
                 href="/talent-search"
-                className="flex items-center justify-between w-full bg-primary/10 text-primary px-5 py-3 rounded-xl text-sm font-semibold hover:bg-primary hover:text-white transition-colors"
+                className="flex items-center justify-between w-full border border-primary text-primary px-5 py-3 rounded-md text-sm font-semibold hover:bg-sage transition-colors"
               >
                 Go to Talent Search <ChevronRight className="w-4 h-4" />
               </Link>
@@ -212,9 +223,9 @@ export default async function JobsPage() {
 
         {/* For Employers / For Job Seekers */}
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl border border-border p-6">
-            <h3 className="font-display text-sm font-bold text-primary uppercase tracking-wide mb-2">For Employers</h3>
-            <p className="font-display text-lg font-bold mb-2">Looking for the right people?</p>
+          <div className="bg-card rounded-lg border border-border p-6">
+            <h3 className="font-mono text-xs font-bold text-primary uppercase tracking-widest mb-2">For Employers</h3>
+            <p className="font-display text-lg font-medium mb-2">Looking for the right people?</p>
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
               Advertise your vacancies, seek recommendations and connect with suitable people.
             </p>
@@ -226,9 +237,9 @@ export default async function JobsPage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-border p-6">
-            <h3 className="font-display text-sm font-bold text-primary uppercase tracking-wide mb-2">For Job Seekers</h3>
-            <p className="font-display text-lg font-bold mb-2">Please do your due diligence.</p>
+          <div className="bg-card rounded-lg border border-border p-6">
+            <h3 className="font-mono text-xs font-bold text-primary uppercase tracking-widest mb-2">For Job Seekers</h3>
+            <p className="font-display text-lg font-medium mb-2">Please do your due diligence.</p>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Kiambu Road Explorer shares job opportunities as a service to our readers but does not guarantee the
               authenticity, suitability or terms of any vacancy or employer. Job seekers should independently verify

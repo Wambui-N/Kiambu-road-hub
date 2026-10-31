@@ -44,22 +44,22 @@ export default async function CurrentFeatures() {
   const articles = await getFeaturedArticles()
 
   return (
-    <section className="py-16 bg-brand-surface">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 bg-background">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <div className="text-center mb-10">
-          <h2 className="font-display text-3xl font-bold text-foreground">Current Features</h2>
+          <h2 className="font-display text-3xl font-medium text-foreground">Current Features</h2>
           <p className="text-muted-foreground mt-2">A look at what&rsquo;s on the pages this month</p>
         </div>
 
         {articles.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-dashed border-border p-10 text-center">
+          <div className="bg-card rounded-lg border border-dashed border-border p-10 text-center">
             <p className="text-4xl mb-4">✍️</p>
             <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
               New sponsored features are added to the magazine regularly — check back soon.
             </p>
             <Link
               href="/journal/nature-trivia"
-              className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center bg-accent text-accent-foreground px-6 py-3 rounded-md text-sm font-semibold hover:bg-accent/85 transition-colors"
             >
               Visit Sponsored Features
             </Link>
@@ -78,19 +78,19 @@ export default async function CurrentFeatures() {
                 <Link
                   key={article.id}
                   href={`/journal/article/${article.slug}`}
-                  className="group block bg-white rounded-2xl border border-border overflow-hidden hover:border-primary hover:shadow-sm transition-all"
+                  className="group block bg-card rounded-lg border border-border overflow-hidden hover:border-primary transition-colors"
                 >
                   <div className="relative h-44 overflow-hidden bg-muted">
                     <Image
                       src={imageUrl}
                       alt={article.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover muted-photo scale-100 group-hover:scale-[1.03] transition-transform duration-500"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </div>
                   <div className="p-6">
-                    <h3 className="font-display font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="font-display font-medium text-lg mb-2 group-hover:text-primary transition-colors">
                       {article.title}
                     </h3>
                     {snippet && <p className="text-sm text-muted-foreground leading-relaxed">{snippet}</p>}

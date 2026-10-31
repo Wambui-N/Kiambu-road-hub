@@ -22,8 +22,8 @@ export default function FeaturedBusinesses({ businesses }: FeaturedBusinessesPro
   if (!businesses.length) return null
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 bg-surface-sand">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -32,7 +32,7 @@ export default function FeaturedBusinesses({ businesses }: FeaturedBusinessesPro
           className="flex items-end justify-between mb-8"
         >
           <div>
-            <h2 className="font-display text-3xl font-bold text-foreground">Premium Listings</h2>
+            <h2 className="font-display text-3xl font-medium text-foreground">Premium Listings</h2>
             <p className="text-muted-foreground mt-1">Sample the top-rated listings</p>
           </div>
           <div className="flex gap-2">

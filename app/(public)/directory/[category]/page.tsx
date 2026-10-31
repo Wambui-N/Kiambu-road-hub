@@ -184,10 +184,10 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     <>
       <Script id="category-breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <Script id="category-collection-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
-    <div className="min-h-screen bg-brand-surface">
+    <div className="min-h-screen bg-background">
       {/* Breadcrumb + header */}
       <div className="bg-primary py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
           <nav className="text-xs text-white/60 mb-3 flex items-center gap-1.5 font-mono">
             <Link href="/" className="hover:text-white">Home</Link>
             <span>/</span>
@@ -195,17 +195,17 @@ export default async function CategoryPage({ params, searchParams }: Props) {
             <span>/</span>
             <span className="text-white">{categoryData.name}</span>
           </nav>
-          <h1 className="font-display text-3xl font-bold text-white">{categoryData.name}</h1>
+          <h1 className="font-display text-3xl font-medium text-white">{categoryData.name}</h1>
           {categoryData.description && (
             <p className="text-white/70 mt-2 text-sm">{categoryData.description}</p>
           )}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-8">
         {/* Emergency Help banner — Medical Services only */}
         {categorySlug === 'medical-services' && (
-          <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 mb-6 flex flex-wrap items-center justify-between gap-4">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-5 mb-6 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
               <div>
@@ -216,10 +216,10 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <a href="tel:999" className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors">
+              <a href="tel:999" className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white rounded-md text-sm font-bold hover:bg-red-700 transition-colors">
                 <Phone className="w-4 h-4" /> Call 999
               </a>
-              <Link href="/emergency" className="inline-flex items-center px-4 py-2 bg-white border border-red-200 text-red-700 rounded-xl text-sm font-semibold hover:bg-red-50 transition-colors">
+              <Link href="/emergency" className="inline-flex items-center px-4 py-2 bg-card border border-red-200 text-red-700 rounded-md text-sm font-semibold hover:bg-red-50 transition-colors">
                 Full Emergency List
               </Link>
             </div>
@@ -231,8 +231,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
             <Link
               href={`/directory/${categorySlug}${subcategory ? `?subcategory=${subcategory}` : ''}`}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-colors ${
-                !tag ? 'bg-foreground text-white' : 'bg-white border border-border text-muted-foreground hover:border-foreground'
+              className={`shrink-0 px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors ${
+                !tag ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:border-foreground'
               }`}
             >
               All services
@@ -241,8 +241,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               <Link
                 key={t.id}
                 href={`/directory/${categorySlug}?tag=${t.slug}${subcategory ? `&subcategory=${subcategory}` : ''}`}
-                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-colors whitespace-nowrap ${
-                  tag === t.slug ? 'bg-foreground text-white' : 'bg-white border border-border text-muted-foreground hover:border-foreground'
+                className={`shrink-0 px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors whitespace-nowrap ${
+                  tag === t.slug ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:border-foreground'
                 }`}
               >
                 {t.name}
@@ -256,8 +256,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
             <Link
               href={`/directory/${categorySlug}`}
-              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                !subcategory ? 'bg-primary text-white' : 'bg-white border border-border text-muted-foreground hover:border-primary hover:text-primary'
+              className={`shrink-0 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                !subcategory ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-muted-foreground hover:border-primary hover:text-primary'
               }`}
             >
               All
@@ -266,10 +266,10 @@ export default async function CategoryPage({ params, searchParams }: Props) {
               <Link
                 key={sub.id ?? sub.slug}
                 href={`/directory/${categorySlug}?subcategory=${sub.slug}`}
-                className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                className={`shrink-0 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
                   subcategory === sub.slug
-                    ? 'bg-primary text-white'
-                    : 'bg-white border border-border text-muted-foreground hover:border-primary hover:text-primary'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-card border border-border text-muted-foreground hover:border-primary hover:text-primary'
                 }`}
               >
                 {sub.name}
@@ -312,14 +312,13 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           </>
         ) : (
           <div className="text-center py-20">
-            <p className="text-4xl mb-4">🔍</p>
-            <h3 className="font-display text-xl font-semibold mb-2">No listings yet</h3>
+            <h3 className="font-display text-xl font-medium mb-2">No listings yet</h3>
             <p className="text-muted-foreground text-sm mb-6">
               We&apos;re actively adding businesses to this category.
             </p>
             <Link
               href="/list-your-business"
-              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-6 py-3 rounded-md text-sm font-semibold hover:bg-accent/85 transition-colors"
             >
               List your business here →
             </Link>

@@ -4,8 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Script from 'next/script'
 import {
-  Phone, MessageCircle, Globe, Mail, MapPin, Clock, Star,
-  BadgeCheck, ExternalLink, ArrowLeft, Building2, User, DoorOpen, CheckCircle2,
+  Phone, MessageCircle, Globe, MapPin, Star,
+  BadgeCheck, ExternalLink, ArrowLeft, CheckCircle2,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
@@ -203,9 +203,9 @@ export default async function BusinessProfilePage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
-      <div className="min-h-screen bg-brand-surface">
+      <div className="min-h-screen bg-background">
         {/* Breadcrumb */}
-        <div className="bg-white border-b border-border py-3">
+        <div className="bg-card border-b border-border py-3">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <nav className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
               <Link href="/" className="hover:text-foreground">Home</Link>
@@ -270,20 +270,20 @@ export default async function BusinessProfilePage({ params }: Props) {
               {/* Name + badges */}
               <div>
                 <div className="flex flex-wrap items-start gap-3 mb-3">
-                  <h1 className="font-display text-3xl font-bold text-foreground flex-1">{business.name}</h1>
+                  <h1 className="font-display text-3xl font-medium text-foreground flex-1">{business.name}</h1>
                   <div className="flex gap-2">
                     {business.verified && (
-                      <Badge className="bg-primary text-white gap-1">
+                      <Badge className="bg-primary text-primary-foreground gap-1">
                         <BadgeCheck className="w-3 h-3" /> Verified
                       </Badge>
                     )}
                     {business.is_sponsor && (
-                      <Badge className="bg-accent text-black gap-1">⭐ Featured</Badge>
+                      <Badge className="bg-accent text-accent-foreground gap-1">Featured</Badge>
                     )}
                   </div>
                 </div>
 
-                {/* Category + subcategory + area */}
+                {/* Category + subcategory */}
                 <div className="flex flex-wrap gap-2 mb-3">
                   {business.category && (
                     <Link href={`/directory/${business.category.slug}`}>
@@ -294,11 +294,6 @@ export default async function BusinessProfilePage({ params }: Props) {
                   )}
                   {business.subcategory && (
                     <Badge variant="secondary">{business.subcategory.name}</Badge>
-                  )}
-                  {business.price_range && (
-                    <Badge variant="outline" className="font-mono">
-                      {business.price_range} — {getPriceRangeLabel(business.price_range)}
-                    </Badge>
                   )}
                 </div>
 
@@ -330,7 +325,7 @@ export default async function BusinessProfilePage({ params }: Props) {
 
               {/* Mall Quick Facts — richer key/value table, replaces the generic tag checklist for malls */}
               {isMall && business.mall_quick_facts && Object.keys(business.mall_quick_facts).length > 0 && (
-                <div className="bg-white rounded-2xl border border-border overflow-hidden">
+                <div className="bg-card rounded-lg border border-border overflow-hidden">
                   <h2 className="font-semibold p-6 pb-0 mb-2">Quick Facts</h2>
                   <div className="divide-y divide-border">
                     {Object.entries(business.mall_quick_facts).map(([key, value]) => (
@@ -345,7 +340,7 @@ export default async function BusinessProfilePage({ params }: Props) {
 
               {/* Inside the Mall — tenant directory */}
               {isMall && tenantsByCategory.length > 0 && (
-                <div className="bg-white rounded-2xl border border-border p-6">
+                <div className="bg-card rounded-lg border border-border p-6">
                   <h2 className="font-semibold mb-4">Inside {business.name}</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {tenantsByCategory.map((group) => (
@@ -378,7 +373,7 @@ export default async function BusinessProfilePage({ params }: Props) {
 
               {/* Quick Facts */}
               {!isMall && quickFactTags.length > 0 && (
-                <div className="bg-white rounded-2xl border border-border p-6">
+                <div className="bg-card rounded-lg border border-border p-6">
                   <h2 className="font-semibold mb-4">Quick Facts</h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2.5">
                     {quickFactTags.map((t) => {
@@ -394,27 +389,6 @@ export default async function BusinessProfilePage({ params }: Props) {
                 </div>
               )}
 
-              {/* Opening hours */}
-              {business.hours && business.hours.length > 0 && (
-                <div className="bg-white rounded-2xl border border-border p-6">
-                  <h2 className="font-semibold mb-4 flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-primary" /> Opening Hours
-                  </h2>
-                  <div className="space-y-2">
-                    {business.hours
-                      .sort((a, b) => a.day_of_week - b.day_of_week)
-                      .map((h) => (
-                        <div key={h.id} className="flex justify-between text-sm">
-                          <span className="font-medium">{DAY_NAMES[h.day_of_week]}</span>
-                          <span className="text-muted-foreground font-mono">
-                            {h.is_closed ? 'Closed' : `${h.opens_at} – ${h.closes_at}`}
-                          </span>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-
               {/* Tags */}
               {otherTags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
@@ -423,7 +397,7 @@ export default async function BusinessProfilePage({ params }: Props) {
                     return (
                       <span
                         key={tag.id}
-                        className="text-xs font-mono px-3 py-1 bg-white border border-border rounded-full text-muted-foreground"
+                        className="text-xs font-mono px-3 py-1 bg-card border border-border rounded-md text-muted-foreground"
                       >
                         {tag.name}
                       </span>
@@ -434,7 +408,7 @@ export default async function BusinessProfilePage({ params }: Props) {
 
               {/* Map embed */}
               {business.google_maps_url && (
-                <div className="bg-white rounded-2xl border border-border overflow-hidden">
+                <div className="bg-card rounded-lg border border-border overflow-hidden">
                   <div className="p-4 flex items-center justify-between border-b border-border">
                     <h2 className="font-semibold flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-primary" /> Location
@@ -467,89 +441,108 @@ export default async function BusinessProfilePage({ params }: Props) {
 
             {/* Sidebar */}
             <div className="lg:w-80 space-y-4 mt-6 lg:mt-0">
-              {/* Contact card */}
-              <div className="bg-white rounded-2xl border border-border p-6 lg:sticky lg:top-24">
-                <h2 className="font-semibold mb-4">Contact & Info</h2>
-                <div className="space-y-3">
-                  {business.phone && (
-                    <a
-                      href={buildTrackedUrl(`tel:${business.phone}`, { linkType: 'phone', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-muted hover:bg-primary hover:text-white transition-colors group"
-                    >
-                      <Phone className="w-4 h-4 text-primary group-hover:text-white" />
-                      <span className="text-sm font-medium">{business.phone}</span>
-                    </a>
-                  )}
-                  {whatsappUrl && (
-                    <a
-                      href={buildTrackedUrl(whatsappUrl, { linkType: 'whatsapp', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-xl bg-green-50 border border-green-200 hover:bg-green-100 transition-colors"
-                    >
-                      <MessageCircle className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium text-green-700">Chat on WhatsApp</span>
-                    </a>
-                  )}
-                  {business.website && (
-                    <a
-                      href={buildTrackedUrl(business.website, { linkType: 'website', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
-                    >
-                      <Globe className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground truncate">{business.website.replace(/^https?:\/\//, '')}</span>
-                    </a>
-                  )}
-                  {business.email && (
-                    <a
-                      href={buildTrackedUrl(`mailto:${business.email}`, { linkType: 'email', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors"
-                    >
-                      <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground truncate">{business.email}</span>
-                    </a>
-                  )}
+              <div className="bg-card rounded-lg border border-border p-5 lg:sticky lg:top-24 space-y-4">
+                {/* Primary actions — the one gold action is whichever contact channel exists first */}
+                {(business.phone || whatsappUrl || business.website) && (
+                  <div className="space-y-2">
+                    {business.phone && (
+                      <a
+                        href={buildTrackedUrl(`tel:${business.phone}`, { linkType: 'phone', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
+                        className="flex items-center justify-center gap-2 w-full h-9 rounded-md bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent/85 transition-colors"
+                      >
+                        <Phone className="w-4 h-4" /> Call {business.phone}
+                      </a>
+                    )}
+                    {whatsappUrl && (
+                      <a
+                        href={buildTrackedUrl(whatsappUrl, { linkType: 'whatsapp', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={business.phone
+                          ? 'flex items-center justify-center gap-2 w-full h-9 rounded-md border border-primary text-primary text-sm font-semibold hover:bg-sage transition-colors'
+                          : 'flex items-center justify-center gap-2 w-full h-9 rounded-md bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent/85 transition-colors'}
+                      >
+                        <MessageCircle className="w-4 h-4" /> WhatsApp
+                      </a>
+                    )}
+                    {business.website && (
+                      <a
+                        href={buildTrackedUrl(business.website, { linkType: 'website', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={business.phone || whatsappUrl
+                          ? 'flex items-center justify-center gap-2 w-full h-9 rounded-md border border-primary text-primary text-sm font-semibold hover:bg-sage transition-colors'
+                          : 'flex items-center justify-center gap-2 w-full h-9 rounded-md bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent/85 transition-colors'}
+                      >
+                        <Globe className="w-4 h-4" /> Visit Website
+                      </a>
+                    )}
+                  </div>
+                )}
+
+                <Separator />
+
+                {/* Labelled details table — contact, hours, price, location in one place */}
+                <div>
+                  <h2 className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-2">Details</h2>
+                  <div className="border border-border rounded-md divide-y divide-border overflow-hidden">
+                    {business.price_range && (
+                      <div className="flex items-center justify-between px-3 py-2 text-sm">
+                        <span className="text-muted-foreground">Price</span>
+                        <span className="font-mono text-foreground">{business.price_range} — {getPriceRangeLabel(business.price_range)}</span>
+                      </div>
+                    )}
+                    {business.email && (
+                      <a
+                        href={buildTrackedUrl(`mailto:${business.email}`, { linkType: 'email', surface: 'business_profile', businessId: business.id, businessSlug: business.slug })}
+                        className="flex items-center justify-between px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      >
+                        <span className="text-muted-foreground">Email</span>
+                        <span className="font-mono text-foreground truncate max-w-[180px]">{business.email}</span>
+                      </a>
+                    )}
+                    {business.hours && business.hours.length > 0 && business.hours
+                      .sort((a, b) => a.day_of_week - b.day_of_week)
+                      .map((h) => (
+                        <div key={h.id} className="flex items-center justify-between px-3 py-2 text-sm">
+                          <span className="text-muted-foreground">{DAY_NAMES[h.day_of_week]}</span>
+                          <span className="font-mono text-foreground">
+                            {h.is_closed ? 'Closed' : `${h.opens_at} – ${h.closes_at}`}
+                          </span>
+                        </div>
+                      ))}
+                    {business.road_street && (
+                      <div className="flex items-center justify-between px-3 py-2 text-sm">
+                        <span className="text-muted-foreground">Street</span>
+                        <span className="font-mono text-foreground text-right">{business.road_street}</span>
+                      </div>
+                    )}
+                    {business.building_name && (
+                      <div className="flex items-center justify-between px-3 py-2 text-sm">
+                        <span className="text-muted-foreground">Building</span>
+                        <span className="font-mono text-foreground text-right">{business.building_name}</span>
+                      </div>
+                    )}
+                    {business.door_number && (
+                      <div className="flex items-center justify-between px-3 py-2 text-sm">
+                        <span className="text-muted-foreground">Door / Office</span>
+                        <span className="font-mono text-foreground">{business.door_number}</span>
+                      </div>
+                    )}
+                    {business.area && (
+                      <div className="flex items-center justify-between px-3 py-2 text-sm">
+                        <span className="text-muted-foreground">Area</span>
+                        <span className="font-mono text-foreground">{business.area.name}</span>
+                      </div>
+                    )}
+                    {business.contact_name && (
+                      <div className="flex items-center justify-between px-3 py-2 text-sm">
+                        <span className="text-muted-foreground">Contact</span>
+                        <span className="font-mono text-foreground">{business.contact_name}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-
-                <Separator className="my-4" />
-
-                {/* Location details */}
-                <div className="space-y-2">
-                  {business.road_street && (
-                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
-                      <span>{business.road_street}</span>
-                    </div>
-                  )}
-                  {business.building_name && (
-                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <Building2 className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground" />
-                      <span>{business.building_name}</span>
-                    </div>
-                  )}
-                  {business.door_number && (
-                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <DoorOpen className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground" />
-                      <span>Office / Door: {business.door_number}</span>
-                    </div>
-                  )}
-                  {business.contact_name && (
-                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <User className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground" />
-                      <span>Contact: {business.contact_name}</span>
-                    </div>
-                  )}
-                  {business.area && (
-                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground" />
-                      <span>{business.area.name}</span>
-                    </div>
-                  )}
-                </div>
-
-                <Separator className="my-4" />
 
                 <p className="text-[10px] text-muted-foreground">
                   Is this your business?{' '}
@@ -564,7 +557,7 @@ export default async function BusinessProfilePage({ params }: Props) {
           {/* Related businesses */}
           {relatedBusinesses.length > 0 && (
             <div className="mt-12">
-              <h2 className="font-display text-2xl font-bold mb-6">
+              <h2 className="font-display text-2xl font-medium mb-6">
                 More in {business.subcategory?.name ?? business.category?.name}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

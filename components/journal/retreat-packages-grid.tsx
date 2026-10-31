@@ -1,6 +1,5 @@
-import Link from 'next/link'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
+import EditorialCard from '@/components/shared/editorial-card'
 import type { RetreatPackage } from '@/types/database'
 
 async function getPackages(): Promise<RetreatPackage[]> {
@@ -56,34 +55,22 @@ export default async function RetreatPackagesGrid({ sectionColor }: { sectionCol
           const imageUrl = pkg.image_path
             ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/store-media/${pkg.image_path}`
             : null
+          const meta = [
+            pkg.duration_note,
+            pkg.price != null ? `${pkg.currency} ${Number(pkg.price).toLocaleString()}` : null,
+          ].filter(Boolean).join(' · ')
           return (
-            <Link
+            <EditorialCard
               key={pkg.id}
               href={`/journal/kiambu-here-n-there/${pkg.slug}`}
-              className="group bg-white rounded-2xl border border-border overflow-hidden hover:border-primary hover:shadow-md transition-all flex flex-col"
-            >
-              {imageUrl && (
-                <div className="relative h-40 overflow-hidden bg-muted shrink-0">
-                  <Image src={imageUrl} alt={pkg.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 50vw" />
-                </div>
-              )}
-              <div className="p-5 flex flex-col flex-1">
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-2">
-                  {pkg.name}
-                </h3>
-                {pkg.description && (
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-3">{pkg.description}</p>
-                )}
-                <div className="flex items-center justify-between mt-auto pt-2 text-xs">
-                  {pkg.duration_note && <span className="text-muted-foreground font-mono">{pkg.duration_note}</span>}
-                  {pkg.price != null && (
-                    <span className="font-mono font-bold" style={{ color: sectionColor }}>
-                      {pkg.currency} {Number(pkg.price).toLocaleString()}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </Link>
+              imageUrl={imageUrl}
+              imageAlt={pkg.name}
+              imageHeight="h-40"
+              title={pkg.name}
+              description={pkg.description}
+              meta={meta || null}
+              metaColor={sectionColor}
+            />
           )
         })}
       </div>

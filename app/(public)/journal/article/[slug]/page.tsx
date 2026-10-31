@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Calendar, Clock, User } from 'lucide-react'
 import type { Article } from '@/types/database'
 import ArticleContent from '@/components/journal/article-content'
+import ReadingProgress from '@/components/journal/reading-progress'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -94,11 +95,12 @@ export default async function ArticleDetailPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(article)) }}
       />
+      <ReadingProgress />
       <ShareBar url={articleUrl} title={article.title} variant="popup" />
 
-      <div className="min-h-screen bg-brand-surface">
+      <div className="min-h-screen bg-background">
         {/* Section badge + breadcrumb */}
-        <div className="bg-white border-b border-border py-3">
+        <div className="bg-card border-b border-border py-3">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <nav className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
               <Link href="/" className="hover:text-foreground">Home</Link>
@@ -132,7 +134,7 @@ export default async function ArticleDetailPage({ params }: Props) {
                   </Link>
                 )}
 
-                <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-4">
+                <h1 className="font-display text-3xl sm:text-4xl font-medium text-foreground leading-tight mb-4">
                   {article.title}
                 </h1>
 
@@ -164,7 +166,7 @@ export default async function ArticleDetailPage({ params }: Props) {
               </div>
 
               {/* Cover image */}
-              <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden bg-muted mb-8">
+              <div className="relative h-72 sm:h-96 rounded-lg overflow-hidden bg-muted mb-8">
                 <Image
                   src={imageUrl}
                   alt={article.title}
@@ -192,8 +194,8 @@ export default async function ArticleDetailPage({ params }: Props) {
 
               {/* Travel inquiry embed for travel sections */}
               {isTravelSection && (
-                <div className="mt-8 bg-primary/5 border border-primary/20 rounded-2xl p-6">
-                  <h3 className="font-display font-bold text-lg mb-2">Planning a trip?</h3>
+                <div className="mt-8 bg-sage border border-primary/20 rounded-lg p-6">
+                  <h3 className="font-display font-medium text-lg mb-2">Planning a trip?</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Interested in visiting the destinations mentioned in this article? Our travel team can arrange a personalised trip for you.
                   </p>
@@ -208,7 +210,7 @@ export default async function ArticleDetailPage({ params }: Props) {
 
               {/* Comments */}
               <div className="mt-12">
-                <h2 className="font-display text-xl font-bold mb-6">
+                <h2 className="font-display text-xl font-medium mb-6">
                   Comments {comments.length > 0 && <span className="text-base text-muted-foreground font-normal">({comments.length})</span>}
                 </h2>
 
@@ -217,7 +219,7 @@ export default async function ArticleDetailPage({ params }: Props) {
                 ) : (
                   <div className="space-y-4 mb-8">
                     {comments.map((c) => (
-                      <div key={c.id} className="bg-white rounded-xl border border-border p-4">
+                      <div key={c.id} className="bg-card rounded-lg border border-border p-4">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-semibold text-sm">{c.commenter_name}</span>
                           <span className="text-xs font-mono text-muted-foreground">

@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
+import EditorialCard from '@/components/shared/editorial-card'
 import type { ProductType, StoreProduct } from '@/types/database'
 
 async function getProducts(productType: ProductType): Promise<StoreProduct[]> {
@@ -58,39 +58,20 @@ export default async function StoreProductsGrid({
             ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/store-media/${product.image_path}`
             : null
           return (
-            <Link
+            <EditorialCard
               key={product.id}
               href={`${basePath}/${product.slug}`}
-              className="group bg-white rounded-2xl border border-border overflow-hidden hover:border-primary hover:shadow-md transition-all flex flex-col"
-            >
-              <div className="relative h-40 overflow-hidden bg-muted shrink-0 flex items-center justify-center">
-                {imageUrl ? (
-                  <Image src={imageUrl} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 50vw" />
-                ) : (
-                  <span className="text-4xl">{isEbook ? '📖' : '🛍️'}</span>
-                )}
-                {product.coming_soon && (
-                  <span className="absolute top-3 left-3 text-[10px] font-mono font-bold bg-black/70 text-white px-2 py-0.5 rounded-full">
-                    Coming Soon
-                  </span>
-                )}
-              </div>
-              <div className="p-5 flex flex-col flex-1">
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors leading-snug mb-2">
-                  {product.name}
-                </h3>
-                {product.description && (
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-3">{product.description}</p>
-                )}
-                {product.coming_soon ? (
-                  <p className="font-mono text-xs text-muted-foreground mt-auto pt-2">Not yet available</p>
-                ) : (
-                  <p className="font-mono font-bold mt-auto pt-2 text-sm" style={{ color: sectionColor }}>
-                    {product.currency} {Number(product.price).toLocaleString()}
-                  </p>
-                )}
-              </div>
-            </Link>
+              imageUrl={imageUrl}
+              imageAlt={product.name}
+              fallbackEmoji={isEbook ? '📖' : '🛍️'}
+              imageHeight="h-40"
+              badge={product.coming_soon ? 'Coming Soon' : null}
+              title={product.name}
+              description={product.description}
+              meta={product.coming_soon ? 'Not yet available' : `${product.currency} ${Number(product.price).toLocaleString()}`}
+              metaColor={sectionColor}
+              metaMuted={product.coming_soon}
+            />
           )
         })}
       </div>

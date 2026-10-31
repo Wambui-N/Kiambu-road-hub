@@ -68,8 +68,8 @@ export function countWords(text: string): number {
 
 /**
  * Pulls a short teaser out of an article: prefers the explicit excerpt,
- * otherwise derives one from the first paragraph of body_json (which is
- * stored either as portable-text-like {content:[...]} or plain {text}).
+ * otherwise derives one from the first text-bearing block in body_json
+ * (BlockNote's native document shape, stored as { blocks: Block[] }).
  */
 export function getArticleSnippet(
   excerpt: string | null | undefined,
@@ -78,17 +78,18 @@ export function getArticleSnippet(
 ): string {
   if (excerpt?.trim()) return truncateWords(excerpt.trim(), maxWords)
 
-  if (bodyJson && typeof bodyJson === 'object') {
-    if (Array.isArray((bodyJson as { content?: unknown[] }).content)) {
-      const portableText = bodyJson as { content: Array<{ type: string; content?: Array<{ value: string }> }> }
-      const firstParagraph = portableText.content.find((block) => block.type === 'paragraph')
-      const text = firstParagraph?.content?.map((s) => s.value).join('') ?? ''
-      if (text.trim()) return truncateWords(text.trim(), maxWords)
-    }
-    if (typeof (bodyJson as { text?: string }).text === 'string') {
-      const firstParagraph = (bodyJson as { text: string }).text.split('\n\n')[0] ?? ''
-      if (firstParagraph.trim()) return truncateWords(firstParagraph.trim(), maxWords)
-    }
+  const blocks = (bodyJson as { blocks?: Array<Record<string, unknown>> } | null)?.blocks
+  if (Array.isArray(blocks)) {
+    const firstTextBlock = blocks.find((block) => {
+      const content = block.content
+      return Array.isArray(content) && content.some((item) => (item as { type?: string }).type === 'text')
+    })
+    const content = (firstTextBlock?.content as Array<{ type?: string; text?: string }> | undefined) ?? []
+    const text = content
+      .filter((item) => item.type === 'text' && typeof item.text === 'string')
+      .map((item) => item.text)
+      .join('')
+    if (text.trim()) return truncateWords(text.trim(), maxWords)
   }
 
   return ''

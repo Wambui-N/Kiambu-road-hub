@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,9 @@ import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { slugify } from '@/lib/utils'
+import FileUploadField from '@/components/admin/file-upload-field'
+import ArticleBlockEditor, { type ArticleBlockEditorHandle } from '@/components/admin/article-block-editor'
+import type { PartialBlock } from '@blocknote/core'
 
 interface JournalSection {
   id: string
@@ -25,13 +28,14 @@ interface ArticleFormProps {
 
 export default function ArticleForm({ sections, initialData }: ArticleFormProps) {
   const router = useRouter()
+  const editorRef = useRef<ArticleBlockEditorHandle>(null)
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     section_id: (initialData?.section_id as string) ?? '',
     title: (initialData?.title as string) ?? '',
     slug: (initialData?.slug as string) ?? '',
     excerpt: (initialData?.excerpt as string) ?? '',
-    body_json: (initialData?.body_json as string) ?? '',
+    cover_image_path: (initialData?.cover_image_path as string) ?? '',
     author_name: (initialData?.author_name as string) ?? '',
     read_time_minutes: String(initialData?.read_time_minutes ?? ''),
     featured: (initialData?.featured as boolean) ?? false,
@@ -39,6 +43,11 @@ export default function ArticleForm({ sections, initialData }: ArticleFormProps)
     seo_title: (initialData?.seo_title as string) ?? '',
     seo_description: (initialData?.seo_description as string) ?? '',
   })
+
+  const initialBlocks = (() => {
+    const bodyJson = initialData?.body_json as { blocks?: PartialBlock[] } | null | undefined
+    return Array.isArray(bodyJson?.blocks) ? bodyJson.blocks : undefined
+  })()
 
   const setField = (key: string, value: string | boolean) => {
     setForm((prev) => {
@@ -57,12 +66,15 @@ export default function ArticleForm({ sections, initialData }: ArticleFormProps)
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
 
+      const blocks = editorRef.current?.getBlocks() ?? []
+
       const payload = {
         section_id: form.section_id || null,
         title: form.title,
         slug: form.slug,
         excerpt: form.excerpt || null,
-        body_json: form.body_json ? JSON.parse(form.body_json) : null,
+        body_json: blocks.length > 0 ? { blocks } : null,
+        cover_image_path: form.cover_image_path || null,
         author_name: form.author_name || null,
         read_time_minutes: form.read_time_minutes ? parseInt(form.read_time_minutes) : null,
         featured: form.featured,
@@ -129,16 +141,18 @@ export default function ArticleForm({ sections, initialData }: ArticleFormProps)
         <Textarea value={form.excerpt} onChange={(e) => setField('excerpt', e.target.value)} rows={2} maxLength={300} />
       </div>
 
+      <FileUploadField
+        label="Cover Image"
+        bucket="article-media"
+        folder="covers"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        value={form.cover_image_path}
+        onChange={(path) => setField('cover_image_path', path)}
+      />
+
       <div className="space-y-1.5">
         <Label>Article Body</Label>
-        <Textarea
-          value={form.body_json}
-          onChange={(e) => setField('body_json', e.target.value)}
-          rows={10}
-          placeholder='Write the article content here. For rich content, enter JSON or plain text that will be stored as-is.'
-          className="font-mono text-xs"
-        />
-        <p className="text-xs text-muted-foreground">Plain text or JSON content. Rich text editor integration can be added later.</p>
+        <ArticleBlockEditor ref={editorRef} initialBlocks={initialBlocks} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

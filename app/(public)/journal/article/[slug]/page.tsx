@@ -11,6 +11,7 @@ import { articleJsonLd } from '@/lib/seo'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Clock, User } from 'lucide-react'
 import type { Article } from '@/types/database'
+import ArticleContent from '@/components/journal/article-content'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -182,13 +183,7 @@ export default async function ArticleDetailPage({ params }: Props) {
               )}
 
               {/* Article body */}
-              <div className="prose prose-sm max-w-none text-foreground space-y-4">
-                {article.body_json ? (
-                  <ArticleBody body={article.body_json} />
-                ) : (
-                  <p className="text-muted-foreground">Article content is being prepared.</p>
-                )}
-              </div>
+              <ArticleContent body={article.body_json} />
 
               {/* Bottom social share row */}
               <div className="mt-10">
@@ -255,35 +250,4 @@ export default async function ArticleDetailPage({ params }: Props) {
       </div>
     </>
   )
-}
-
-function ArticleBody({ body }: { body: Record<string, unknown> }) {
-  if (!body || typeof body !== 'object') return null
-
-  if (Array.isArray((body as { content?: unknown[] }).content)) {
-    const portableText = body as { content: Array<{ type: string; content?: Array<{ type: string; value: string }> }> }
-    return (
-      <div className="space-y-4">
-        {portableText.content.map((block, i) => {
-          if (block.type === 'paragraph') {
-            const text = block.content?.map((s) => s.value).join('') ?? ''
-            return <p key={i} className="text-muted-foreground leading-relaxed">{text}</p>
-          }
-          return null
-        })}
-      </div>
-    )
-  }
-
-  if (typeof (body as { text?: string }).text === 'string') {
-    return (
-      <div className="space-y-4">
-        {(body as { text: string }).text.split('\n\n').map((para, i) => (
-          <p key={i} className="text-muted-foreground leading-relaxed">{para}</p>
-        ))}
-      </div>
-    )
-  }
-
-  return null
 }

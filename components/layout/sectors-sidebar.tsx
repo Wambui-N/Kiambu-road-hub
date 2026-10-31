@@ -39,7 +39,7 @@ const SECTOR_GROUPS: SectorGroup[] = [
     bgColor: '#EFF6FF',
     links: [
       { label: 'Travel Booking', href: '/travel' },
-      { label: 'Kiambu Retreats', href: '/journal/kiambu-here-n-there' },
+      { label: 'Kiambu & Beyond', href: '/journal/kiambu-here-n-there' },
       { label: 'Sponsored Features', href: '/journal/nature-trivia' },
     ],
   },

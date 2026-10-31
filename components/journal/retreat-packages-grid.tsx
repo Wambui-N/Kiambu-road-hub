@@ -24,7 +24,7 @@ export default async function RetreatPackagesGrid({ sectionColor }: { sectionCol
     <div className="rounded-2xl p-6 mb-8 bg-white border border-border">
       <p className="font-display text-lg font-bold mb-1">Discover more. Explore more. Enjoy more.</p>
       <p className="text-sm text-muted-foreground leading-relaxed">
-        Kiambu Retreats highlights interesting places for Kiambu Road residents to discover, visit, stay and explore —
+        Kiambu &amp; Beyond highlights interesting places for Kiambu Road residents to discover, visit, stay and explore —
         you don&apos;t always have to travel far to feel far away.
       </p>
     </div>

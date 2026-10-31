@@ -282,7 +282,7 @@ export const JOURNAL_SECTIONS = [
   { name: 'Prayer & Verse',          slug: 'prayer-verse',            tagline: 'Beyond the scriptures',                            sort_order: 4  },
   { name: 'Inspiration',             slug: 'inspiration',             tagline: 'The hidden voice',                                 sort_order: 5  },
   { name: 'Explorer Publications',   slug: 'e-books',                 tagline: 'Read your way to a good life',                     sort_order: 6  },
-  { name: 'Kiambu Retreats',         slug: 'kiambu-here-n-there',     tagline: 'You don\'t always have to travel far to feel far away', sort_order: 7  },
+  { name: 'Kiambu & Beyond',         slug: 'kiambu-here-n-there',     tagline: 'You don\'t always have to travel far to feel far away', sort_order: 7  },
   { name: 'Sponsored Features',      slug: 'nature-trivia',           tagline: 'Bits and pieces on nature and wildlife',           sort_order: 9  },
   { name: 'Business Agency',        slug: 'business-notes',          tagline: 'Quotes that mean business',                        sort_order: 10 },
   { name: 'Community Projects',     slug: 'business-opportunities',  tagline: 'Campaigns making a difference on Kiambu Road',     sort_order: 11 },

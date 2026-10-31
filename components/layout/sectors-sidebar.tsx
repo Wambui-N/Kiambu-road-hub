@@ -40,7 +40,6 @@ const SECTOR_GROUPS: SectorGroup[] = [
     links: [
       { label: 'Travel Booking', href: '/travel' },
       { label: 'Kiambu Retreats', href: '/journal/kiambu-here-n-there' },
-      { label: 'Destination beyond', href: '/journal/destination-review' },
       { label: 'Sponsored Features', href: '/journal/nature-trivia' },
     ],
   },

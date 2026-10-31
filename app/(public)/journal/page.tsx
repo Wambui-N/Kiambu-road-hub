@@ -16,7 +16,6 @@ const SECTION_ICONS: Record<string, string> = {
   'prayer-verse': '🙏',
   'inspiration': '💡',
   'kiambu-here-n-there': '🗺️',
-  'destination-review': '✈️',
   'nature-trivia': '🌿',
   'business-notes': '💼',
   'e-books': '📚',

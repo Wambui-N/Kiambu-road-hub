@@ -67,6 +67,34 @@ export function countWords(text: string): number {
 }
 
 /**
+ * Pulls a short teaser out of an article: prefers the explicit excerpt,
+ * otherwise derives one from the first paragraph of body_json (which is
+ * stored either as portable-text-like {content:[...]} or plain {text}).
+ */
+export function getArticleSnippet(
+  excerpt: string | null | undefined,
+  bodyJson: Record<string, unknown> | null | undefined,
+  maxWords = 25
+): string {
+  if (excerpt?.trim()) return truncateWords(excerpt.trim(), maxWords)
+
+  if (bodyJson && typeof bodyJson === 'object') {
+    if (Array.isArray((bodyJson as { content?: unknown[] }).content)) {
+      const portableText = bodyJson as { content: Array<{ type: string; content?: Array<{ value: string }> }> }
+      const firstParagraph = portableText.content.find((block) => block.type === 'paragraph')
+      const text = firstParagraph?.content?.map((s) => s.value).join('') ?? ''
+      if (text.trim()) return truncateWords(text.trim(), maxWords)
+    }
+    if (typeof (bodyJson as { text?: string }).text === 'string') {
+      const firstParagraph = (bodyJson as { text: string }).text.split('\n\n')[0] ?? ''
+      if (firstParagraph.trim()) return truncateWords(firstParagraph.trim(), maxWords)
+    }
+  }
+
+  return ''
+}
+
+/**
  * Appends UTM parameters to a URL without overriding any the destination
  * already sets (respects the business's own tracking).
  */

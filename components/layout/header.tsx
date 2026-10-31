@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
 
 const PRIMARY_NAV_LINKS = [
+  { label: 'Home', href: '/' },
   { label: 'Directory', href: '/directory' },
   { label: 'Magazine', href: '/journal' },
   { label: 'Events & Expos', href: '/events' },

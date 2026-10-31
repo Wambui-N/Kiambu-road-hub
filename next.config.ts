@@ -53,6 +53,16 @@ const nextConfig: NextConfig = {
         destination: '/shop/:path*',
         permanent: true,
       },
+      {
+        source: '/journal/destination-beyond',
+        destination: '/journal/kiambu-here-n-there',
+        permanent: true,
+      },
+      {
+        source: '/journal/destination-review',
+        destination: '/journal/kiambu-here-n-there',
+        permanent: true,
+      },
     ]
   },
   images: {

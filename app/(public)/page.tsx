@@ -5,6 +5,7 @@ import HeroSection from '@/components/home/hero-section'
 import StatsBar from '@/components/home/stats-bar'
 import CategoryGrid from '@/components/home/category-grid'
 import FeaturedBusinesses from '@/components/home/featured-businesses'
+import CurrentFeatures from '@/components/home/current-features'
 import HomeAdsSection from '@/components/ads/home-ads-section'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo'
 import type { Area, Business, Category, AdSlot as AdSlotType } from '@/types/database'
@@ -151,59 +152,7 @@ export default async function HomePage() {
       <CategoryGrid categories={displayCategories} />
       <FeaturedBusinesses businesses={featuredBusinesses} />
 
-      {/* Journal teaser section */}
-      <section className="py-16 bg-brand-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="font-display text-3xl font-bold text-foreground">
-              Current Features
-            </h2>
-            <p className="text-muted-foreground mt-2">
-            A look at what&rsquo;s on the pages this month
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                section: 'Health Digest',
-                slug: 'health-digest',
-                color: '#10B981',
-                title: 'Wellness, close to home',
-                excerpt: 'Practical health tips, clinic spotlights and wellness advice for the Kiambu Road community.',
-              },
-              {
-                section: 'Kiambu Retreats',
-                slug: 'kiambu-here-n-there',
-                color: '#3B82F6',
-                title: 'Escapes worth the drive',
-                excerpt: "Weekend getaways, hidden gems and travel guides from around the Kiambu Road corridor and beyond.",
-              },
-              {
-                section: 'Business Agency',
-                slug: 'business-notes',
-                color: '#E8A020',
-                title: 'The corridor at work',
-                excerpt: "Local entrepreneurship stories, business tips and insights from Kiambu Road's growing economy.",
-              },
-            ].map((item) => (
-              <a
-                key={item.section}
-                href={`/journal/${item.slug}`}
-                className="block bg-white rounded-2xl border border-border p-6 hover:border-primary hover:shadow-sm transition-all"
-              >
-                <span
-                  className="inline-block text-xs font-mono font-semibold px-2 py-1 rounded-full mb-4 text-white"
-                  style={{ backgroundColor: item.color }}
-                >
-                  {item.section}
-                </span>
-                <h3 className="font-display font-semibold text-lg mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.excerpt}</p>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      <CurrentFeatures />
     </>
   )
 }

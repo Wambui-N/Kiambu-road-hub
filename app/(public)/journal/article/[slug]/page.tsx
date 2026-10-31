@@ -84,7 +84,7 @@ export default async function ArticleDetailPage({ params }: Props) {
     : fallback
 
   const articleUrl = `https://kiamburoad.com/journal/article/${slug}`
-  const isTravelSection = sectionSlug === 'kiambu-here-n-there' || sectionSlug === 'destination-review'
+  const isTravelSection = sectionSlug === 'kiambu-here-n-there'
 
   return (
     <>
